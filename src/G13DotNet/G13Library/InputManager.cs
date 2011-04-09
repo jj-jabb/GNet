@@ -284,23 +284,31 @@ namespace G13Library
             }
         }
 
+        static InputWrapper KeyWrapper(ScanCode scanCode, bool keyUp, bool extended)
+        {
+            return new InputWrapper
+            {
+                Type = SendInputType.Keyboard,
+                MKH = new MouseKeyboardHardwareUnion
+                {
+                    Keyboard = new KeyboardInputData
+                    {
+                        Scan = scanCode,
+                        Flags =
+                            KeyboardFlags.ScanCode |
+                            (keyUp ? KeyboardFlags.KeyUp : 0) |
+                            (extended ? KeyboardFlags.ExtendedKey : 0)
+                    }
+                }
+            };
+        }
+
         static uint DoKeyDown(ScanCode scanCode, bool extended)
         {
             var inputData = new InputWrapper[]
-                {
-                    new InputWrapper
-                    {
-                        Type = SendInputType.Keyboard,
-                        MKH = new MouseKeyboardHardwareUnion
-                        {
-                            Keyboard = new KeyboardInputData
-                            {
-                                Scan = scanCode,
-                                Flags = KeyboardFlags.ScanCode | (extended ? KeyboardFlags.ExtendedKey : 0)
-                            }
-                        }
-                    }
-                };
+            {
+                KeyWrapper(scanCode, false, extended)
+            };
 
             return SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
         }
@@ -308,20 +316,9 @@ namespace G13Library
         static uint DoKeyUp(ScanCode scanCode, bool extended)
         {
             var inputData = new InputWrapper[]
-                {
-                    new InputWrapper
-                    {
-                        Type = SendInputType.Keyboard,
-                        MKH = new MouseKeyboardHardwareUnion
-                        {
-                            Keyboard = new KeyboardInputData
-                            {
-                                Scan = scanCode,
-                                Flags = KeyboardFlags.KeyUp | KeyboardFlags.ScanCode | (extended ? KeyboardFlags.ExtendedKey : 0)
-                            }
-                        }
-                    }
-                };
+            {
+                KeyWrapper(scanCode, true, extended)
+            };
 
             return SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
         }
@@ -351,30 +348,8 @@ namespace G13Library
         {
             var inputData = new InputWrapper[]
             { 
-                new InputWrapper
-                {
-                    Type = SendInputType.Keyboard,
-                    MKH = new MouseKeyboardHardwareUnion
-                    {
-                        Keyboard = new KeyboardInputData
-                        {
-                            Scan = scanCode,
-                            Flags = KeyboardFlags.ScanCode
-                        }
-                    }
-                },
-                new InputWrapper
-                {
-                    Type = SendInputType.Keyboard,
-                    MKH = new MouseKeyboardHardwareUnion
-                    {
-                        Keyboard = new KeyboardInputData
-                        {
-                            Scan = scanCode,
-                            Flags = KeyboardFlags.KeyUp | KeyboardFlags.ScanCode | (extended ? KeyboardFlags.ExtendedKey : 0)
-                        }
-                    }
-                }
+                KeyWrapper(scanCode, false, extended),
+                KeyWrapper(scanCode, true, extended)
             };
 
             return SendInput(2, inputData, Marshal.SizeOf(typeof(InputWrapper)));

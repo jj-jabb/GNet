@@ -48,6 +48,7 @@
             this.Controls.Add(this.rtbInfo);
             this.Name = "TestForm";
             this.Text = "G13 Test Form";
+            this.Load += new System.EventHandler(this.TestForm_Load);
             this.ResumeLayout(false);
 
         }
