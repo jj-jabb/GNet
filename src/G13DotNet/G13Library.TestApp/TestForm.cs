@@ -47,9 +47,43 @@ namespace G13Library.TestApp
             switch (key)
             {
                 case G13Device.Keys.G1:
+                    InputManager.MouseDown(InputManager.MouseDownFlags.LeftDown);
+                    break;
 
                 case G13Device.Keys.G4:
-                    InputManager.KeyDown(InputManager.ScanCode.w, repeat: true);
+                    InputManager.KeyDown(InputManager.ScanCode.w, repeat: false);
+                    break;
+
+                case G13Device.Keys.G11:
+                    InputManager.KeyDown(InputManager.ScanCode.s);
+                    break;
+
+                case G13Device.Keys.G10:
+                    InputManager.KeyDown(InputManager.ScanCode.a);
+                    break;
+
+                case G13Device.Keys.G12:
+                    InputManager.KeyDown(InputManager.ScanCode.d);
+                    break;
+
+                case G13Device.Keys.G22:
+                    InputManager.KeyDown(InputManager.ScanCode.space);
+                    break;
+
+                case G13Device.Keys.G15:
+                    InputManager.KeyDown(InputManager.ScanCode.lcontrol);
+                    break;
+
+                case G13Device.Keys.G5:
+                    InputManager.KeyDown(InputManager.ScanCode.e);
+                    break;
+
+                case G13Device.Keys.G6:
+                    InputManager.KeyDown(InputManager.ScanCode.r);
+                    break;
+
+                case G13Device.Keys.G3:
+                    InputManager.KeyDown(InputManager.ScanCode.q);
                     break;
             }
         }
@@ -60,8 +94,44 @@ namespace G13Library.TestApp
 
             switch (key)
             {
+                case G13Device.Keys.G1:
+                    InputManager.MouseUp(InputManager.MouseUpFlags.LeftUp);
+                    break;
+
                 case G13Device.Keys.G4:
                     InputManager.KeyUp(InputManager.ScanCode.w);
+                    break;
+
+                case G13Device.Keys.G11:
+                    InputManager.KeyUp(InputManager.ScanCode.s);
+                    break;
+
+                case G13Device.Keys.G10:
+                    InputManager.KeyUp(InputManager.ScanCode.a);
+                    break;
+
+                case G13Device.Keys.G12:
+                    InputManager.KeyUp(InputManager.ScanCode.d);
+                    break;
+
+                case G13Device.Keys.G22:
+                    InputManager.KeyUp(InputManager.ScanCode.space);
+                    break;
+
+                case G13Device.Keys.G15:
+                    InputManager.KeyUp(InputManager.ScanCode.lcontrol);
+                    break;
+
+                case G13Device.Keys.G5:
+                    InputManager.KeyUp(InputManager.ScanCode.e);
+                    break;
+
+                case G13Device.Keys.G6:
+                    InputManager.KeyUp(InputManager.ScanCode.r);
+                    break;
+
+                case G13Device.Keys.G3:
+                    InputManager.KeyUp(InputManager.ScanCode.q);
                     break;
             }
         }

@@ -234,8 +234,8 @@ namespace G13Library
         static int InputWrapperSize;
 
         static BackgroundWorker keyRepeater;
-        static Queue<RepeatingKey> repeatingKeyQueue;
-        static RepeatingKey currentRepeatingKey;
+        //static Queue<RepeatingKey> repeatingKeyQueue;
+        static RepeatingKey rkey;
 
         struct RepeatingKey
         {
@@ -243,8 +243,16 @@ namespace G13Library
             public bool Extended;
             public int InitialPauseTime;
             public int RepeatPauseTime;
+            public bool IsRunning;
+            public bool IsEmpty;
 
-            public static RepeatingKey Empty = new RepeatingKey();
+            public void Clear()
+            {
+                IsRunning = false;
+                IsEmpty = true;
+            }
+
+            public static RepeatingKey Empty = new RepeatingKey() { IsEmpty = true };
         }
 
         static InputManager()
@@ -255,49 +263,69 @@ namespace G13Library
             keyRepeater.DoWork += new DoWorkEventHandler(keyRepeater_DoWork);
             keyRepeater.RunWorkerCompleted += new RunWorkerCompletedEventHandler(keyRepeater_RunWorkerCompleted);
 
-            repeatingKeyQueue = new Queue<RepeatingKey>();
+            //repeatingKeyQueue = new Queue<RepeatingKey>();
+            rkey = RepeatingKey.Empty;
         }
 
         static void keyRepeater_DoWork(object sender, DoWorkEventArgs e)
         {
-            RepeatingKey args;
-
-            if (e.Argument is RepeatingKey)
-                args = (RepeatingKey)e.Argument;
-            else
+            if (rkey.IsEmpty)
                 return;
 
-            DoKeyDown(args.Code, args.Extended);
-            Thread.Sleep(args.InitialPauseTime);
-            DoKeyUp(args.Code, args.Extended);
-
-            while (!keyRepeater.CancellationPending)
+            while (!rkey.IsEmpty)
             {
-                DoKeyDown(args.Code, args.Extended);
-                Thread.Sleep(args.RepeatPauseTime);
-                DoKeyUp(args.Code, args.Extended);
+                rkey.IsRunning = true;
+                var code = rkey.Code;
+                var ext = rkey.Extended;
+                var initialPauseTime = rkey.InitialPauseTime;
+                var repeatPauseTime = rkey.RepeatPauseTime;
+
+                Thread.Sleep(initialPauseTime);
+                while (rkey.IsRunning)
+                {
+                    DoKeyUp(code, ext);
+                    if (rkey.IsRunning)
+                        Thread.Sleep(repeatPauseTime);
+                    if (rkey.IsRunning)
+                        DoKeyDown(code, ext);
+                }
             }
+
+            //RepeatingKey args;
+
+            //if (e.Argument is RepeatingKey)
+            //    args = (RepeatingKey)e.Argument;
+            //else
+            //    return;
+
+            //DoKeyDown(args.Code, args.Extended);
+            //Thread.Sleep(args.InitialPauseTime);
+            //DoKeyUp(args.Code, args.Extended);
+
+            //while (!keyRepeater.CancellationPending)
+            //{
+            //    DoKeyDown(args.Code, args.Extended);
+            //    Thread.Sleep(args.RepeatPauseTime);
+            //    DoKeyUp(args.Code, args.Extended);
+            //}
         }
 
         static void keyRepeater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            currentRepeatingKey = RepeatingKey.Empty;
+            if (rkey.IsEmpty == false)
+                keyRepeater.RunWorkerAsync();
 
-            if (!keyRepeater.IsBusy && repeatingKeyQueue.Count > 0)
-            {
-                currentRepeatingKey = repeatingKeyQueue.Dequeue();
-                keyRepeater.RunWorkerAsync(currentRepeatingKey);
-            }
+            rkey = RepeatingKey.Empty;
         }
 
         static void RepeatKey(RepeatingKey keyInfo)
         {
-            repeatingKeyQueue.Enqueue(keyInfo);
-            if (!keyRepeater.IsBusy && repeatingKeyQueue.Count > 0)
-            {
-                currentRepeatingKey = repeatingKeyQueue.Dequeue();
-                keyRepeater.RunWorkerAsync(currentRepeatingKey);
-            }
+            rkey = keyInfo;
+            rkey.IsRunning = false;
+            rkey.IsEmpty = false;
+
+            if (!keyRepeater.IsBusy)
+                keyRepeater.RunWorkerAsync();
         }
 
         static InputWrapper KeyWrapper(ScanCode scanCode, bool keyUp, bool extended)
@@ -357,23 +385,31 @@ namespace G13Library
 
         public static uint KeyDown(ScanCode scanCode, bool extended = false, bool repeat = false, int initialPauseTime = 500, int repeatPauseTime = 30)
         {
+            uint retval;
             if (repeat)
+            {
+                retval = DoKeyDown(scanCode, extended);
                 RepeatKey(new RepeatingKey { Code = scanCode, Extended = extended, InitialPauseTime = initialPauseTime, RepeatPauseTime = repeatPauseTime });
+            }
             else
-                return DoKeyDown(scanCode, extended);
+                retval = DoKeyDown(scanCode, extended);
 
-            return 0;
+            return retval;
         }
 
 
         public static uint KeyUp(ScanCode scanCode, bool extended = false)
         {
-            if (scanCode == currentRepeatingKey.Code && extended == currentRepeatingKey.Extended)
-                keyRepeater.CancelAsync();
+            uint retval;
+            if (scanCode == rkey.Code && extended == rkey.Extended)
+            {
+                retval = DoKeyUp(scanCode, extended);
+                rkey.Clear();
+            }
             else
-                return DoKeyUp(scanCode, extended);
+                retval = DoKeyUp(scanCode, extended);
 
-            return 0;
+            return retval;
         }
 
         public static uint KeyTap(ScanCode scanCode, bool extended = false)
