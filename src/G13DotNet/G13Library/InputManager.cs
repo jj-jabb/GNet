@@ -13,6 +13,22 @@ namespace G13Library
 
         #region pinvoke
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Win32Point
+        {
+            public Int32 X;
+            public Int32 Y;
+
+            public override string ToString()
+            {
+                return "Win32Point: " + X + ", " + Y;
+            }
+        };
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool GetCursorPos(ref Win32Point pt);
+
         [DllImport("user32.dll", SetLastError = true)]
         private static extern uint SendInput(uint numberInputs, InputWrapper[] inputs, int sizeOfStructure);
 
@@ -46,7 +62,7 @@ namespace G13Library
         {
             public int X;
             public int Y;
-            public uint MouseData;
+            public int MouseData;
             public MouseEventFlags Flags;
             public uint Time;
             public IntPtr ExtraInfo;
@@ -303,6 +319,22 @@ namespace G13Library
             };
         }
 
+        static InputWrapper MouseWrapper(MouseEventFlags flags, int data)
+        {
+            return new InputWrapper
+            {
+                Type = SendInputType.Mouse,
+                MKH = new MouseKeyboardHardwareUnion
+                {
+                    Mouse = new MouseInputData
+                    {
+                        Flags = flags,
+                        MouseData = data
+                    }
+                }
+            };
+        }
+
         static uint DoKeyDown(ScanCode scanCode, bool extended)
         {
             var inputData = new InputWrapper[]
@@ -355,7 +387,42 @@ namespace G13Library
             return SendInput(2, inputData, Marshal.SizeOf(typeof(InputWrapper)));
         }
 
-        public static uint MouseDown(MouseDownFlags flags, uint xButton = 0)
+        public static uint MouseDown(MouseDownFlags flags, int xButton = 0)
+        {
+            var inputData = new InputWrapper[]
+            {
+                MouseWrapper((MouseEventFlags)flags, xButton)
+            };
+
+            return SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+        }
+
+        public static uint MouseUp(MouseUpFlags flags, int xButton = 0)
+        {
+            var inputData = new InputWrapper[]
+            {
+                MouseWrapper((MouseEventFlags)flags, xButton)
+            };
+
+            return SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+        }
+
+        /// <summary>
+        /// Simulate a mouse wheel event
+        /// </summary>
+        /// <param name="amount">The amount of wheel movement (120 == one click)</param>
+        /// <returns>1 if successful, 0 if SendInput failed</returns>
+        public static uint MouseWheel(int amount)
+        {
+            var inputData = new InputWrapper[]
+            {
+                MouseWrapper(MouseEventFlags.Wheel, amount)
+            };
+
+            return SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+        }
+
+        public static uint MouseMoveTo(int x, int y, bool virtualDesk)
         {
             var inputData = new InputWrapper[]
             {
@@ -366,8 +433,9 @@ namespace G13Library
                     {
                         Mouse = new MouseInputData
                         {
-                            Flags = (MouseEventFlags)flags,
-                            MouseData = xButton
+                            X = x,
+                            Y = y,
+                            Flags = MouseEventFlags.Move | MouseEventFlags.Absolute | (virtualDesk ? MouseEventFlags.VirtualDesktop : 0)
                         }
                     }
                 }
@@ -376,7 +444,7 @@ namespace G13Library
             return SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
         }
 
-        public static uint MouseUp(MouseUpFlags flags, uint xButton = 0)
+        public static uint MouseMoveBy(int x, int y)
         {
             var inputData = new InputWrapper[]
             {
@@ -387,14 +455,26 @@ namespace G13Library
                     {
                         Mouse = new MouseInputData
                         {
-                            Flags = (MouseEventFlags)flags,
-                            MouseData = xButton
+                            X = x,
+                            Y = y,
+                            Flags = MouseEventFlags.Move
                         }
                     }
                 }
             };
 
             return SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+        }
+
+        public static Win32Point MouseScreenPos
+        {
+            get
+            {
+                Win32Point p = new Win32Point();
+                if (!GetCursorPos(ref p))
+                    System.Diagnostics.Debug.WriteLine("GetCursorPos returned false");
+                return p;
+            }
         }
     }
 }

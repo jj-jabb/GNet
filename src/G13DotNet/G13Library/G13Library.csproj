@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="G13Device.cs" />
     <Compile Include="InputManager.cs" />
+    <Compile Include="JoystickPosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
