@@ -39,14 +39,31 @@ namespace G13Library.TestApp
         {
         }
 
+
         void KeyPressed(G13Device device, G13Device.Keys key, ulong keyState)
         {
             rtbInfo.AppendText(key.ToString() + " Pressed" + Environment.NewLine);
+
+            switch (key)
+            {
+                case G13Device.Keys.G1:
+
+                case G13Device.Keys.G4:
+                    InputManager.KeyDown(InputManager.ScanCode.w, repeat: true);
+                    break;
+            }
         }
 
         void KeyReleased(G13Device device, G13Device.Keys key, ulong keyState)
         {
             rtbInfo.AppendText(key.ToString() + " Released" + Environment.NewLine);
+
+            switch (key)
+            {
+                case G13Device.Keys.G4:
+                    InputManager.KeyUp(InputManager.ScanCode.w);
+                    break;
+            }
         }
 
         void Inserted(G13Device device)

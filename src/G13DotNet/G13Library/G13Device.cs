@@ -23,6 +23,8 @@ namespace G13Library
         KeyStateStruct currentState = new KeyStateStruct();
         JoystickPosition joystick;
 
+        bool deviceIsSetup;
+
         public G13Device()
         {
             _device = HidDevices.GetDevice(Logitech, G13);
@@ -64,9 +66,18 @@ namespace G13Library
             if (_device == null)
                 return;
 
+            if (deviceIsSetup)
+                return;
+
+            deviceIsSetup = true;
+
             _device.Inserted += new DeviceMonitorHandler(_device_Inserted);
             _device.Removed += new DeviceMonitorHandler(_device_Removed);
             _device.DataRead += new DeviceReadHandler(_device_DataRead);
+
+            _device.MonitorDeviceEvents = true;
+            _device.StartReading();
+            //_device.StartReading();
         }
 
         void _device_Inserted(HidDevice device)
@@ -109,15 +120,18 @@ namespace G13Library
                 var dif = currentState.UL ^ state.UL;
                 var pressed = (dif & state.UL) > 0;
 
-                if (pressed)
+                if (dif > 0)
                 {
-                    if (KeyPressed != null)
-                        KeyPressed(this, (Keys)dif, state.UL);
-                }
-                else if (KeyReleased != null)
-                    KeyReleased(this, (Keys)dif, state.UL);
+                    if (pressed)
+                    {
+                        if (KeyPressed != null)
+                            KeyPressed(this, (Keys)dif, state.UL);
+                    }
+                    else if (KeyReleased != null)
+                        KeyReleased(this, (Keys)dif, state.UL);
 
-                currentState = state;
+                    currentState = state;
+                }
             }
         }
 
