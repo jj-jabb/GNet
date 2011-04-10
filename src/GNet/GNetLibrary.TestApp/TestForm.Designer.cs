@@ -1,4 +1,4 @@
-﻿namespace G13Library.TestApp
+﻿namespace GNetLibrary.TestApp
 {
     partial class TestForm
     {

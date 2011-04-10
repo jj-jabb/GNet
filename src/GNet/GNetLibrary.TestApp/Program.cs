@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace G13Library.TestApp
+namespace GNetLibrary.TestApp
 {
     static class Program
     {

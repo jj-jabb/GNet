@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace G13Library.TestApp
+using GNetLibrary.IO;
+using GNetLibrary.Macro;
+using GNetLibrary.PInvoke;
+
+namespace GNetLibrary.TestApp
 {
     class G13ProfileBasicTests : G13Profile
     {
         public G13ProfileBasicTests(TestForm form) : base(form) { }
 
-        InputManager.Win32Point screenPos;
+        Win32Point screenPos;
 
         protected override void JoystickChanged(G13Device device, int x, int y)
         {
@@ -22,46 +26,46 @@ namespace G13Library.TestApp
             switch (key)
             {
                 case G13Device.Keys.G1:
-                    InputManager.MouseDown(InputManager.MouseDownFlags.LeftDown);
+                    MouseDown(PInvoke.MouseDownFlags.LeftDown);
                     break;
 
                 // MouseWheel needs some love. Specifically, it's own background worker to continue wheelin' while the key is pressed
                 // So really, a MouseWheelRepeat and MouseWheelEnd are needed in addition to MouseWheel. Might want to also add
                 // MouseWheelHorizontal functions as well, I think it's available in the api...
                 case G13Device.Keys.G2:
-                    InputManager.MouseWheel(120);
+                    MouseWheel(120);
                     break;
 
                 case G13Device.Keys.G3:
-                    InputManager.MouseWheel(-120);
+                    MouseWheel(-120);
                     break;
 
                 case G13Device.Keys.G4:
-                    screenPos = InputManager.MouseAbsolutePos;
+                    screenPos = MouseAbsolutePos;
                     break;
 
                 case G13Device.Keys.G5:
-                    InputManager.MouseMoveTo(screenPos);
+                    MouseMoveTo(screenPos);
                     break;
 
                 case G13Device.Keys.G6:
-                    InputManager.MouseMoveBy(10, 10);
+                    MouseMoveBy(10, 10);
                     break;
 
                 case G13Device.Keys.G7:
-                    InputManager.MouseMoveToPixel(567, 171);
-                    var pos = InputManager.MouseScreenPos;
+                    MouseMoveToPixel(567, 171);
+                    var pos = MouseScreenPos;
                     form.RtbInfo.AppendText("Moved mouse to " + pos.X + ", " + pos.Y + Environment.NewLine);
                     break;
 
                 case G13Device.Keys.G8:
-                    InputManager.MouseTap(InputManager.MouseTapFlags.RightTap);
+                    MouseTap(MouseTapFlags.RightTap);
                     break;
 
                 // tested this case using Adobe reader - double middle tap brings up a small view of the full page
                 case G13Device.Keys.G9:
-                    InputManager.MouseTap(InputManager.MouseTapFlags.MiddleTap);
-                    InputManager.MouseTap(InputManager.MouseTapFlags.MiddleTap);
+                    MouseTap(MouseTapFlags.MiddleTap);
+                    MouseTap(MouseTapFlags.MiddleTap);
                     break;
             }
         }
@@ -73,7 +77,7 @@ namespace G13Library.TestApp
             switch (key)
             {
                 case G13Device.Keys.G1:
-                    InputManager.MouseUp(InputManager.MouseUpFlags.LeftUp);
+                    MouseUp(MouseUpFlags.LeftUp);
                     break;
             }
         }

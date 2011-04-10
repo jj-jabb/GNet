@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace G13Library.TestApp
+using GNetLibrary.IO;
+
+namespace GNetLibrary.TestApp
 {
-    abstract class G13Profile
+    abstract class G13Profile : InputSimulator
     {
         protected readonly G13Device g13;
         protected readonly TestForm form;

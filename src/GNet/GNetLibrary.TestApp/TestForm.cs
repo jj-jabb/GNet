@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace G13Library.TestApp
+namespace GNetLibrary.TestApp
 {
     public partial class TestForm : Form
     {

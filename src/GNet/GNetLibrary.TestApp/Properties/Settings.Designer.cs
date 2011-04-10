@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace G13Library.TestApp.Properties
+namespace GNetLibrary.TestApp.Properties
 {
 
 

@@ -4,8 +4,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 using HidLibrary;
+using GNetLibrary.IO;
 
-namespace G13Library
+namespace GNetLibrary
 {
     public class G13Device
     {

@@ -75,7 +75,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\G13Library\G13Library.csproj">
+    <ProjectReference Include="..\GNetLibrary\GNetLibrary.csproj">
       <Project>{A19132BE-AB6C-42FE-A245-9E10DD615DCC}</Project>
       <Name>G13Library</Name>
     </ProjectReference>

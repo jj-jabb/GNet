@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace G13Library.TestApp
+using GNetLibrary.IO;
+using GNetLibrary.Macro;
+using GNetLibrary.PInvoke;
+
+namespace GNetLibrary.TestApp
 {
     class G13ProfileFPS : G13Profile
     {
@@ -13,39 +17,39 @@ namespace G13Library.TestApp
             switch (key)
             {
                 case G13Device.Keys.G4:
-                    InputManager.KeyDown(InputManager.ScanCode.w, repeat: false);
+                    KeyDown(ScanCode.w, repeat: false);
                     break;
 
                 case G13Device.Keys.G11:
-                    InputManager.KeyDown(InputManager.ScanCode.s);
+                    KeyDown(ScanCode.s);
                     break;
 
                 case G13Device.Keys.G10:
-                    InputManager.KeyDown(InputManager.ScanCode.a);
+                    KeyDown(ScanCode.a);
                     break;
 
                 case G13Device.Keys.G12:
-                    InputManager.KeyDown(InputManager.ScanCode.d);
+                    KeyDown(ScanCode.d);
                     break;
 
                 case G13Device.Keys.G22:
-                    InputManager.KeyDown(InputManager.ScanCode.space);
+                    KeyDown(ScanCode.space);
                     break;
 
                 case G13Device.Keys.G15:
-                    InputManager.KeyDown(InputManager.ScanCode.lcontrol);
+                    KeyDown(ScanCode.lcontrol);
                     break;
 
                 case G13Device.Keys.G5:
-                    InputManager.KeyDown(InputManager.ScanCode.e);
+                    KeyDown(ScanCode.e);
                     break;
 
                 case G13Device.Keys.G6:
-                    InputManager.KeyDown(InputManager.ScanCode.r);
+                    KeyDown(ScanCode.r);
                     break;
 
                 case G13Device.Keys.G3:
-                    InputManager.KeyDown(InputManager.ScanCode.q);
+                    KeyDown(ScanCode.q);
                     break;
             }
         }
@@ -55,39 +59,39 @@ namespace G13Library.TestApp
             switch (key)
             {
                 case G13Device.Keys.G4:
-                    InputManager.KeyUp(InputManager.ScanCode.w);
+                    KeyUp(ScanCode.w);
                     break;
 
                 case G13Device.Keys.G11:
-                    InputManager.KeyUp(InputManager.ScanCode.s);
+                    KeyUp(ScanCode.s);
                     break;
 
                 case G13Device.Keys.G10:
-                    InputManager.KeyUp(InputManager.ScanCode.a);
+                    KeyUp(ScanCode.a);
                     break;
 
                 case G13Device.Keys.G12:
-                    InputManager.KeyUp(InputManager.ScanCode.d);
+                    KeyUp(ScanCode.d);
                     break;
 
                 case G13Device.Keys.G22:
-                    InputManager.KeyUp(InputManager.ScanCode.space);
+                    KeyUp(ScanCode.space);
                     break;
 
                 case G13Device.Keys.G15:
-                    InputManager.KeyUp(InputManager.ScanCode.lcontrol);
+                    KeyUp(ScanCode.lcontrol);
                     break;
 
                 case G13Device.Keys.G5:
-                    InputManager.KeyUp(InputManager.ScanCode.e);
+                    KeyUp(ScanCode.e);
                     break;
 
                 case G13Device.Keys.G6:
-                    InputManager.KeyUp(InputManager.ScanCode.r);
+                    KeyUp(ScanCode.r);
                     break;
 
                 case G13Device.Keys.G3:
-                    InputManager.KeyUp(InputManager.ScanCode.q);
+                    KeyUp(ScanCode.q);
                     break;
             }
         }
