@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="G13Profile.cs" />
+    <Compile Include="G13ProfileFPS.cs" />
+    <Compile Include="G13ProfileBasicTests.cs" />
     <Compile Include="TestForm.cs">
       <SubType>Form</SubType>
     </Compile>
