@@ -6,6 +6,8 @@ namespace G13Library
 {
     public class Macro
     {
+        public static readonly Dictionary<string, InputManager.Win32Point> SavedPoints = new Dictionary<string, InputManager.Win32Point>();
+
         public abstract class Step
         {
             internal InputManager.InputWrapper[] inputs;
@@ -116,39 +118,141 @@ namespace G13Library
 
         public class MouseTap : Step
         {
-            int button;
+            public MouseTap(int button)
+            {
+                int data = 0;
+
+                switch (button)
+                {
+                    case 0:
+                    case 1 :
+                        inputs = new InputManager.InputWrapper[] { InputManager.MouseWrapper(InputManager.MouseEventFlags.LeftDown, data) };
+                        inputs = new InputManager.InputWrapper[] { InputManager.MouseWrapper(InputManager.MouseEventFlags.LeftUp, data) };
+                        break;
+
+                    case 2:
+                        inputs = new InputManager.InputWrapper[] { InputManager.MouseWrapper(InputManager.MouseEventFlags.RightDown, data) };
+                        inputs = new InputManager.InputWrapper[] { InputManager.MouseWrapper(InputManager.MouseEventFlags.RightUp, data) };
+                        break;
+
+                    case 3:
+                        inputs = new InputManager.InputWrapper[] { InputManager.MouseWrapper(InputManager.MouseEventFlags.MiddleDown, data) };
+                        inputs = new InputManager.InputWrapper[] { InputManager.MouseWrapper(InputManager.MouseEventFlags.MiddleUp, data) };
+                        break;
+
+                    default:
+                        data = button - 3;
+                        inputs = new InputManager.InputWrapper[] { InputManager.MouseWrapper(InputManager.MouseEventFlags.XDown, data) };
+                        inputs = new InputManager.InputWrapper[] { InputManager.MouseWrapper(InputManager.MouseEventFlags.XUp, data) };
+                        break;
+                }
+            }
         }
 
         public class MouseWheel : Step
         {
-            int amount;
+            public MouseWheel(int amount)
+            {
+                inputs = new InputManager.InputWrapper[] { InputManager.MouseWrapper(InputManager.MouseEventFlags.Wheel, amount) };
+            }
         }
 
         public class MouseSavePos : Step
         {
-            string name;
+            public MouseSavePos(string name)
+            {
+                SavedPoints[name] = InputManager.MouseAbsolutePos;
+            }
         }
 
         public class MouseRecallPos : Step
         {
-            string name;
+            public MouseRecallPos(string name)
+            {
+                InputManager.Win32Point p;
+                if (SavedPoints.TryGetValue(name, out p))
+                    inputs = new InputManager.InputWrapper[]
+                    {
+                        new InputManager.InputWrapper
+                        {
+                            Type = InputManager.SendInputType.Mouse,
+                            MKH = new InputManager.MouseKeyboardHardwareUnion
+                            {
+                                Mouse = new InputManager.MouseInputData
+                                {
+                                    X = p.X,
+                                    Y = p.Y,
+                                    Flags = InputManager.MouseEventFlags.Move | InputManager.MouseEventFlags.Absolute
+                                }
+                            }
+                        }
+                    };
+            }
         }
 
         public class MouseMoveTo : Step
         {
-            int x;
-            int y;
+            public MouseMoveTo(int x, int y)
+            {
+                inputs = new InputManager.InputWrapper[]
+                {
+                    new InputManager.InputWrapper
+                    {
+                        Type = InputManager.SendInputType.Mouse,
+                        MKH = new InputManager.MouseKeyboardHardwareUnion
+                        {
+                            Mouse = new InputManager.MouseInputData
+                            {
+                                X = x,
+                                Y = y,
+                                Flags = InputManager.MouseEventFlags.Move | InputManager.MouseEventFlags.Absolute
+                            }
+                        }
+                    }
+                };
+            }
         }
 
         public class MouseNudge : Step
         {
-            int x;
-            int y;
+            public MouseNudge(int x, int y)
+            {
+                inputs = new InputManager.InputWrapper[]
+                {
+                    new InputManager.InputWrapper
+                    {
+                        Type = InputManager.SendInputType.Mouse,
+                        MKH = new InputManager.MouseKeyboardHardwareUnion
+                        {
+                            Mouse = new InputManager.MouseInputData
+                            {
+                                X = x,
+                                Y = y,
+                                Flags = InputManager.MouseEventFlags.Move
+                            }
+                        }
+                    }
+                };
+            }
         }
 
         public class WriteText : Step
         {
-            string text;
+            public WriteText(string text)
+            {
+                List<InputManager.InputWrapper> input = new List<InputManager.InputWrapper>();
+                for (int i = 0; i < text.Length; i++)
+                {
+                    var sci = InputManager.AsciiToScanCode(text[i]);
+
+                    if (sci.IsShifted)
+                        input.Add(InputManager.KeyWrapper(new InputManager.KeyboardInputData { Scan = InputManager.ScanCode.lshift, Flags = InputManager.KeyboardFlags.ScanCode }));
+                    input.Add(InputManager.KeyWrapper(new InputManager.KeyboardInputData { Key = sci.VkKey, Scan = sci.ScanCode }));
+                    input.Add(InputManager.KeyWrapper(new InputManager.KeyboardInputData { Key = sci.VkKey, Scan = sci.ScanCode, Flags = InputManager.KeyboardFlags.KeyUp }));
+                    if (sci.IsShifted)
+                        input.Add(InputManager.KeyWrapper(new InputManager.KeyboardInputData { Scan = InputManager.ScanCode.lshift, Flags = InputManager.KeyboardFlags.ScanCode | InputManager.KeyboardFlags.KeyUp }));
+                }
+            }
         }
     }
 }
