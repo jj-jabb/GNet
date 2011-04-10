@@ -75,7 +75,7 @@ namespace HidLibrary
             }
         }
 
-        private static IEnumerable<string> EnumerateHidDevices()
+        public static IEnumerable<string> EnumerateHidDevices()
         {
             var devices = new List<string>();
             var hidClass = HidClassGuid;
