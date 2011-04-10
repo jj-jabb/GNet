@@ -982,7 +982,7 @@ namespace G13Library
                 keyRepeater.RunWorkerAsync();
         }
 
-        static InputWrapper KeyWrapper(char c, bool keyUp, bool extended)
+        internal static InputWrapper KeyWrapper(char c, bool keyUp = false, bool extended = false)
         {
             var vKCode = VkKeyScan(c);
             var scanCode = (ScanCode)MapVirtualKey((uint)(vKCode & 0x00ff), 0);
@@ -1004,7 +1004,7 @@ namespace G13Library
             };
         }
 
-        static InputWrapper KeyWrapper(ScanCode scanCode, bool keyUp, bool extended)
+        internal static InputWrapper KeyWrapper(ScanCode scanCode, bool keyUp = false, bool extended = false)
         {
             return new InputWrapper
             {
@@ -1023,7 +1023,7 @@ namespace G13Library
             };
         }
 
-        static InputWrapper KeyWrapper(KeyboardInputData data)
+        internal static InputWrapper KeyWrapper(KeyboardInputData data)
         {
             return new InputWrapper
             {
@@ -1035,7 +1035,7 @@ namespace G13Library
             };
         }
 
-        static InputWrapper MouseWrapper(MouseEventFlags flags, int data)
+        internal static InputWrapper MouseWrapper(MouseEventFlags flags, int data)
         {
             return new InputWrapper
             {
