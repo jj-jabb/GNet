@@ -8,9 +8,10 @@ namespace GNetLibrary.MacroSystem
     public abstract class Step : IEquatable<Step>
     {
         protected InputWrapper[] inputs;
+        protected string toString;
 
         public InputWrapper[] Inputs { get { return inputs; } }
-        public virtual Step Reverse { get { return null; } }
+        public virtual Step Cleanup { get { return null; } }
 
         public virtual bool Equals(Step other)
         {
@@ -27,10 +28,15 @@ namespace GNetLibrary.MacroSystem
             return true;
         }
 
-        public void Run()
+        public virtual void Run()
         {
             if (inputs != null)
                 Interop.SendInput((uint)inputs.Length, inputs);
+        }
+
+        public override string ToString()
+        {
+            return toString;
         }
     }
 }

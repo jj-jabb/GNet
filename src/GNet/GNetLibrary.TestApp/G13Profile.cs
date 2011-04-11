@@ -14,6 +14,7 @@ namespace GNetLibrary.TestApp
         public G13Profile(TestForm form)
         {
             this.form = form;
+            MacroSystem.Macro.SynchronizeInvoke = form;
 
             g13 = new G13Device();
 

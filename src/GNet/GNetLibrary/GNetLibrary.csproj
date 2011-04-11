@@ -37,10 +37,12 @@
     <Compile Include="G13Device.cs" />
     <Compile Include="IO\InputSimulator.cs" />
     <Compile Include="IO\JoystickPosition.cs" />
+    <Compile Include="MacroSystem\Delay.cs" />
     <Compile Include="MacroSystem\KeyDown.cs" />
     <Compile Include="MacroSystem\KeyTap.cs" />
     <Compile Include="MacroSystem\KeyUp.cs" />
     <Compile Include="MacroSystem\Macro.cs" />
+    <Compile Include="MacroSystem\MacroStopBehavior.cs" />
     <Compile Include="MacroSystem\MouseDown.cs" />
     <Compile Include="MacroSystem\MouseMoveTo.cs" />
     <Compile Include="MacroSystem\MouseNudge.cs" />

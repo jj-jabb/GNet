@@ -7,10 +7,20 @@ namespace GNetLibrary.MacroSystem
 {
     public class MouseRecallPos : Step
     {
+        string name;
+
         public MouseRecallPos(string name)
+        {
+            this.name = name;
+
+            toString = "MouseRecallPos(" + name + ")";
+        }
+
+        public override void Run()
         {
             Win32Point p;
             if (Macro.SavedPoints.TryGetValue(name, out p))
+            {
                 inputs = new InputWrapper[]
                     {
                         new InputWrapper
@@ -27,6 +37,9 @@ namespace GNetLibrary.MacroSystem
                             }
                         }
                     };
+
+                Interop.SendInput((uint)inputs.Length, inputs);
+            }
         }
     }
 }

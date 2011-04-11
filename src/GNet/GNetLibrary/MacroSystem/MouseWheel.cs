@@ -10,6 +10,7 @@ namespace GNetLibrary.MacroSystem
         public MouseWheel(int amount)
         {
             inputs = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.Wheel, amount) };
+            toString = "MouseWheel(" + amount + ")";
         }
     }
 }

@@ -19,11 +19,35 @@ namespace GNetLibrary.TestApp
             // do nothing (i.e. don't print out events)
         }
 
+        Macro savePos = new Macro(
+            new MouseSavePos("test")
+            );
+
+        Macro writeAtSavedPos = new Macro(
+            new MouseRecallPos("test"),
+            new MouseDown(1),
+            new KeyDown(ScanCode.lshift),
+            new KeyDown('a')
+            );
+
+        Macro writeAtSavedPos2 = new Macro(
+            new MouseRecallPos("test"),
+            new MouseDown(1),
+            new KeyDown(ScanCode.lshift),
+            new KeyDown('a'),
+            new Delay(200),
+            new KeyTap('b'),
+            new Delay(200),
+            new KeyTap('c'),
+            new Delay(200),
+            new KeyTap('d'),
+            new KeyUp(ScanCode.lshift)
+            );
+
         protected override void KeyPressed(G13Device device, G13Device.Keys key, ulong keyState)
         {
             form.RtbInfo.AppendText(key.ToString() + " Pressed" + Environment.NewLine);
 
-            var macro = new Macro();
 
             switch (key)
             {
@@ -71,6 +95,11 @@ namespace GNetLibrary.TestApp
                     break;
 
                 case G13Device.Keys.G10:
+                    savePos.Run();
+                    break;
+
+                case G13Device.Keys.G11:
+                    writeAtSavedPos2.Run();
                     break;
             }
         }
@@ -83,6 +112,10 @@ namespace GNetLibrary.TestApp
             {
                 case G13Device.Keys.G1:
                     MouseUp(MouseUpFlags.LeftUp);
+                    break;
+
+                case G13Device.Keys.G11:
+                    writeAtSavedPos2.Cleanup();
                     break;
             }
         }

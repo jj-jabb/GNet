@@ -25,6 +25,8 @@ namespace GNetLibrary.MacroSystem
                         }
                     }
                 };
+
+            toString = "MouseMoveTo(" + x + ", " + y + ")";
         }
     }
 }

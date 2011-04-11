@@ -22,6 +22,7 @@ namespace GNetLibrary.MacroSystem
                 if (sci.IsShifted)
                     input.Add(InputSimulator.KeyWrapper(new KeyboardInputData { Scan = ScanCode.lshift, Flags = KeyboardFlags.ScanCode | KeyboardFlags.KeyUp }));
             }
+            toString = "WriteText(" + text + ")";
         }
     }
 }
