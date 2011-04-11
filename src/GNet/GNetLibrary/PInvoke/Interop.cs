@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace GNetLibrary.PInvoke
 {
+    public delegate void WinEventDelegate(IntPtr hWinEventHook, WinEvent eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+
     public static class Interop
     {
         // http://msdn.microsoft.com/en-us/library/ms724385(v=vs.85).aspx
@@ -25,6 +28,27 @@ namespace GNetLibrary.PInvoke
 
         [DllImport("user32.dll")]
         public static extern short GetKeyState(VirtualKeyStates nVirtKey);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetWinEventHook(WinEvent eventMin, WinEvent eventMax, IntPtr hmodWinEventProc, WinEventDelegate lpfnWinEventProc, uint idProcess, uint idThread, SetWinEventHookFlags dwFlags);
+        
+		[DllImport("user32.dll", CharSet=CharSet.Auto)]
+		private static extern Int32 GetWindowThreadProcessId(IntPtr hWnd,out Int32 lpdwProcessId);
+
+		public static Int32 GetWindowProcessId(IntPtr hwnd)
+		{
+			//This Function is used to get Active process ID...
+			Int32 pid;
+			GetWindowThreadProcessId(hwnd, out pid);
+			return pid;
+		}
+
+        public static Process GetProcess(IntPtr hwnd)
+        {
+            Int32 pid;
+            GetWindowThreadProcessId(hwnd, out pid);
+            return Process.GetProcessById(pid);
+        }
 
         public static bool IsKeyPressed(VirtualKeyStates testKey)
         {
