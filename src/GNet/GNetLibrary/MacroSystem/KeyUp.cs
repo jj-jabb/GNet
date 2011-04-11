@@ -3,19 +3,17 @@
 using GNetLibrary.IO;
 using GNetLibrary.PInvoke;
 
-namespace GNetLibrary.Macro
+namespace GNetLibrary.MacroSystem
 {
-    public class KeyTap : Step
+    public class KeyUp : Step
     {
-        public KeyTap(ScanCode scanCode)
+        public KeyUp(ScanCode scanCode)
         {
-            inputs = new InputWrapper[] { InputSimulator.KeyWrapper(scanCode) };
             inputs = new InputWrapper[] { InputSimulator.KeyWrapper(scanCode, true) };
         }
 
-        public KeyTap(char key)
+        public KeyUp(char key)
         {
-            inputs = new InputWrapper[] { InputSimulator.KeyWrapper(key) };
             inputs = new InputWrapper[] { InputSimulator.KeyWrapper(key, true) };
         }
     }

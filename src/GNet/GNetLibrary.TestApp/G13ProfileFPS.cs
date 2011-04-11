@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using GNetLibrary.IO;
-using GNetLibrary.Macro;
+using GNetLibrary.MacroSystem;
 using GNetLibrary.PInvoke;
 
 namespace GNetLibrary.TestApp

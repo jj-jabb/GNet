@@ -5,7 +5,7 @@ using System.Text;
 using GNetLibrary.IO;
 using GNetLibrary.PInvoke;
 
-namespace GNetLibrary.Macro
+namespace GNetLibrary.MacroSystem
 {
     public class Macro
     {

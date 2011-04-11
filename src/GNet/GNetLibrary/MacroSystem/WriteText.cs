@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using GNetLibrary.IO;
 using GNetLibrary.PInvoke;
 
-namespace GNetLibrary.Macro
+namespace GNetLibrary.MacroSystem
 {
     public class WriteText : Step
     {
