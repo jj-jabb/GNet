@@ -28,13 +28,6 @@ namespace GNetLibrary.IO
             public static RepeatingKey Empty = new RepeatingKey() { IsEmpty = true };
         }
 
-        static int InputWrapperSize;
-
-        static InputSimulator()
-        {
-            InputWrapperSize = Marshal.SizeOf(typeof(InputWrapper));
-        }
-
         BackgroundWorker keyRepeater;
         RepeatingKey rkey;
 
@@ -166,7 +159,7 @@ namespace GNetLibrary.IO
                 KeyWrapper(scanCode, false, extended)
             };
 
-            return Interop.SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(1, inputData);
         }
 
         public static uint DoKeyUp(ScanCode scanCode, bool extended)
@@ -176,7 +169,7 @@ namespace GNetLibrary.IO
                 KeyWrapper(scanCode, true, extended)
             };
 
-            return Interop.SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(1, inputData);
         }
 
         public static uint DoKeyDown(char c, bool extended)
@@ -186,7 +179,7 @@ namespace GNetLibrary.IO
                 KeyWrapper(c, false, extended)
             };
 
-            return Interop.SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(1, inputData);
         }
 
         public static uint DoKeyUp(char c, bool extended)
@@ -196,7 +189,7 @@ namespace GNetLibrary.IO
                 KeyWrapper(c, true, extended)
             };
 
-            return Interop.SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(1, inputData);
         }
 
         public uint KeyDown(ScanCode scanCode, bool extended = false, bool repeat = false, int initialPauseTime = 500, int repeatPauseTime = 30)
@@ -236,7 +229,7 @@ namespace GNetLibrary.IO
                 KeyWrapper(scanCode, true, extended)
             };
 
-            return Interop.SendInput(2, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(2, inputData);
         }
 
         public uint KeyDown(char c, bool extended = false)
@@ -258,7 +251,7 @@ namespace GNetLibrary.IO
                 KeyWrapper(c, true, extended)
             };
 
-            return Interop.SendInput(2, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(2, inputData);
         }
 
         public uint MouseDown(MouseDownFlags flags, int xButton = 0)
@@ -268,7 +261,7 @@ namespace GNetLibrary.IO
                 MouseWrapper((MouseEventFlags)flags, xButton)
             };
 
-            return Interop.SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(1, inputData);
         }
 
         public uint MouseUp(MouseUpFlags flags, int xButton = 0)
@@ -278,7 +271,7 @@ namespace GNetLibrary.IO
                 MouseWrapper((MouseEventFlags)flags, xButton)
             };
 
-            return Interop.SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(1, inputData);
         }
 
         public uint MouseTap(MouseTapFlags flags, int xButton = 0)
@@ -289,7 +282,7 @@ namespace GNetLibrary.IO
                 MouseWrapper((MouseEventFlags)((int)flags << 1), xButton)
             };
 
-            return Interop.SendInput(2, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(2, inputData);
         }
 
         /// <summary>
@@ -304,7 +297,7 @@ namespace GNetLibrary.IO
                 MouseWrapper(MouseEventFlags.Wheel, amount)
             };
 
-            return Interop.SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(1, inputData);
         }
 
         public uint MouseMoveTo(int x, int y, bool virtualDesk = false)
@@ -326,7 +319,7 @@ namespace GNetLibrary.IO
                 }
             };
 
-            return Interop.SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(1, inputData);
         }
 
         public uint MouseMoveTo(Win32Point p, bool virtualDesk = false)
@@ -355,7 +348,7 @@ namespace GNetLibrary.IO
                 }
             };
 
-            return Interop.SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(1, inputData);
         }
 
         public uint MouseMoveToPixel(Win32Point p)
@@ -382,7 +375,7 @@ namespace GNetLibrary.IO
                 }
             };
 
-            return Interop.SendInput(1, inputData, Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput(1, inputData);
         }
 
         public uint MouseMoveBy(Win32Point p)
@@ -446,7 +439,7 @@ namespace GNetLibrary.IO
                     input.Add(KeyWrapper(new KeyboardInputData { Scan = ScanCode.lshift, Flags = KeyboardFlags.ScanCode | KeyboardFlags.KeyUp }));
             }
 
-            return Interop.SendInput((uint)input.Count, input.ToArray(), Marshal.SizeOf(typeof(InputWrapper)));
+            return Interop.SendInput((uint)input.Count, input.ToArray());
         }
 
         public static ScanCodeInfo AsciiToScanCode(char ascii)

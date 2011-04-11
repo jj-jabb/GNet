@@ -23,6 +23,8 @@ namespace GNetLibrary.TestApp
         {
             form.RtbInfo.AppendText(key.ToString() + " Pressed" + Environment.NewLine);
 
+            var macro = new Macro.Macro();
+
             switch (key)
             {
                 case G13Device.Keys.G1:
@@ -66,6 +68,9 @@ namespace GNetLibrary.TestApp
                 case G13Device.Keys.G9:
                     MouseTap(MouseTapFlags.MiddleTap);
                     MouseTap(MouseTapFlags.MiddleTap);
+                    break;
+
+                case G13Device.Keys.G10:
                     break;
             }
         }

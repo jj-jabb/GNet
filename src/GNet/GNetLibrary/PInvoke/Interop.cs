@@ -51,5 +51,12 @@ namespace GNetLibrary.PInvoke
 
             return keyPressed;
         }
+
+        public static readonly int InputWrapperSize = Marshal.SizeOf(typeof(InputWrapper));
+
+        internal static uint SendInput(uint p, InputWrapper[] inputs)
+        {
+            return SendInput(p, inputs, InputWrapperSize);
+        }
     }
 }

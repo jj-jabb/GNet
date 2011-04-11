@@ -7,6 +7,8 @@ namespace GNetLibrary.Macro
 {
     public class MouseDown : Step
     {
+        MouseUp reverse;
+
         public MouseDown(int button)
         {
             int data = 0;
@@ -15,24 +17,30 @@ namespace GNetLibrary.Macro
                 case 0:
                 case 1:
                     inputs = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.LeftDown, data) };
-                    reverse = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.LeftUp, data) };
                     break;
 
                 case 2:
                     inputs = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.RightDown, data) };
-                    reverse = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.RightUp, data) };
                     break;
 
                 case 3:
                     inputs = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.MiddleDown, data) };
-                    reverse = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.MiddleUp, data) };
                     break;
 
                 default:
                     data = button - 3;
                     inputs = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.XDown, data) };
-                    reverse = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.XUp, data) };
                     break;
+            }
+
+            reverse = new MouseUp(button);
+        }
+
+        public override Step Reverse
+        {
+            get
+            {
+                return reverse;
             }
         }
     }

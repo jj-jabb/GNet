@@ -7,16 +7,18 @@ namespace GNetLibrary.Macro
 {
     public class KeyDown : Step
     {
+        KeyUp reverse;
+
         public KeyDown(ScanCode scanCode)
         {
             inputs = new InputWrapper[] { InputSimulator.KeyWrapper(scanCode) };
-            reverse = new InputWrapper[] { InputSimulator.KeyWrapper(scanCode, true) };
+            reverse = new KeyUp(scanCode);
         }
 
         public KeyDown(char key)
         {
             inputs = new InputWrapper[] { InputSimulator.KeyWrapper(key) };
-            reverse = new InputWrapper[] { InputSimulator.KeyWrapper(key, true) };
+            reverse = new KeyUp(key);
         }
     }
 }

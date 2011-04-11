@@ -10,29 +10,26 @@ namespace GNetLibrary.Macro
         public MouseUp(int button)
         {
             int data = 0;
-            MouseEventFlags flags;
             switch (button)
             {
                 case 0:
                 case 1:
-                    flags = MouseEventFlags.LeftUp;
+                    inputs = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.LeftUp, data) };
                     break;
 
                 case 2:
-                    flags = MouseEventFlags.RightUp;
+                    inputs = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.RightUp, data) };
                     break;
 
                 case 3:
-                    flags = MouseEventFlags.MiddleUp;
+                    inputs = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.MiddleUp, data) };
                     break;
 
                 default:
-                    flags = MouseEventFlags.XUp;
                     data = button - 3;
+                    inputs = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.XUp, data) };
                     break;
             }
-
-            inputs = new InputWrapper[] { InputSimulator.MouseWrapper(flags, data) };
         }
     }
 }

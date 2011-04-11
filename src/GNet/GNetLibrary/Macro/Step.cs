@@ -8,10 +8,9 @@ namespace GNetLibrary.Macro
     public abstract class Step : IEquatable<Step>
     {
         protected InputWrapper[] inputs;
-        protected InputWrapper[] reverse;
 
         public InputWrapper[] Inputs { get { return inputs; } }
-        public InputWrapper[] Reverse { get { return reverse; } }
+        public virtual Step Reverse { get { return null; } }
 
         public virtual bool Equals(Step other)
         {
@@ -31,11 +30,7 @@ namespace GNetLibrary.Macro
         public void Run()
         {
             if (inputs != null)
-            {
-                for (int i = 0; i < inputs.Length; i++)
-                {
-                }
-            }
+                Interop.SendInput((uint)inputs.Length, inputs);
         }
     }
 }
