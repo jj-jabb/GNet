@@ -6,6 +6,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNetLibrary", "GNetLibrary\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HidLibrary", "HidLibrary\HidLibrary.csproj", "{88D76D95-D068-4D03-B9DF-5EE14A6B4A11}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IronPython 2.6.2", "IronPython 2.6.2", "{09A8DF02-5FDF-4E48-8BFC-56BB380757AA}"
+	ProjectSection(SolutionItems) = preProject
+		IronPython 2.6.2\IronPython.dll = IronPython 2.6.2\IronPython.dll
+		IronPython 2.6.2\IronPython.Modules.dll = IronPython 2.6.2\IronPython.Modules.dll
+		IronPython 2.6.2\IronPython.Modules.xml = IronPython 2.6.2\IronPython.Modules.xml
+		IronPython 2.6.2\IronPython.xml = IronPython 2.6.2\IronPython.xml
+		IronPython 2.6.2\IronPythonTest.dll = IronPython 2.6.2\IronPythonTest.dll
+		IronPython 2.6.2\Microsoft.Dynamic.dll = IronPython 2.6.2\Microsoft.Dynamic.dll
+		IronPython 2.6.2\Microsoft.Scripting.Core.dll = IronPython 2.6.2\Microsoft.Scripting.Core.dll
+		IronPython 2.6.2\Microsoft.Scripting.Debugging.dll = IronPython 2.6.2\Microsoft.Scripting.Debugging.dll
+		IronPython 2.6.2\Microsoft.Scripting.dll = IronPython 2.6.2\Microsoft.Scripting.dll
+		IronPython 2.6.2\Microsoft.Scripting.ExtensionAttribute.dll = IronPython 2.6.2\Microsoft.Scripting.ExtensionAttribute.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

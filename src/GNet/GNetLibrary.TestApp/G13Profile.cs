@@ -6,7 +6,7 @@ using GNetLibrary.IO;
 
 namespace GNetLibrary.TestApp
 {
-    abstract class G13Profile : InputSimulator
+    public abstract class G13Profile : InputSimulator
     {
         protected readonly G13Device g13;
         protected readonly TestForm form;
