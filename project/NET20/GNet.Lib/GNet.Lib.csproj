@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DB692C8B-565E-4F48-B863-DF08971BD8AE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GNet.Lib</RootNamespace>
+    <AssemblyName>GNet.Lib</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\GNet.Lib\IO\InputSimulator.cs">
+      <Link>IO\InputSimulator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\IO\JoystickPosition.cs">
+      <Link>IO\JoystickPosition.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\Delay.cs">
+      <Link>MacroSystem\Delay.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\KeyDown.cs">
+      <Link>MacroSystem\KeyDown.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\KeyTap.cs">
+      <Link>MacroSystem\KeyTap.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\KeyUp.cs">
+      <Link>MacroSystem\KeyUp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\Macro.cs">
+      <Link>MacroSystem\Macro.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\MacroStopBehavior.cs">
+      <Link>MacroSystem\MacroStopBehavior.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\MouseDown.cs">
+      <Link>MacroSystem\MouseDown.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\MouseMoveTo.cs">
+      <Link>MacroSystem\MouseMoveTo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\MouseNudge.cs">
+      <Link>MacroSystem\MouseNudge.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\MouseRecallPos.cs">
+      <Link>MacroSystem\MouseRecallPos.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\MouseSavePos.cs">
+      <Link>MacroSystem\MouseSavePos.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\MouseTap.cs">
+      <Link>MacroSystem\MouseTap.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\MouseUp.cs">
+      <Link>MacroSystem\MouseUp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\MouseWheel.cs">
+      <Link>MacroSystem\MouseWheel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\Step.cs">
+      <Link>MacroSystem\Step.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\MacroSystem\WriteText.cs">
+      <Link>MacroSystem\WriteText.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\HardwareInputData.cs">
+      <Link>PInvoke\HardwareInputData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\InputWrapper.cs">
+      <Link>PInvoke\InputWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\Interop.cs">
+      <Link>PInvoke\Interop.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\KeyboardFlags.cs">
+      <Link>PInvoke\KeyboardFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\KeyboardInputData.cs">
+      <Link>PInvoke\KeyboardInputData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\MouseFlags.cs">
+      <Link>PInvoke\MouseFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\MouseInputData.cs">
+      <Link>PInvoke\MouseInputData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\MouseKeyboardHardwareUnion.cs">
+      <Link>PInvoke\MouseKeyboardHardwareUnion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\ScanCode.cs">
+      <Link>PInvoke\ScanCode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\ScanCodeInfo.cs">
+      <Link>PInvoke\ScanCodeInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\SendInputType.cs">
+      <Link>PInvoke\SendInputType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\SetWinEventHookFlags.cs">
+      <Link>PInvoke\SetWinEventHookFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\SystemMetric.cs">
+      <Link>PInvoke\SystemMetric.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\VirtualKeyStates.cs">
+      <Link>PInvoke\VirtualKeyStates.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\Win32Point.cs">
+      <Link>PInvoke\Win32Point.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet.Lib\PInvoke\WinEvent.cs">
+      <Link>PInvoke\WinEvent.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HidLibrary\HidLibrary.csproj">
+      <Project>{74EDB42A-BB8D-46E1-A396-F761FFEC0486}</Project>
+      <Name>HidLibrary %28.NET 2.0\Third-Party Libraries\HidLibrary%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

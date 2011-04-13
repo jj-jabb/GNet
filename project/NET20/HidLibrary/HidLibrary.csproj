@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{74EDB42A-BB8D-46E1-A396-F761FFEC0486}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HidLibrary</RootNamespace>
+    <AssemblyName>HidLibrary</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\HidLibrary\BackgroundWorker.cs">
+      <Link>BackgroundWorker.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\HidLibrary\EventArgs.cs">
+      <Link>EventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\HidLibrary\HidAsyncState.cs">
+      <Link>HidAsyncState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\HidLibrary\HidDevice.cs">
+      <Link>HidDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\HidLibrary\HidDeviceAttributes.cs">
+      <Link>HidDeviceAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\HidLibrary\HidDeviceCapabilities.cs">
+      <Link>HidDeviceCapabilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\HidLibrary\HidDeviceData.cs">
+      <Link>HidDeviceData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\HidLibrary\HidDeviceEventMonitor.cs">
+      <Link>HidDeviceEventMonitor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\HidLibrary\HidDevices.cs">
+      <Link>HidDevices.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\HidLibrary\HidReport.cs">
+      <Link>HidReport.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\HidLibrary\NativeMethods.cs">
+      <Link>NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\src\HidLibrary\HidLibrary.csproj">
+      <Link>HidLibrary.csproj</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\HidLibrary\LICENSE">
+      <Link>LICENSE</Link>
+    </None>
+    <None Include="..\..\..\src\HidLibrary\README.md">
+      <Link>README.md</Link>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

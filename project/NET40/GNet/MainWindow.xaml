@@ -1,0 +1,39 @@
+﻿<Window
+    x:Class="GNet.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+	Title="GNet - Logitech G-series Key Profiler for .NET"
+    Height="500"
+    Width="700"
+	>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Height="22">
+            <MenuItem Header="Pro_file">
+                <MenuItem Header="_New..."  Command="New" />
+                <MenuItem Header="_Open" Command="Open" />
+                <MenuItem Header="_Save"  Command="Save" />
+                <MenuItem Header="Save _As..." Command="SaveAs" />
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Undo"  Command="Undo" />
+                <MenuItem Header="_Redo"  Command="Redo" />
+                <Separator />
+                <MenuItem Header="Cu_t"  Command="Cut" />
+                <MenuItem Header="_Copy"  Command="Copy" />
+                <MenuItem Header="_Paste" Command="Paste" />
+                <Separator />
+                <MenuItem Header="_Profile Properties..." />
+            </MenuItem>
+        </Menu>
+        <Grid DockPanel.Dock="Bottom">
+        <avalonEdit:TextEditor
+			Name="textEditor"
+			FontFamily="Consolas"
+			FontSize="10pt"
+			SyntaxHighlighting="Boo"
+			>
+            </avalonEdit:TextEditor>
+        </Grid>
+    </DockPanel>
+</Window>
