@@ -1,5 +1,0 @@
-<SyntaxModes version="1.0">
-	<Mode file       = "PythonProfile.xshd"
-	      name       = "Python Profile"
-	      extensions = ".py"/>
-</SyntaxModes>
