@@ -32,6 +32,7 @@ namespace GNet
             {
                 device.KeyPressed += new G13Device.KeyPressedHandler(device_KeyPressed);
                 device.KeyReleased += new G13Device.KeyReleasedHandler(device_KeyReleased);
+                onEvent.Call("PROFILE_ACTIVATED", 0, "lhc");
             }
 
             isRunning = true;
@@ -45,6 +46,7 @@ namespace GNet
             {
                 if (onEvent != null)
                 {
+                    onEvent.Call("PROFILE_DEACTIVATED", 0, "lhc");
                     device.KeyPressed -= new G13Device.KeyPressedHandler(device_KeyPressed);
                     device.KeyReleased -= new G13Device.KeyReleasedHandler(device_KeyReleased);
                 }
