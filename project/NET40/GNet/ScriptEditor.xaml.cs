@@ -56,19 +56,32 @@ end
             runButton.IsEnabled = false;
             stopButton.IsEnabled = true;
 
-            switch(editor.SyntaxHighlighting.Name)
+            try
             {
-                case "Boo":
-                    scriptRunner = new BooRunner("Test", editor.Text).Run();
-                    break;
+                switch (editor.SyntaxHighlighting.Name)
+                {
+                    case "Boo":
+                        scriptRunner = new BooRunner("Test", editor.Text).Run();
+                        break;
 
-                case "Lua":
-                    scriptRunner = new LuaRunner(editor.Text).Run();
-                    break;
+                    case "Lua":
+                        scriptRunner = new LuaRunner(editor.Text).Run();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                StopScript();
+                Console.WriteLine(ex.ToString());
             }
         }
 
         private void stopButton_Click(object sender, RoutedEventArgs e)
+        {
+            StopScript();
+        }
+
+        void StopScript()
         {
             if (scriptRunner != null)
             {
