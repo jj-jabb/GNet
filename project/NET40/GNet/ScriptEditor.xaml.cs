@@ -28,6 +28,12 @@ namespace GNet
 @"# Name:
 # Description:
 # Executables:
+
+import GNet.Lib
+
+static def Run(d as G13Device):
+	d.KeyPressed += def(key):
+		print key as uint
 ";
         }
 

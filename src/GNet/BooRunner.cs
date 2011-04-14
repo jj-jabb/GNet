@@ -12,6 +12,8 @@ namespace GNet
 {
     public class BooRunner
     {
+        static G13Device device = new G13Device();
+
         public void Run(string name, string contents)
         {
             BooCompiler compiler = new BooCompiler();
@@ -26,16 +28,25 @@ namespace GNet
             //Poke context.Errors to make sure.
             if (context.GeneratedAssembly != null)
             {
-                Type scriptModule = context.GeneratedAssembly.GetType(name + "Module");
+                var scriptModule = context.GeneratedAssembly.GetType(name + "Module");
+                if (scriptModule == null)
+                {
+                    Console.WriteLine("Could not find script module " + name + "Module");
+                    return;
+                }
 
-                foreach (var type in context.GeneratedAssembly.GetTypes())
-                    Console.WriteLine("Type: " + type.Name);
+                var runMethod = scriptModule.GetMethod("Run", new Type[] { typeof(G13Device) });
 
-                foreach (var method in scriptModule.GetMembers())
-                    Console.WriteLine("Method: " + method.Name);
+                if (runMethod == null)
+                {
+                    Console.WriteLine("Could not find a static function named Run that takes a G13Device as it's argument");
+                    return;
+                }
 
-                var ctors = scriptModule.GetConstructors();
+                var result = runMethod.Invoke(null, new object[] { device });
 
+                if (result != null)
+                    Console.WriteLine(result.ToString());
                 //var instance = Activator.CreateInstance(scriptModule);
 
                 //MethodInfo stringManip = scriptModule.GetMethod("stringManip");
