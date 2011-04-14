@@ -42,6 +42,9 @@
     <Reference Include="Boo.Lang.Compiler">
       <HintPath>..\Boo\Boo.Lang.Compiler.dll</HintPath>
     </Reference>
+    <Reference Include="Boo.Lang.Parser">
+      <HintPath>..\Boo\Boo.Lang.Parser.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Management" />
@@ -62,6 +65,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\..\..\src\GNet\BooRunner.cs">
+      <Link>BooRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet\RedirectWriter.cs">
+      <Link>RedirectWriter.cs</Link>
+    </Compile>
+    <Compile Include="ScriptEditor.xaml.cs">
+      <DependentUpon>ScriptEditor.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -77,6 +89,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ScriptEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -96,6 +112,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Profiles\_default.boo" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
