@@ -12,7 +12,7 @@ namespace GNet
 {
     public class BooRunner : IScriptRunner
     {
-        static G13Device device = new G13Device();
+        static G13Device device = G13Device.Current;
 
         string name;
         string contents;

@@ -35,6 +35,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\src\GNet.Lib\G13Device.Api.cs">
+      <Link>G13Device.Api.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\GNet.Lib\G13Device.cs">
       <Link>G13Device.cs</Link>
     </Compile>

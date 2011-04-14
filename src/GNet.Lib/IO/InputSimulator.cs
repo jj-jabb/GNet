@@ -254,7 +254,7 @@ namespace GNet.Lib.IO
             return Interop.SendInput(2, inputData);
         }
 
-        public uint MouseDown(MouseDownFlags flags, int xButton = 0)
+        public static uint MouseDown(MouseDownFlags flags, int xButton = 0)
         {
             var inputData = new InputWrapper[]
             {
@@ -264,7 +264,7 @@ namespace GNet.Lib.IO
             return Interop.SendInput(1, inputData);
         }
 
-        public uint MouseUp(MouseUpFlags flags, int xButton = 0)
+        public static uint MouseUp(MouseUpFlags flags, int xButton = 0)
         {
             var inputData = new InputWrapper[]
             {
@@ -274,7 +274,7 @@ namespace GNet.Lib.IO
             return Interop.SendInput(1, inputData);
         }
 
-        public uint MouseTap(MouseTapFlags flags, int xButton = 0)
+        public static uint MouseTap(MouseTapFlags flags, int xButton = 0)
         {
             var inputData = new InputWrapper[]
             {
@@ -290,7 +290,7 @@ namespace GNet.Lib.IO
         /// </summary>
         /// <param name="amount">The amount of wheel movement (120 == one click)</param>
         /// <returns>1 if successful, 0 if Interop.SendInput failed</returns>
-        public uint MouseWheel(int amount)
+        public static uint MouseWheel(int amount)
         {
             var inputData = new InputWrapper[]
             {
@@ -300,7 +300,7 @@ namespace GNet.Lib.IO
             return Interop.SendInput(1, inputData);
         }
 
-        public uint MouseMoveTo(int x, int y, bool virtualDesk = false)
+        public static uint MouseMoveTo(int x, int y, bool virtualDesk = false)
         {
             var inputData = new InputWrapper[]
             {
@@ -322,12 +322,12 @@ namespace GNet.Lib.IO
             return Interop.SendInput(1, inputData);
         }
 
-        public uint MouseMoveTo(Win32Point p, bool virtualDesk = false)
+        public static uint MouseMoveTo(Win32Point p, bool virtualDesk = false)
         {
             return MouseMoveTo(p.X, p.Y, virtualDesk);
         }
 
-        public uint MouseMoveToPixel(int x, int y)
+        public static uint MouseMoveToPixel(int x, int y)
         {
             var size = ScreenSize;
 
@@ -351,12 +351,12 @@ namespace GNet.Lib.IO
             return Interop.SendInput(1, inputData);
         }
 
-        public uint MouseMoveToPixel(Win32Point p)
+        public static uint MouseMoveToPixel(Win32Point p)
         {
             return MouseMoveToPixel(p.X, p.Y);
         }
 
-        public uint MouseMoveBy(int x, int y)
+        public static uint MouseMoveBy(int x, int y)
         {
             var inputData = new InputWrapper[]
             {
@@ -378,7 +378,7 @@ namespace GNet.Lib.IO
             return Interop.SendInput(1, inputData);
         }
 
-        public uint MouseMoveBy(Win32Point p)
+        public static uint MouseMoveBy(Win32Point p)
         {
             return MouseMoveBy(p.X, p.Y);
         }
@@ -424,7 +424,7 @@ namespace GNet.Lib.IO
             }
         }
 
-        public uint Write(string text)
+        public static uint Write(string text)
         {
             List<InputWrapper> input = new List<InputWrapper>();
             for (int i = 0; i < text.Length; i++)

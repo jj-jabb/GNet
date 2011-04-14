@@ -8,11 +8,22 @@ using GNet.Lib.IO;
 
 namespace GNet.Lib
 {
-    public class G13Device
+    public partial class G13Device
     {
+        static G13Device current;
+        public static G13Device Current
+        {
+            get
+            {
+                if (current == null)
+                    current = new G13Device();
+
+                return current;
+            }
+        }
+
         public delegate void DeviceEventHandler();
-        public delegate void KeyPressedHandler(Keys key);
-        public delegate void KeyReleasedHandler(Keys key);
+        public delegate void KeyHandler(Keys key);
         public delegate void JoystickChangedHandler(int x, int y);
         public delegate void JoystickAngleChangedHandler(double radians, double distanceSquared);
 
@@ -27,8 +38,9 @@ namespace GNet.Lib
 
         bool deviceIsSetup;
         bool separateKeyEvents = true;
+        int mKeyState = 1;
 
-        public G13Device()
+        G13Device()
         {
             device = HidDevices.GetDevice(Logitech, G13);
             SetupDevice();
@@ -36,10 +48,11 @@ namespace GNet.Lib
 
         public bool SeparateKeyEvents { get { return separateKeyEvents; } set { separateKeyEvents = value; } }
 
+        public event DeviceEventHandler DeviceConnected;
         public event DeviceEventHandler Inserted;
         public event DeviceEventHandler Removed;
-        public event KeyPressedHandler KeyPressed;
-        public event KeyReleasedHandler KeyReleased;
+        public event KeyHandler KeyPressed;
+        public event KeyHandler KeyReleased;
         public event JoystickChangedHandler JoystickChanged;
         public event JoystickAngleChangedHandler JoystickAngleChanged;
 
@@ -48,9 +61,41 @@ namespace GNet.Lib
             get { return currentState.UL; }
         }
 
+        public int MKeyState { get { return mKeyState; } }
+
         public JoystickPosition Joystick
         {
             get { return joystick; }
+        }
+
+        public bool IsConnected
+        {
+            get
+            {
+                if (Device == null)
+                    return false;
+
+                return Device.IsConnected;
+            }
+        }
+
+        public void WaitForConnection()
+        {
+            if (connectedPoller == null)
+            {
+                connectedPoller = new BackgroundWorker<HidDevice>();
+                connectedPoller.Updated += new EventHandler<EventArgs<HidDevice>>(connectedPoller_Updated);
+                connectedPoller.DoWork += new System.ComponentModel.DoWorkEventHandler(connectedPoller_DoWork);
+            }
+
+            if (!connectedPoller.IsBusy)
+                connectedPoller.RunWorkerAsync();
+        }
+
+        public void CancelWait()
+        {
+            if (connectedPoller.IsBusy)
+                connectedPoller.CancelAsync();
         }
 
         HidDevice Device
@@ -139,7 +184,18 @@ namespace GNet.Lib
                         if (KeyPressed != null)
                         {
                             if (!separateKeyEvents)
+                            {
+                                if (((Keys)dif & Keys.M1) == Keys.M1)
+                                    mKeyState = 1;
+
+                                if (((Keys)dif & Keys.M2) == Keys.M2)
+                                    mKeyState = 2;
+
+                                if (((Keys)dif & Keys.M3) == Keys.M3)
+                                    mKeyState = 3;
+
                                 KeyPressed((Keys)dif);
+                            }
                             else
                             {
                                 // need to check each key, because more than one key can be pressed at the same time 
@@ -222,13 +278,22 @@ namespace GNet.Lib
                                     KeyPressed(Keys.J3);
 
                                 if (((Keys)dif & Keys.M1) == Keys.M1)
+                                {
+                                    mKeyState = 1;
                                     KeyPressed(Keys.M1);
+                                }
 
                                 if (((Keys)dif & Keys.M2) == Keys.M2)
+                                {
+                                    mKeyState = 2;
                                     KeyPressed(Keys.M2);
+                                }
 
                                 if (((Keys)dif & Keys.M3) == Keys.M3)
+                                {
+                                    mKeyState = 3;
                                     KeyPressed(Keys.M3);
+                                }
 
                                 if (((Keys)dif & Keys.M4) == Keys.M4)
                                     KeyPressed(Keys.M4);
@@ -377,37 +442,6 @@ namespace GNet.Lib
             }
         }
 
-        public bool IsConnected
-        {
-            get
-            {
-                if (Device == null)
-                    return false;
-
-                return Device.IsConnected;
-            }
-        }
-
-        public event DeviceEventHandler DeviceConnected;
-        public void WaitForConnection()
-        {
-            if (connectedPoller == null)
-            {
-                connectedPoller = new BackgroundWorker<HidDevice>();
-                connectedPoller.Updated += new EventHandler<EventArgs<HidDevice>>(connectedPoller_Updated);
-                connectedPoller.DoWork += new System.ComponentModel.DoWorkEventHandler(connectedPoller_DoWork);
-            }
-
-            if (!connectedPoller.IsBusy)
-                connectedPoller.RunWorkerAsync();
-        }
-
-        public void CancelWait()
-        {
-            if (connectedPoller.IsBusy)
-                connectedPoller.CancelAsync();
-        }
-
         void connectedPoller_Updated(object sender, EventArgs<HidDevice> e)
         {
             device = e.Data;
@@ -424,55 +458,6 @@ namespace GNet.Lib
                 d = HidDevices.GetDevice(Logitech, G13);
 
             connectedPoller.Update(d);
-        }
-
-
-
-        [Flags]
-        public enum Keys : ulong
-        {
-            // G keys
-            G1 = 0x0000000001,
-            G2 = 0x0000000002,
-            G3 = 0x0000000004,
-            G4 = 0x0000000008,
-            G5 = 0x0000000010,
-            G6 = 0x0000000020,
-            G7 = 0x0000000040,
-            G8 = 0x0000000080,
-            G9 = 0x0000000100,
-            G10 = 0x0000000200,
-            G11 = 0x0000000400,
-            G12 = 0x0000000800,
-            G13 = 0x0000001000,
-            G14 = 0x0000002000,
-            G15 = 0x0000004000,
-            G16 = 0x0000008000,
-            G17 = 0x0000010000,
-            G18 = 0x0000020000,
-            G19 = 0x0000040000,
-            G20 = 0x0000080000,
-            G21 = 0x0000100000,
-            G22 = 0x0000200000,
-
-            // Joystick buttons
-            J1 = 0x0200000000, // left
-            J2 = 0x0400000000, // bottom
-            J3 = 0x0800000000, // middle (i.e., on the stick)
-
-            // M keys
-            M1 = 0x0020000000,
-            M2 = 0x0040000000,
-            M3 = 0x0080000000,
-            M4 = 0x0100000000,
-
-            // LCD keys
-            L1 = 0x0001000000, // LCD Select Applet
-            L2 = 0x0002000000,
-            L3 = 0x0004000000,
-            L4 = 0x0008000000,
-            L5 = 0x0010000000,
-            L6 = 0x6000000000, // LCD Light
         }
 
         [StructLayout(LayoutKind.Explicit)]
@@ -492,5 +477,52 @@ namespace GNet.Lib
             [FieldOffset(0)]
             public ulong UL;
         }
+    }
+
+    [Flags]
+    public enum Keys : ulong
+    {
+        // G keys
+        G1 = 0x0000000001,
+        G2 = 0x0000000002,
+        G3 = 0x0000000004,
+        G4 = 0x0000000008,
+        G5 = 0x0000000010,
+        G6 = 0x0000000020,
+        G7 = 0x0000000040,
+        G8 = 0x0000000080,
+        G9 = 0x0000000100,
+        G10 = 0x0000000200,
+        G11 = 0x0000000400,
+        G12 = 0x0000000800,
+        G13 = 0x0000001000,
+        G14 = 0x0000002000,
+        G15 = 0x0000004000,
+        G16 = 0x0000008000,
+        G17 = 0x0000010000,
+        G18 = 0x0000020000,
+        G19 = 0x0000040000,
+        G20 = 0x0000080000,
+        G21 = 0x0000100000,
+        G22 = 0x0000200000,
+
+        // Joystick buttons
+        J1 = 0x0200000000, // left
+        J2 = 0x0400000000, // bottom
+        J3 = 0x0800000000, // middle (i.e., on the stick)
+
+        // M keys
+        M1 = 0x0020000000,
+        M2 = 0x0040000000,
+        M3 = 0x0080000000,
+        M4 = 0x0100000000,
+
+        // LCD keys
+        L1 = 0x0001000000, // LCD Select Applet
+        L2 = 0x0002000000,
+        L3 = 0x0004000000,
+        L4 = 0x0008000000,
+        L5 = 0x0010000000,
+        L6 = 0x6000000000, // LCD Light
     }
 }
