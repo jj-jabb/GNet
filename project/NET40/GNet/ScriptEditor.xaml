@@ -32,7 +32,7 @@
             Name="editor"
             FontFamily="Consolas"
             FontSize="10pt"
-            SyntaxHighlighting="Boo"
+            SyntaxHighlighting="Lua"
             ShowLineNumbers="True"
             />
     </Grid>

@@ -10,11 +10,20 @@ using GNet.Lib;
 
 namespace GNet
 {
-    public class BooRunner
+    public class BooRunner : IScriptRunner
     {
         static G13Device device = new G13Device();
 
-        public void Run(string name, string contents)
+        string name;
+        string contents;
+
+        public BooRunner(string name, string contents)
+        {
+            this.name = name;
+            this.contents = contents;
+        }
+
+        public IScriptRunner Run()
         {
             BooCompiler compiler = new BooCompiler();
             compiler.Parameters.Input.Add(new StringInput(name, contents)); //( new FileInput(path));
@@ -32,7 +41,7 @@ namespace GNet
                 if (scriptModule == null)
                 {
                     Console.WriteLine("Could not find script module " + name + "Module");
-                    return;
+                    return null;
                 }
 
                 var runMethod = scriptModule.GetMethod("Run", new Type[] { typeof(G13Device) });
@@ -40,7 +49,7 @@ namespace GNet
                 if (runMethod == null)
                 {
                     Console.WriteLine("Could not find a static function named Run that takes a G13Device as it's argument");
-                    return;
+                    return null;
                 }
 
                 var result = runMethod.Invoke(null, new object[] { device });
@@ -58,6 +67,12 @@ namespace GNet
                 foreach (CompilerError error in context.Errors)
                     Console.WriteLine(error);
             }
+
+            return this;
+        }
+
+        public void Stop()
+        {
         }
     }
 }

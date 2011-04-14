@@ -412,4 +412,7 @@
     <Page Include="TextEditor.xaml" />
     <Page Include="themes\generic.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Highlighting\Resources\Lua.xshd" />
+  </ItemGroup>
 </Project>

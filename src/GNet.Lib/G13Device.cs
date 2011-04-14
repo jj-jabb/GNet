@@ -135,6 +135,7 @@ namespace GNet.Lib
                 if (dif > 0)
                 {
                     if (pressed)
+                    {
                         if (KeyPressed != null)
                         {
                             if (!separateKeyEvents)
@@ -253,6 +254,7 @@ namespace GNet.Lib
                                 #endregion
                             }
                         }
+                    }
                     else if (KeyReleased != null)
                         if (!separateKeyEvents)
                             KeyReleased((Keys)dif);

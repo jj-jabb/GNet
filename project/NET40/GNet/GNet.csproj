@@ -45,6 +45,14 @@
     <Reference Include="Boo.Lang.Parser">
       <HintPath>..\Boo\Boo.Lang.Parser.dll</HintPath>
     </Reference>
+    <Reference Include="lua51, Version=0.0.0.0, Culture=neutral, PublicKeyToken=1e1fb15b02227b8a, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\LuaInterface_2.0.3_NET40\lua51.dll</HintPath>
+    </Reference>
+    <Reference Include="LuaInterface, Version=2.0.0.16708, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\LuaInterface_2.0.3_NET40\LuaInterface.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Management" />
@@ -67,6 +75,12 @@
     </ApplicationDefinition>
     <Compile Include="..\..\..\src\GNet\BooRunner.cs">
       <Link>BooRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet\IScriptRunner.cs">
+      <Link>IScriptRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet\LuaRunner.cs">
+      <Link>LuaRunner.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\GNet\RedirectWriter.cs">
       <Link>RedirectWriter.cs</Link>
@@ -112,7 +126,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Profiles\_default.boo" />
+    <None Include="Profiles\Boo\_default.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Profiles\Lua\_default.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

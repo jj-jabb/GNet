@@ -21,30 +21,63 @@ namespace GNet
     /// </summary>
     public partial class ScriptEditor : UserControl
     {
+        IScriptRunner scriptRunner;
+
         public ScriptEditor()
         {
             InitializeComponent();
+
+            // Boo
+//            editor.Text =
+//@"# Name:
+//# Description:
+//# Executables:
+//
+//import GNet.Lib
+//
+//static def Run(d as G13Device):
+//	d.KeyPressed += def(key):
+//		print key as uint
+//";
+            // Lua
             editor.Text =
-@"# Name:
-# Description:
-# Executables:
+@"-- Name:
+-- Description:
+-- Executables:
 
-import GNet.Lib
-
-static def Run(d as G13Device):
-	d.KeyPressed += def(key):
-		print key as uint
+function OnEvent(event, arg, family)
+    OutputLogMessage(event.."" : ""..arg.."" : ""..family)
+end
 ";
         }
 
         private void runButton_Click(object sender, RoutedEventArgs e)
         {
-            new BooRunner().Run("Test", editor.Text);
+            runButton.IsEnabled = false;
+            stopButton.IsEnabled = true;
+
+            switch(editor.SyntaxHighlighting.Name)
+            {
+                case "Boo":
+                    scriptRunner = new BooRunner("Test", editor.Text).Run();
+                    break;
+
+                case "Lua":
+                    scriptRunner = new LuaRunner(editor.Text).Run();
+                    break;
+            }
         }
 
         private void stopButton_Click(object sender, RoutedEventArgs e)
         {
+            if (scriptRunner != null)
+            {
+                scriptRunner.Stop();
+                scriptRunner = null;
+            }
 
+            runButton.IsEnabled = true;
+            stopButton.IsEnabled = false;
         }
     }
 }
