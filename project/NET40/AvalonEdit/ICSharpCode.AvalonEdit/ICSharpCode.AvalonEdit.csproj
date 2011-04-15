@@ -413,6 +413,8 @@
     <Page Include="themes\generic.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Highlighting\Resources\Lua.xshd" />
+    <EmbeddedResource Include="Highlighting\Resources\Lua.xshd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

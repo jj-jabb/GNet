@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
 namespace GNet
 {
-    public partial class Form1 : Form
+    public partial class ScriptEditor : UserControl
     {
-        public Form1()
+        public ScriptEditor()
         {
             InitializeComponent();
         }

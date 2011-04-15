@@ -1,8 +1,40 @@
 using System;
 using System.IO;
+using System.Text;
+
+#if NET20
+using System.Windows.Forms;
+#else
+using System.Windows.Controls;
+#endif
 
 namespace GNet
 {
+
+    public class TextBoxStreamWriter : TextWriter
+    {
+        TextBox _output = null;
+
+        public TextBoxStreamWriter(TextBox output)
+        {
+            _output = output;
+        }
+
+        public override void Write(char value)
+        {
+            base.Write(value);
+            _output.AppendText(value.ToString()); // When character data is written, append it to the text box.
+        }
+
+        public override Encoding Encoding
+        {
+            get { return System.Text.Encoding.UTF8; }
+        }
+    }
+
+
+
+    // Alternative:
     // http://consoleredirect.codeplex.com/
     public class RedirectWriter : StringWriter
     {

@@ -41,6 +41,12 @@
     <Reference Include="Boo.Lang.Compiler">
       <HintPath>..\Boo\bin\Boo.Lang.Compiler.dll</HintPath>
     </Reference>
+    <Reference Include="lua51">
+      <HintPath>..\..\LuaInterface_2.0.3\lua51.dll</HintPath>
+    </Reference>
+    <Reference Include="LuaInterface">
+      <HintPath>..\..\LuaInterface_2.0.3\LuaInterface.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Management" />
@@ -61,6 +67,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="..\..\..\src\GNet\BooRunner.cs">
+      <Link>BooRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet\IScriptRunner.cs">
+      <Link>IScriptRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet\LuaRunner.cs">
+      <Link>LuaRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\GNet\RedirectWriter.cs">
+      <Link>RedirectWriter.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\GNet\WMI.cs">
       <Link>WMI.cs</Link>
     </Compile>
