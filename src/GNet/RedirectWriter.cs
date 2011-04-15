@@ -13,6 +13,7 @@ namespace GNet
 
     public class TextBoxStreamWriter : TextWriter
     {
+        delegate void InvokeAction(char value);
         public static TextBox _output = null;
 
         public TextBoxStreamWriter(TextBox output)
@@ -21,6 +22,18 @@ namespace GNet
         }
 
         public override void Write(char value)
+        {
+            if (CrossFramework.IsInvokeRequired(_output))
+            {
+                _output.Invoke(new InvokeAction(InvokeWrite), value);
+            }
+            else
+            {
+                InvokeWrite(value);
+            }
+        }
+
+        void InvokeWrite(char value)
         {
             base.Write(value);
             _output.AppendText(value.ToString()); // When character data is written, append it to the text box.

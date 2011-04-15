@@ -2,7 +2,16 @@
 -- Description: The default profile.
 -- Executables:
 
+poll = true
+
+-- NOTE: currently family is ALWAYS 'lhc' since the only currently supported
+-- device is the G13 left-handed-controller.
 function OnEvent(event, arg, family)
+	if poll and (event == 'PROFILE_ACTIVATED' or event == 'M_RELEASED') then
+		SetMKeyState(1)
+		Sleep(25)
+	end
+	
     if event == 'G_PRESSED' then
 		if arg == 20 then
 			ClearLog()
@@ -90,5 +99,5 @@ function OnEvent(event, arg, family)
         end
     end
 
-    OutputLogMessage(event..' : '..arg..' : '..family)
+    --OutputLogMessage(event..' : '..arg..' : '..family)
 end

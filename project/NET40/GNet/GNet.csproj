@@ -85,6 +85,7 @@
     <Compile Include="..\..\..\src\GNet\RedirectWriter.cs">
       <Link>RedirectWriter.cs</Link>
     </Compile>
+    <Compile Include="CrossFramework.cs" />
     <Compile Include="ScriptEditor.xaml.cs">
       <DependentUpon>ScriptEditor.xaml</DependentUpon>
     </Compile>
