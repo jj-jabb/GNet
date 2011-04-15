@@ -10,6 +10,8 @@ namespace GNet
 {
     public partial class MainForm : Form
     {
+        TextBoxStreamWriter tbsw;
+
         public MainForm()
         {
             InitializeComponent();
@@ -22,6 +24,12 @@ namespace GNet
             editor.Dock = DockStyle.Fill;
             tabPage.Controls.Add(editor);
             documentTabs.TabPages.Add(tabPage);
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            tbsw = new TextBoxStreamWriter(output);
+            Console.SetOut(tbsw);
         }
     }
 }

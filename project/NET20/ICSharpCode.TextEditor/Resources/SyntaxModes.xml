@@ -30,10 +30,14 @@
 	<Mode file       = "Java-Mode.xshd"
 	      name       = "Java"
 	      extensions = ".java"/>
-	
-	<Mode file       = "JavaScript-Mode.xshd"
+
+  <Mode file       = "JavaScript-Mode.xshd"
 	      name       = "JavaScript"
 	      extensions = ".js"/>
+
+  <Mode file       = "Lua.xshd"
+	      name       = "Lua"
+	      extensions = ".lua"/>
 	
 	<Mode file       = "Patch-Mode.xshd"
 	      name       = "Patch"

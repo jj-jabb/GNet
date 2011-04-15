@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.buttonPanel = new System.Windows.Forms.Panel();
-            this.editor = new ICSharpCode.TextEditor.TextEditorControl();
             this.runButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
+            this.editor = new ICSharpCode.TextEditor.TextEditorControl();
             this.buttonPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,15 +45,6 @@
             this.buttonPanel.Size = new System.Drawing.Size(563, 25);
             this.buttonPanel.TabIndex = 0;
             // 
-            // editor
-            // 
-            this.editor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.editor.IsReadOnly = false;
-            this.editor.Location = new System.Drawing.Point(0, 25);
-            this.editor.Name = "editor";
-            this.editor.Size = new System.Drawing.Size(563, 429);
-            this.editor.TabIndex = 1;
-            // 
             // runButton
             // 
             this.runButton.Dock = System.Windows.Forms.DockStyle.Left;
@@ -63,6 +54,7 @@
             this.runButton.TabIndex = 0;
             this.runButton.Text = "Run";
             this.runButton.UseVisualStyleBackColor = true;
+            this.runButton.Click += new System.EventHandler(this.runButton_Click);
             // 
             // stopButton
             // 
@@ -74,6 +66,16 @@
             this.stopButton.TabIndex = 1;
             this.stopButton.Text = "Stop";
             this.stopButton.UseVisualStyleBackColor = true;
+            this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
+            // 
+            // editor
+            // 
+            this.editor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.editor.IsReadOnly = false;
+            this.editor.Location = new System.Drawing.Point(0, 25);
+            this.editor.Name = "editor";
+            this.editor.Size = new System.Drawing.Size(563, 429);
+            this.editor.TabIndex = 1;
             // 
             // ScriptEditor
             // 

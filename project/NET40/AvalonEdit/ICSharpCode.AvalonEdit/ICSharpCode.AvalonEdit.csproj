@@ -417,4 +417,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Highlighting\Resources\Python.xshd" />
+  </ItemGroup>
 </Project>

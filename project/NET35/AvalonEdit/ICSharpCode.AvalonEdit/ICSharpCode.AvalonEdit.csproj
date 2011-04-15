@@ -411,4 +411,7 @@
     <Page Include="TextEditor.xaml" />
     <Page Include="themes\generic.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Highlighting\Resources\Python.xshd" />
+  </ItemGroup>
 </Project>

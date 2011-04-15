@@ -32,7 +32,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			hlm.RegisterHighlighting("C++", new[] { ".c", ".h", ".cc", ".cpp" , ".hpp" }, "CPP-Mode.xshd");
 			hlm.RegisterHighlighting("Java", new[] { ".java" }, "Java-Mode.xshd");
 			hlm.RegisterHighlighting("Patch", new[] { ".patch", ".diff" }, "Patch-Mode.xshd");
-			hlm.RegisterHighlighting("PHP", new[] { ".php" }, "PHP-Mode.xshd");
+            hlm.RegisterHighlighting("PHP", new[] { ".php" }, "PHP-Mode.xshd");
+            hlm.RegisterHighlighting("Python", new[] { ".py" }, "Python.xshd");
 			hlm.RegisterHighlighting("TeX", new[] { ".tex" }, "Tex-Mode.xshd");
 			hlm.RegisterHighlighting("VBNET", new[] { ".vb" }, "VBNET-Mode.xshd");
 			hlm.RegisterHighlighting("XML", (".xml;.xsl;.xslt;.xsd;.manifest;.config;.addin;" +
