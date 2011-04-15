@@ -126,10 +126,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Profiles\Boo\_default.boo">
+    <None Include="..\..\..\src\Profiles\Boo\_default.boo">
+      <Link>Profiles\Boo\_default.boo</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Profiles\Lua\_default.lua">
+    <None Include="..\..\..\src\Profiles\Lua\_default.lua">
+      <Link>Profiles\Lua\_default.lua</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">

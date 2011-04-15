@@ -13,7 +13,7 @@ namespace GNet
 
     public class TextBoxStreamWriter : TextWriter
     {
-        TextBox _output = null;
+        public static TextBox _output = null;
 
         public TextBoxStreamWriter(TextBox output)
         {

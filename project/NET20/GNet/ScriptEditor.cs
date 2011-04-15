@@ -28,7 +28,16 @@ namespace GNet
                 HighlightingManager.Manager.AddHighlightingStrategy(h);
             }
 
-            editor.Text =
+            if (File.Exists(@".\Profiles\Lua\_default.lua"))
+            {
+                using (var fs = File.OpenText(@".\Profiles\Lua\_default.lua"))
+                {
+                    editor.Text = fs.ReadToEnd();
+                }
+            }
+            else
+            {
+                editor.Text =
 @"-- Name:
 -- Description:
 -- Executables:
@@ -37,6 +46,7 @@ function OnEvent(event, arg, family)
     OutputLogMessage(event.."" : ""..arg.."" : ""..family)
 end
 ";
+            }
         }
 
         private void runButton_Click(object sender, EventArgs e)

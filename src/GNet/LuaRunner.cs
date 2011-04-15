@@ -47,6 +47,7 @@ namespace GNet
             var mi = device.GetType().GetMethods();
 
             Register("OutputLogMessage", this);
+            Register("ClearLog", this);
 
             // these don't work correctly
             //Register("GetMKeyState", device, typeof(string));
@@ -74,7 +75,14 @@ namespace GNet
             {
                 device.KeyPressed += new G13Device.KeyHandler(device_KeyPressed);
                 device.KeyReleased += new G13Device.KeyHandler(device_KeyReleased);
-                onEvent.Call("PROFILE_ACTIVATED", 0, "lhc");
+                try
+                {
+                    onEvent.Call("PROFILE_ACTIVATED", 0, "lhc");
+                }
+                catch (Exception ex)
+                {
+                    OutputLogMessage(ex.ToString());
+                }
             }
 
             isRunning = true;
@@ -88,7 +96,14 @@ namespace GNet
             {
                 if (onEvent != null)
                 {
-                    onEvent.Call("PROFILE_DEACTIVATED", 0, "lhc");
+                    try
+                    {
+                        onEvent.Call("PROFILE_DEACTIVATED", 0, "lhc");
+                    }
+                    catch (Exception ex)
+                    {
+                        OutputLogMessage(ex.ToString());
+                    }
                     device.KeyPressed -= new G13Device.KeyHandler(device_KeyPressed);
                     device.KeyReleased -= new G13Device.KeyHandler(device_KeyReleased);
                 }
@@ -100,23 +115,42 @@ namespace GNet
 
         void device_KeyPressed(Keys key)
         {
-            var keyName = key.ToString();
-            var evnt = keyName.Substring(0, 1) + "_PRESSED";
-            var arg = int.Parse(keyName.Substring(1));
-            onEvent.Call(evnt, arg, "lhc");
+            try
+            {
+                var keyName = key.ToString();
+                var evnt = keyName.Substring(0, 1) + "_PRESSED";
+                var arg = int.Parse(keyName.Substring(1));
+                onEvent.Call(evnt, arg, "lhc");
+            }
+            catch (Exception ex)
+            {
+                OutputLogMessage(ex.ToString());
+            }
         }
 
         void device_KeyReleased(Keys key)
         {
-            var keyName = key.ToString();
-            var evnt = keyName.Substring(0, 1) + "_RELEASED";
-            var arg = int.Parse(keyName.Substring(1));
-            onEvent.Call(evnt, arg, "lhc");
+            try
+            {
+                var keyName = key.ToString();
+                var evnt = keyName.Substring(0, 1) + "_RELEASED";
+                var arg = int.Parse(keyName.Substring(1));
+                onEvent.Call(evnt, arg, "lhc");
+            }
+            catch (Exception ex)
+            {
+                OutputLogMessage(ex.ToString());
+            }
         }
 
         public void OutputLogMessage(object s)
         {
             Console.WriteLine(s.ToString());
+        }
+
+        public void ClearLog()
+        {
+            TextBoxStreamWriter._output.Clear();
         }
     }
 }

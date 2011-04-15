@@ -3,7 +3,7 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-	Title="GNet - Logitech G-series Key Profiler for .NET"
+	Title="GNet - Logitech G-series Key Profiler for .NET 4.0"
     Height="500"
     Width="700"
     Loaded="Window_Loaded"
