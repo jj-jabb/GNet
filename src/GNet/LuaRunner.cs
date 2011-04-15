@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Text;
 
 using LuaInterface;
@@ -21,18 +22,50 @@ namespace GNet
             this.contents = contents;
         }
 
+        void Register(string name, object owner, params Type[] parameters)
+        {
+            if (lua == null)
+                return;
+
+            MethodInfo mi;
+
+            if (parameters == null || parameters.Length == 0)
+                mi = owner.GetType().GetMethod(name);
+            else
+                mi = owner.GetType().GetMethod(name, parameters);
+
+            if (mi != null)
+                lua.RegisterFunction(name, owner, mi);
+            else
+                System.Diagnostics.Debug.WriteLine("not found: " + name);
+        }
+
         public IScriptRunner Run()
         {
             lua = new Lua();
 
-            var park1 = typeof(G13Device).GetMethod("PressAndReleaseKey", new Type[] { typeof(string[]) });
-            var park2 = typeof(G13Device).GetMethod("PressAndReleaseKey", new Type[] { typeof(ushort[]) });
+            var mi = device.GetType().GetMethods();
 
-            lua.RegisterFunction("OutputLogMessage", this, typeof(LuaRunner).GetMethod("OutputLogMessage"));
-            lua.RegisterFunction("PressAndReleaseKey", device, park1);
-            // this won't work - need to make PressAndReleaseKey take an object[] and check it for
-            // strings / ushorts
-            //lua.RegisterFunction("PressAndReleaseKey", device, park2);
+            Register("OutputLogMessage", this);
+
+            // these don't work correctly
+            //Register("GetMKeyState", device, typeof(string));
+            //Register("SetMKeyState", device, typeof(int), typeof(string));
+
+            Register("PressAndReleaseKey", device, typeof(object[]));
+            Register("PressKey", device, typeof(object[]));
+            Register("ReleaseKey", device, typeof(object[]));
+            Register("IsModifierPressed", device, typeof(string));
+            Register("PressMouseButton", device, typeof(int));
+            Register("ReleaseMouseButton", device, typeof(int));
+            Register("PressAndReleaseMouseButton", device, typeof(int));
+            Register("IsMouseButtonPressed", device, typeof(int));
+            Register("MoveMouseTo", device, typeof(int), typeof(int));
+            Register("MoveMouseWheel", device, typeof(int));
+            Register("MoveMouseRelative", device, typeof(int), typeof(int));
+            Register("MoveMouseToVirtual", device, typeof(int), typeof(int));
+            Register("GetMousePosition", device, typeof(int).MakeByRefType(), typeof(int).MakeByRefType());
+            Register("IsKeyLockOn", device, typeof(string));
 
             lua.DoString(contents);
 

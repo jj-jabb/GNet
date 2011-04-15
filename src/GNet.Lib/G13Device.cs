@@ -38,7 +38,7 @@ namespace GNet.Lib
 
         bool deviceIsSetup;
         bool separateKeyEvents = true;
-        int mKeyState = 1;
+        int mKeyState = 0;
 
         G13Device()
         {

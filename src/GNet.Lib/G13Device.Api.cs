@@ -136,8 +136,9 @@ namespace GNet.Lib
             return mKeyState;
         }
 
-        public void SetMKeyState(int mkey, string family = "lhc")
+        public void SetMKeyState(double dkey, string family = "lhc")
         {
+            int mkey = (int)dkey;
             mKeyState = mkey;
             if (KeyPressed != null)
             {
@@ -187,12 +188,12 @@ namespace GNet.Lib
             Interop.SendInput((uint)inputData.Length, inputData);
         }
 
-        public void PressKey(ScanCode scanCode, params ScanCode[] scanCodes)
+        public void PressKey(params ScanCode[] scanCodes)
         {
             PressKey(GetCodes(scanCodes));
         }
 
-        public void PressKey(ushort scanCode, params ushort[] scanCodes)
+        public void PressKey(params ushort[] scanCodes)
         {
             PressKey(GetCodes(scanCodes));
         }
@@ -200,6 +201,11 @@ namespace GNet.Lib
         public void PressKey(params string[] keyNames)
         {
             PressKey(GetCodes(keyNames));
+        }
+
+        public void PressKey(params object[] keys)
+        {
+            PressKey(GetCodes(keys));
         }
 
         #endregion
@@ -230,6 +236,11 @@ namespace GNet.Lib
             ReleaseKey(GetCodes(keyNames));
         }
 
+        public void ReleaseKey(params object[] keys)
+        {
+            ReleaseKey(GetCodes(keys));
+        }
+
         #endregion
 
         #region PressAndReleaseKey
@@ -246,11 +257,6 @@ namespace GNet.Lib
             Interop.SendInput((uint)inputData.Count, inputData.ToArray());
         }
 
-        //public void PressAndReleaseKey(string keyName, params string[] keyNames)
-        //{
-        //    PressAndReleaseKey(GetCodes(keyName.ToString(), keyNames));
-        //}
-
         public void PressAndReleaseKey(params ScanCode[] scanCodes)
         {
             PressAndReleaseKey(GetCodes(scanCodes));
@@ -264,6 +270,11 @@ namespace GNet.Lib
         public void PressAndReleaseKey(params string[] keyNames)
         {
             PressAndReleaseKey(GetCodes(keyNames));
+        }
+
+        public void PressAndReleaseKey(params object[] keys)
+        {
+            PressAndReleaseKey(GetCodes(keys));
         }
 
         #endregion
@@ -516,6 +527,57 @@ namespace GNet.Lib
                 for (int i = 0; i < keyNames.Length; i++)
                     if (nameToCode.TryGetValue(keyNames[i], out code))
                         codes.Add(code);
+
+            return codes;
+        }
+
+        IList<ScanCode> GetCodes(object[] keys)
+        {
+            ScanCode code;
+            IList<ScanCode> codes = new List<ScanCode>();
+
+            if (keys != null)
+                foreach(var key in keys)
+                    switch(Type.GetTypeCode(key.GetType()))
+                    {
+                        case TypeCode.String:
+                        case TypeCode.Object:
+                            if (nameToCode.TryGetValue(key.ToString(), out code))
+                                codes.Add(code);
+                            break;
+
+                        case TypeCode.Single:
+                            codes.Add((ScanCode)(float)key);
+                            break;
+
+                        case TypeCode.Double:
+                            codes.Add((ScanCode)(double)key);
+                            break;
+
+                        case TypeCode.Int16:
+                            codes.Add((ScanCode)(short)key);
+                            break;
+
+                        case TypeCode.Int32:
+                            codes.Add((ScanCode)(int)key);
+                            break;
+
+                        case TypeCode.Int64:
+                            codes.Add((ScanCode)(long)key);
+                            break;
+
+                        case TypeCode.UInt16:
+                            codes.Add((ScanCode)(ushort)key);
+                            break;
+
+                        case TypeCode.UInt32:
+                            codes.Add((ScanCode)(uint)key);
+                            break;
+
+                        case TypeCode.UInt64:
+                            codes.Add((ScanCode)(ulong)key);
+                            break;
+                    }
 
             return codes;
         }

@@ -71,7 +71,7 @@ namespace GNet.Lib.PInvoke
 
                 case 1:
                     // Not pressed, but toggled on
-                    keyPressed = false;
+                    keyPressed = true;
                     break;
 
                 default:
