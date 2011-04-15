@@ -48,6 +48,8 @@ namespace GNet
         Thread thread;
         AutoResetEvent auto;
 
+        DateTime startTime;
+
         public LuaRunner(string contents)
         {
             this.contents = contents;
@@ -61,6 +63,7 @@ namespace GNet
             device.KeyReleased += new G13Device.KeyHandler(device_KeyReleased);
 
             isRunning = true;
+            startTime = DateTime.Now;
 
             auto = new AutoResetEvent(false);
             thread = new Thread(new ThreadStart(RunThread));
@@ -106,6 +109,14 @@ namespace GNet
             Thread.Sleep(timeout);
         }
 
+        public int GetRunningTime()
+        {
+            TimeSpan ts = DateTime.Now - startTime;
+            return (int)ts.TotalMilliseconds;
+        }
+
+
+
         void RunThread()
         {
             KeyEvent e = KeyEvent.Empty;
@@ -117,6 +128,7 @@ namespace GNet
                 Register("OutputLogMessage", this);
                 Register("ClearLog", this);
                 Register("Sleep", this, typeof(int));
+                Register("GetRunningTime", this);
 
                 Register("GetMKeyState", device, typeof(string));
                 Register("SetMKeyState", device, typeof(int), typeof(string));

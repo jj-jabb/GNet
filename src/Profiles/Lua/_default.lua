@@ -12,6 +12,10 @@ function OnEvent(event, arg, family)
 		Sleep(25)
 	end
 	
+	if event == 'PROFILE_DEACTIVATED' then
+		OutputLogMessage('Ran for '..GetRunningTime()..' milliseconds.')
+	end
+	
     if event == 'G_PRESSED' then
 		if arg == 20 then
 			ClearLog()
