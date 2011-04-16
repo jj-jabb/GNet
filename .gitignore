@@ -1,6 +1,8 @@
 *.suo
 *.user
+*.tlog
 *\obj
 *\bin
 *\old
+*\debug
 *\release
