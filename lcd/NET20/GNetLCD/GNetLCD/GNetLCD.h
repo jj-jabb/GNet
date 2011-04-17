@@ -3,7 +3,10 @@
 #pragma once
 
 using namespace System;
-using namespace Runtime::InteropServices;
+using namespace System::Drawing;
+using namespace System::Drawing::Imaging;
+using namespace System::Drawing::Text;
+using namespace System::Runtime::InteropServices;
 
 namespace GNet {
 
@@ -38,12 +41,30 @@ namespace GNet {
             connectContext = 0;
             openContext = 0;
 
+            switch (deviceType)
+            {
+                case LcdDeviceType::LcdDeviceBW:
+                    bitmap = gcnew Bitmap(LGLCD_BMP_WIDTH, LGLCD_BMP_HEIGHT);
+                    break;
+
+                case LcdDeviceType::LcdDeviceQVGA:
+                    bitmap = gcnew Bitmap(LGLCD_QVGA_BMP_WIDTH, LGLCD_QVGA_BMP_HEIGHT);
+                    break;
+            }
+
+            graphics = Graphics::FromImage(bitmap);
+            graphics->TextRenderingHint = TextRenderingHint::SingleBitPerPixelGridFit;
+            graphics->Clear(Color::Black);
+
 			lgLcdInit();
 		}
 
 		~Lcd()
 		{
             disposed = true;
+            
+            delete bitmap;
+            delete graphics;
 
 			Close();
 			Disconnect();
@@ -52,6 +73,8 @@ namespace GNet {
         
         property bool IsConnected { bool get() { return connectContext != 0; } }
         property bool IsOpen { bool get() { return openContext != 0; } }
+        property Bitmap^ LcdBitmap { Bitmap^ get() { return bitmap; } }
+        property Graphics^ LcdGraphics { Graphics^ get() { return graphics; } }
 
 		void BringToFront()
 		{
@@ -157,6 +180,59 @@ namespace GNet {
             onSoftButtonsGch.Free();
 		}
 
+        int UpdateBitmap(LcdPriority priority)
+        {
+            if (disposed) return -1;
+
+            int result = 0;
+
+            BitmapData^ bitdata =  bitmap->LockBits(
+                Drawing::Rectangle(0, 0, bitmap->Width, bitmap->Height),
+                ImageLockMode::ReadOnly,
+                //deviceType == LcdDeviceType::LcdDeviceBW ? 
+                PixelFormat::Format32bppRgb
+                );
+
+            if (deviceType == LcdDeviceType::LcdDeviceBW) {
+				lgLcdBitmap160x43x1 bmp;
+				bmp.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
+
+                for (int y = 0; y < bitdata->Height; y++) {
+                    BYTE* row = (BYTE*) (bitdata->Scan0).ToPointer() + (y * bitdata->Stride);
+                    for (int x = 0; x < bitdata->Width; x++) {
+
+                        BYTE* p = &row[x*4];
+                        BYTE val = p[0] | p[1] | p[2];
+                        bmp.pixels[(y * bitdata->Width) + x] =
+                            (p[0] | p[1] | p[2]) < 0x80 ?
+                                0x00 : 0xff;
+                    }
+                }
+
+				result = lgLcdUpdateBitmap(openContext->device, &bmp.hdr, LGLCD_SYNC_UPDATE((int)priority));
+            } else {
+				lgLcdBitmapQVGAx32 bmp;
+				bmp.hdr.Format = LGLCD_BMP_FORMAT_QVGAx32;
+
+                // don't have a color device to test this (e.g. G19)
+                /*
+                for (int y = 0; y < bitdata->Height; y++) {
+                    byte* row = (byte*) bitdata->Scan0 + (y * bitdata->Stride);
+                    for (int x = 0; x < bitdata->Width; x++) {
+                        byte* p = row[x];
+                        bmp.pixels[(y * bitdata->Width) + x] = row[x];
+                    }
+                }
+                */
+
+				result = lgLcdUpdateBitmap(openContext->device, &bmp.hdr, LGLCD_SYNC_UPDATE((int)priority));
+            }
+
+            bitmap->UnlockBits(bitdata);
+
+            return result;
+        }
+
         int UpdateBitmap(array<System::Byte>^ bytes, LcdPriority priority)
         {
             if (disposed) return -1;
@@ -210,6 +286,9 @@ namespace GNet {
 		bool isAutostartable;
 		LcdDeviceType deviceType;
         GCHandle onSoftButtonsGch;
+
+        Graphics^ graphics;
+        Bitmap^ bitmap;
 
 	private:
         bool disposed;
