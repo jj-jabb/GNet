@@ -65,7 +65,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>../../LCDSDKx86/lglcd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../../LCDSDKx86/lglcd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
