@@ -55,6 +55,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -157,6 +158,10 @@
     <ProjectReference Include="..\GNet.Lib\GNet.Lib.csproj">
       <Project>{9BB4FB5F-5B20-455D-9571-F26B6A4DD582}</Project>
       <Name>GNet.Lib %28.NET 4.0\GNet.Lib%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GNetLCD\GNetLCD.vcxproj">
+      <Project>{E00B95BB-117F-4B5C-9F0E-23B96ED365D4}</Project>
+      <Name>GNetLCD %28.NET 4.0\GNetLCD%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\HidLibrary\HidLibrary.csproj">
       <Project>{F5FDAB52-E116-476D-8771-F92E00035688}</Project>

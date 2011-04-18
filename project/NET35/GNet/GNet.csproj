@@ -51,6 +51,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -125,6 +126,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NET20\GNetLCD\GNetLCD.vcxproj">
+      <Project>{5F8F73BB-805D-4766-A17C-00D85EE98182}</Project>
+      <Name>GNetLCD %28.NET 2.0\GNetLCD%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AvalonDock\AvalonDock.Themes\AvalonDock.Themes35.csproj">
       <Project>{8FBFE159-F34A-49D2-B813-C29E358796C6}</Project>
       <Name>AvalonDock.Themes35</Name>

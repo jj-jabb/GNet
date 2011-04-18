@@ -115,6 +115,10 @@
       <Project>{DB692C8B-565E-4F48-B863-DF08971BD8AE}</Project>
       <Name>GNet.Lib %28.NET 2.0\GNet.Lib%29</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GNetLCD\GNetLCD.vcxproj">
+      <Project>{5F8F73BB-805D-4766-A17C-00D85EE98182}</Project>
+      <Name>GNetLCD %28.NET 2.0\GNetLCD%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HidLibrary\HidLibrary.csproj">
       <Project>{74EDB42A-BB8D-46E1-A396-F761FFEC0486}</Project>
       <Name>HidLibrary %28.NET 2.0\Third-Party Libraries\HidLibrary%29</Name>

@@ -75,6 +75,7 @@ end
             if (scriptRunner != null)
             {
                 scriptRunner.Stop();
+                scriptRunner.Dispose();
                 scriptRunner = null;
             }
 

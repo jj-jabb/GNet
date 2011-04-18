@@ -23,6 +23,10 @@ namespace GNet
             this.contents = contents;
         }
 
+        public void Dispose()
+        {
+        }
+
         public IScriptRunner Run()
         {
             BooCompiler compiler = new BooCompiler();

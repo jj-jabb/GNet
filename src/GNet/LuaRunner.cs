@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -11,7 +12,7 @@ using GNet.Lib;
 
 namespace GNet
 {
-    public class LuaRunner : IScriptRunner
+    public class LuaRunner : IScriptRunner, IDisposable
     {
         static G13Device device = G13Device.Current;
 
@@ -40,6 +41,7 @@ namespace GNet
 
         Queue<KeyEvent> keyEvents;
 
+        Lcd lcd;
         Lua lua;
         LuaFunction onEvent;
         bool isRunning;
@@ -55,12 +57,24 @@ namespace GNet
             this.contents = contents;
 
             keyEvents = new Queue<KeyEvent>();
+
+            lcd = new Lcd("GNet Profiler", false, false, LcdDeviceType.LcdDeviceBW);
+            var connected = lcd.Connect();
+            var open = lcd.Open();
+        }
+
+        public void Dispose()
+        {
+            lcd.Dispose();
+            lcd = null;
         }
 
         public IScriptRunner Run()
         {
             device.KeyPressed += new G13Device.KeyHandler(device_KeyPressed);
             device.KeyReleased += new G13Device.KeyHandler(device_KeyReleased);
+            //device.Inserted += new G13Device.DeviceEventHandler(device_Inserted);
+            //device.Removed += new G13Device.DeviceEventHandler(device_Removed);
 
             isRunning = true;
             startTime = DateTime.Now;
@@ -70,6 +84,21 @@ namespace GNet
             thread.Start();
 
             return this;
+        }
+
+        void device_Removed()
+        {
+            lcd.Dispose();
+            lcd = null;
+        }
+
+        void device_Inserted()
+        {
+            lcd = new Lcd("GNet Profiler", false, false, LcdDeviceType.LcdDeviceBW);
+            lcd.Connect();
+            lcd.Open();
+            DrawString("GNet Profiler Alpha Release", "Microsoft Sans Serif", 10, 1, "#FFFFFF", 0, 0);
+            lcd.BringToFront();
         }
 
         public void Stop()
@@ -115,11 +144,43 @@ namespace GNet
             return (int)ts.TotalMilliseconds;
         }
 
+        public void DrawString(string text, string fontName, double fontSize, double fontStyle, string htmlColor, double x, double y)
+        {
+            if (lcd == null)
+                return;
+
+            FontStyle fstyle = (FontStyle)fontStyle;
+            float fsize = (float)fontSize;
+            float fx = (float)x;
+            float fy = (float)y;
+            Brush brush = new SolidBrush(ColorTranslator.FromHtml(htmlColor));
+
+            using (Font f = new Font(fontName, fsize, fstyle))
+            {
+                lcd.LcdGraphics.DrawString(text, f, brush, 0f, 0f);
+            }
+
+            lcd.UpdateBitmap(LcdPriority.Normal);
+        }
+
+        public void ClearLcd()
+        {
+            lcd.LcdGraphics.Clear(Color.Black);
+            lcd.UpdateBitmap(LcdPriority.Normal);
+        }
+
 
 
         void RunThread()
         {
             KeyEvent e = KeyEvent.Empty;
+
+            if (!device.IsConnected)
+                return;
+
+            lcd.BringToFront();
+            Thread.Sleep(100);
+            DrawString("GNet Profiler\nAlpha Release", "Microsoft Sans Serif", 10, 1, "#FFFFFF", 0, 0);
 
             try
             {
@@ -129,7 +190,10 @@ namespace GNet
                 Register("ClearLog", this);
                 Register("Sleep", this, typeof(int));
                 Register("GetRunningTime", this);
+                Register("DrawString", this, typeof(string), typeof(string), typeof(double), typeof(double), typeof(string), typeof(double), typeof(double));
+                Register("ClearLcd", this);
 
+                //string text, string fontName, double fontSize, double fontStyle, string htmlColor, double x, double y
                 Register("GetMKeyState", device, typeof(string));
                 Register("SetMKeyState", device, typeof(int), typeof(string));
 
@@ -155,6 +219,7 @@ namespace GNet
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                lcd.RemoveFromFront();
                 return;
             }
 
@@ -215,6 +280,9 @@ namespace GNet
 
             auto.Close();
             auto = null;
+
+            if (lcd != null)
+                lcd.RemoveFromFront();
         }
 
         void addKeyEvent(Keys key, bool isPressed)

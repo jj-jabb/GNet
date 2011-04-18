@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GNet
 {
-    public interface IScriptRunner
+    public interface IScriptRunner : IDisposable
     {
         IScriptRunner Run();
         void Stop();
