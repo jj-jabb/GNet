@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 
 namespace HidLibrary
 {
@@ -302,7 +303,7 @@ namespace HidLibrary
 	    static internal extern bool HidD_FreePreparsedData(IntPtr preparsedData);
 
 	    [DllImport("hid.dll")]
-	    static internal extern bool HidD_SetFeature(int hidDeviceObject, ref byte lpReportBuffer, int reportBufferLength);
+        static internal extern bool HidD_SetFeature(SafeFileHandle hidDeviceObject, IntPtr lpReportBuffer, int reportBufferLength);
 
 	    [DllImport("hid.dll")]
 	    static internal extern bool HidD_SetNumInputBuffers(int hidDeviceObject, int numberBuffers);

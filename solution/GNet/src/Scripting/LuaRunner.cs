@@ -68,6 +68,9 @@ namespace GNet
             if (!device.Lcd.IsOpen)
                 device_Inserted();
 
+            //device.SetBacklightColor(255, 0, 0);
+            //device.SetMLight(1);
+
             device.KeyPressed += new G13Device.KeyHandler(device_KeyPressed);
             device.KeyReleased += new G13Device.KeyHandler(device_KeyReleased);
             //device.Inserted += new G13Device.DeviceEventHandler(device_Inserted);
@@ -101,6 +104,8 @@ namespace GNet
         {
             if (isRunning)
             {
+                device.SetBacklightColor(255, 255, 255);
+
                 device.KeyPressed -= new G13Device.KeyHandler(device_KeyPressed);
                 device.KeyReleased -= new G13Device.KeyHandler(device_KeyReleased);
 
@@ -162,6 +167,32 @@ namespace GNet
             device.Lcd.UpdateBitmap(LcdPriority.Normal);
         }
 
+        public void SetBacklightColor(string htmlColor)
+        {
+            try
+            {
+                Color color = ColorTranslator.FromHtml(htmlColor);
+                if (!color.IsEmpty)
+                    device.SetBacklightColor(color.R, color.G, color.B);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        public void SetMLight(double key)
+        {
+            try
+            {
+                device.SetMLight((byte)key);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
         public void ClearLcd()
         {
             if (device.Lcd == null || !device.Lcd.IsOpen)
@@ -193,6 +224,8 @@ namespace GNet
                 Register("GetRunningTime", this);
                 Register("DrawString", this, typeof(string), typeof(string), typeof(double), typeof(double), typeof(string), typeof(double), typeof(double));
                 Register("ClearLcd", this);
+                Register("SetBacklightColor", this, typeof(string));
+                Register("SetMLight", this, typeof(double));
 
                 //string text, string fontName, double fontSize, double fontStyle, string htmlColor, double x, double y
                 Register("GetMKeyState", device, typeof(string));

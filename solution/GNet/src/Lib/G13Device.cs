@@ -122,6 +122,40 @@ namespace GNet.Lib
             }
         }
 
+        public void SetBacklightColor(byte red, byte green, byte blue)
+        {
+            byte[] data = new byte[device.Capabilities.FeatureReportByteLength];
+            data[0] = 7;
+            data[1] = red;
+            data[2] = green;
+            data[3] = blue;
+            data[4] = 0;
+            device.SetFeature(data, device.Capabilities.FeatureReportByteLength);
+        }
+
+        //public void SetMLight(int key)
+        //{
+        //    byte[] data = new byte[this.device.Capabilities.FeatureReportByteLength];
+        //    data[0] = 5;
+        //    data[1] = (byte)(1 << (key - 1));
+        //    data[2] = 0xff;
+        //    data[3] = 110;
+        //    data[4] = 0;
+        //    this.device.SetFeature(data, this.device.Capabilities.FeatureReportByteLength);
+        //}
+
+        public void SetMLight(byte key)
+        {
+            byte[] data = new byte[this.device.Capabilities.FeatureReportByteLength];
+            data[0] = 5;
+            data[1] = key;
+            data[2] = 0xff;
+            data[3] = 110;
+            data[4] = 0;
+            this.device.SetFeature(data, this.device.Capabilities.FeatureReportByteLength);
+        }
+
+
         public void WaitForConnection()
         {
             if (connectedPoller == null)

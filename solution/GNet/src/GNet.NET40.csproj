@@ -145,8 +145,12 @@
   <ItemGroup>
     <None Include="HidLibrary\LICENSE" />
     <None Include="HidLibrary\README.md" />
-    <None Include="Profiles\Boo\_default.boo" />
-    <None Include="Profiles\Lua\_default.lua" />
+    <None Include="Profiles\Boo\_default.boo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Profiles\Lua\_default.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.Win32.SafeHandles;
 
 namespace HidLibrary
 {
@@ -28,6 +29,8 @@ namespace HidLibrary
 
         private readonly HidDeviceEventMonitor deviceEventMonitor;
 
+        IntPtr hidHandle;
+
         private bool monitorDeviceEvents;
         //private delegate HidDeviceData ReadDelegate();
         //private delegate HidReport ReadReportDelegate();
@@ -47,12 +50,13 @@ namespace HidLibrary
 
             try
             {
-                var hidHandle = OpenDeviceIO(devicePath, NativeMethods.ACCESS_NONE);
+                hidHandle = OpenDeviceIO(devicePath, NativeMethods.ACCESS_NONE);
 
                 deviceAttributes = GetDeviceAttributes(hidHandle);
                 deviceCapabilities = GetDeviceCapabilities(hidHandle);
 
                 CloseDeviceIO(hidHandle);
+                hidHandle = IntPtr.Zero;
             }
             catch (Exception exception)
             {
@@ -67,6 +71,8 @@ namespace HidLibrary
             readWorker.Updated += new EventHandler<EventArgs<HidDeviceData>>(readWorker_Updated);
             readWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(readWorker_DoWork);
         }
+
+        //SafeFileHandle sfh;
 
         public IntPtr ReadHandle { get; private set; }
         public IntPtr WriteHandle { get; private set; }
@@ -176,8 +182,12 @@ namespace HidLibrary
         public void CloseDevice()
         {
             if (!IsOpen) return;
+            
             CloseDeviceIO(ReadHandle);
             CloseDeviceIO(WriteHandle);
+
+            //sfh.Dispose();
+
             IsOpen = false;
         }
 
@@ -496,6 +506,22 @@ namespace HidLibrary
         {
             if (MonitorDeviceEvents) MonitorDeviceEvents = false;
             if (IsOpen) CloseDevice();
+        }
+
+        public void SetFeature(byte[] data, int length)
+        {
+            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            var safe = new SafeFileHandle(OpenDeviceIO(devicePath, DeviceMode.NonOverlapped, NativeMethods.GENERIC_WRITE), true);
+            try
+            {
+                IntPtr buffer = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
+                NativeMethods.HidD_SetFeature(safe, buffer, length);
+            }
+            finally
+            {
+                handle.Free();
+                safe.Dispose();
+            }
         }
     }
 }
