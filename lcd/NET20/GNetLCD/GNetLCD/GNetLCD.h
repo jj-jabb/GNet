@@ -3,66 +3,12 @@
 #pragma once
 
 using namespace System;
-using namespace Runtime::InteropServices;
+using namespace System::Drawing;
+using namespace System::Drawing::Imaging;
+using namespace System::Drawing::Text;
+using namespace System::Runtime::InteropServices;
 
 namespace GNet {
-	
-    //lgLcdConnectContext connectContext;
-    //lgLcdOpenByTypeContext openContext;
-
-	//DWORD CALLBACK OnLCDButtonsCallback(int device, DWORD dwButtons, const PVOID pContext)
-	//{
-	//	return 0;
-	//}
-
-	//void LcdOpen()
-	//{
-	//	DWORD res;
-
-	//	//// initialize the library
-	//	res = lgLcdInit();
- //   
-	//	//// connect to LCDMon
-	//	// set up connection context
-	//	lgLcdConnectContext connectContext;
-	//	ZeroMemory(&connectContext, sizeof(connectContext));
-	//	connectContext.appFriendlyName = _T("simple color sample");
-	//	connectContext.isAutostartable = FALSE;
-	//	connectContext.isPersistent = FALSE;
-	//	// we don't have a configuration screen
-	//	connectContext.onConfigure.configCallback = NULL;
-	//	connectContext.onConfigure.configContext = NULL;
-	//	// the "connection" member will be returned upon return
-	//	connectContext.connection = LGLCD_INVALID_CONNECTION;
-	//	// and connect
-	//	res = lgLcdConnect(&connectContext);
-
-	//	// Let's attempt to open up a color device
-	//	lgLcdOpenByTypeContext openContext;
-	//	ZeroMemory(&openContext, sizeof(openContext));
-	//	openContext.connection = connectContext.connection;
-	//	openContext.deviceType = LGLCD_DEVICE_BW;
-	//	// we have no softbutton notification callback
-	//	openContext.onSoftbuttonsChanged.softbuttonsChangedCallback = OnLCDButtonsCallback;
-	//	openContext.onSoftbuttonsChanged.softbuttonsChangedContext = NULL;
-	//	// the "device" member will be returned upon return
-	//	openContext.device = LGLCD_INVALID_DEVICE;
-	//	res = lgLcdOpenByType(&openContext);
-	//}
-
-	//void LcdClose()
-	//{
-	//	DWORD res;
-
-	//	// let's close the device again
-	//	res = lgLcdClose(openContext.device);
-
-	//	// and take down the connection
-	//	res = lgLcdDisconnect(connectContext.connection);
-
-	//	// and shut down the library
-	//	res = lgLcdDeInit();
-	//}
 
 	public enum class LcdDeviceType
 	{
@@ -70,8 +16,19 @@ namespace GNet {
 		LcdDeviceQVGA = 0x00000002
 	};
 
+    public enum class LcdPriority
+    {
+        NoShow = 0,
+        Background = 64,
+        Normal = 128,
+        Alert = 255
+    };
+    
 	public ref class Lcd : IDisposable {
 	public:
+	    static int BW_SIZE = LGLCD_BMP_WIDTH * LGLCD_BMP_HEIGHT * LGLCD_BMP_BPP;
+        static int QVGA_SIZE = LGLCD_QVGA_BMP_WIDTH * LGLCD_QVGA_BMP_HEIGHT * LGLCD_QVGA_BMP_BPP;
+
 		Lcd(String^ appFriendlyName, bool isPersistent, bool isAutostartable, LcdDeviceType deviceType)
 		{
 			this->appFriendlyName = appFriendlyName;
@@ -79,36 +36,59 @@ namespace GNet {
 			this->isAutostartable = isAutostartable;
 			this->deviceType = deviceType;
 
+            disposed = false;
+
+            connectContext = 0;
+            openContext = 0;
+
+            switch (deviceType)
+            {
+                case LcdDeviceType::LcdDeviceBW:
+                    bitmap = gcnew Bitmap(LGLCD_BMP_WIDTH, LGLCD_BMP_HEIGHT);
+                    break;
+
+                case LcdDeviceType::LcdDeviceQVGA:
+                    bitmap = gcnew Bitmap(LGLCD_QVGA_BMP_WIDTH, LGLCD_QVGA_BMP_HEIGHT);
+                    break;
+            }
+
+            graphics = Graphics::FromImage(bitmap);
+            graphics->TextRenderingHint = TextRenderingHint::SingleBitPerPixelGridFit;
+            graphics->Clear(Color::Black);
+
 			lgLcdInit();
-			Connect();
-			Open();
 		}
 
 		~Lcd()
 		{
+            disposed = true;
+            
+            delete bitmap;
+            delete graphics;
+
 			Close();
 			Disconnect();
 			lgLcdDeInit();
 		}
+        
+        property bool IsConnected { bool get() { return connectContext != 0; } }
+        property bool IsOpen { bool get() { return openContext != 0; } }
+        property Bitmap^ LcdBitmap { Bitmap^ get() { return bitmap; } }
+        property Graphics^ LcdGraphics { Graphics^ get() { return graphics; } }
 
 		void BringToFront()
 		{
+            if (disposed) return;
+            if (openContext == 0) return;
+
 			int result = lgLcdSetAsLCDForegroundApp(openContext->device, 1);
-
-			int x=  result;
 		}
 
-	protected:
-		delegate int LcdOnSoftButtonsCB(int device, int dwButtons, IntPtr pContext);
-
-		virtual int SoftbuttonsChanged(int a, int b, IntPtr c)
+		int Connect()
 		{
-			System::Console::WriteLine("SoftbuttonsChanged");
-			return 0;
-		}
+            if (disposed) return -1;
+            if (connectContext != 0) return 0;
 
-		void Connect()
-		{
 			connectContext = new lgLcdConnectContext();
 #ifdef UNICODE
 			connectContext->appFriendlyName = (LPCWSTR)(Marshal::StringToHGlobalUni(appFriendlyName)).ToPointer();
@@ -119,34 +99,48 @@ namespace GNet {
 			connectContext->isAutostartable = isAutostartable;
 			connectContext->connection = LGLCD_INVALID_CONNECTION;
 
-			lgLcdConnect(connectContext);
+			DWORD result = lgLcdConnect(connectContext);
+            if (ERROR_SUCCESS != result)
+                connectContext = 0;
+
+            return result;
 		}
 
-		void Disconnect()
+		bool Disconnect()
 		{
-			if (connectContext != 0)
-			{
-				lgLcdDisconnect(connectContext->connection);
-				Marshal::FreeHGlobal(IntPtr((void*)connectContext->appFriendlyName));
-				delete(connectContext);
-				connectContext = 0;
-			}
+            if (disposed) return false;
+			if (connectContext == 0) return false;
+
+			lgLcdDisconnect(connectContext->connection);
+			Marshal::FreeHGlobal(IntPtr((void*)connectContext->appFriendlyName));
+			delete(connectContext);
+			connectContext = 0;
 		}
 
-		bool Open()
+		int Open()
 		{
-			if (connectContext == 0 || connectContext->connection == LGLCD_INVALID_CONNECTION)
-				return false;
+            if (disposed) return -1;
+            if (openContext != 0) return 0;
+
+			if (connectContext == 0 || connectContext->connection == LGLCD_INVALID_CONNECTION) return -2;
 
 			openContext = new lgLcdOpenByTypeContext();
 			openContext->connection = connectContext->connection;
 			openContext->deviceType = (int)deviceType;
 
-			onSoftButtonsDelegate = gcnew LcdOnSoftButtonsCB(this, &Lcd::SoftbuttonsChanged);
+			LcdOnSoftButtonsCB^ onSoftButtonsDelegate = gcnew LcdOnSoftButtonsCB(this, &Lcd::SoftbuttonsChanged);
+            onSoftButtonsGch = GCHandle::Alloc(onSoftButtonsDelegate);
+            IntPtr onSoftButtonsIp = Marshal::GetFunctionPointerForDelegate(onSoftButtonsDelegate);
 
-			openContext->onSoftbuttonsChanged.softbuttonsChangedCallback = (lgLcdOnSoftButtonsCB)(Marshal::GetFunctionPointerForDelegate(onSoftButtonsDelegate)).ToPointer();
+			openContext->onSoftbuttonsChanged.softbuttonsChangedCallback = (lgLcdOnSoftButtonsCB)(onSoftButtonsIp).ToPointer();
 
-			int val = lgLcdOpenByType(openContext);
+			int result = lgLcdOpenByType(openContext);
+            
+            if (ERROR_SUCCESS != result)
+            {
+                openContext = 0;
+                return result;
+            }
 
 			switch (deviceType)
 			{
@@ -156,7 +150,7 @@ namespace GNet {
 						bmp.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
 
 						ZeroMemory(&bmp.pixels, sizeof(bmp.pixels));
-						val = lgLcdUpdateBitmap(openContext->device, &bmp.hdr, LGLCD_SYNC_UPDATE(LGLCD_PRIORITY_NORMAL));
+						result = lgLcdUpdateBitmap(openContext->device, &bmp.hdr, LGLCD_SYNC_UPDATE(LGLCD_PRIORITY_NORMAL));
 					}
 					break;
 
@@ -166,45 +160,139 @@ namespace GNet {
 						bmp.hdr.Format = LGLCD_BMP_FORMAT_QVGAx32;
 
 						ZeroMemory(&bmp.pixels, sizeof(bmp.pixels));
-						val = lgLcdUpdateBitmap(openContext->device, &bmp.hdr, LGLCD_SYNC_UPDATE(LGLCD_PRIORITY_NORMAL));
+						result = lgLcdUpdateBitmap(openContext->device, &bmp.hdr, LGLCD_SYNC_UPDATE(LGLCD_PRIORITY_NORMAL));
 					}
 					break;
 			}
 
-			return true;
+			return 0;
 		}
 
-		void Close()
+		bool Close()
 		{
-			if (openContext != 0)
-			{
-				lgLcdSetAsLCDForegroundApp(openContext->device, 0);
-				// TODO: free any allocated memory from Open
-				lgLcdClose(openContext->device);
-				delete openContext;
-				openContext = 0;
-			}
+            if (disposed) return false;
+			if (openContext == 0) return false;
+
+			lgLcdSetAsLCDForegroundApp(openContext->device, 0);
+			lgLcdClose(openContext->device);
+			delete openContext;
+			openContext = 0;
+            onSoftButtonsGch.Free();
 		}
 
-		//void InitBitmap()
-		//{
-		//	bitmap = new lgLcdBitmap160x43x1();
-		//	bitmap->hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
-		//}
+        int UpdateBitmap(LcdPriority priority)
+        {
+            if (disposed) return -1;
+
+            int result = 0;
+
+            BitmapData^ bitdata =  bitmap->LockBits(
+                Drawing::Rectangle(0, 0, bitmap->Width, bitmap->Height),
+                ImageLockMode::ReadOnly,
+                //deviceType == LcdDeviceType::LcdDeviceBW ? 
+                PixelFormat::Format32bppRgb
+                );
+
+            if (deviceType == LcdDeviceType::LcdDeviceBW) {
+				lgLcdBitmap160x43x1 bmp;
+				bmp.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
+
+                for (int y = 0; y < bitdata->Height; y++) {
+                    BYTE* row = (BYTE*) (bitdata->Scan0).ToPointer() + (y * bitdata->Stride);
+                    for (int x = 0; x < bitdata->Width; x++) {
+
+                        BYTE* p = &row[x*4];
+                        BYTE val = p[0] | p[1] | p[2];
+                        bmp.pixels[(y * bitdata->Width) + x] =
+                            (p[0] | p[1] | p[2]) < 0x80 ?
+                                0x00 : 0xff;
+                    }
+                }
+
+				result = lgLcdUpdateBitmap(openContext->device, &bmp.hdr, LGLCD_SYNC_UPDATE((int)priority));
+            } else {
+				lgLcdBitmapQVGAx32 bmp;
+				bmp.hdr.Format = LGLCD_BMP_FORMAT_QVGAx32;
+
+                // don't have a color device to test this (e.g. G19)
+                /*
+                for (int y = 0; y < bitdata->Height; y++) {
+                    byte* row = (byte*) bitdata->Scan0 + (y * bitdata->Stride);
+                    for (int x = 0; x < bitdata->Width; x++) {
+                        byte* p = row[x];
+                        bmp.pixels[(y * bitdata->Width) + x] = row[x];
+                    }
+                }
+                */
+
+				result = lgLcdUpdateBitmap(openContext->device, &bmp.hdr, LGLCD_SYNC_UPDATE((int)priority));
+            }
+
+            bitmap->UnlockBits(bitdata);
+
+            return result;
+        }
+
+        int UpdateBitmap(array<System::Byte>^ bytes, LcdPriority priority)
+        {
+            if (disposed) return -1;
+
+            pin_ptr<BYTE> pbytes = &bytes[0];
+            int result = 0;
+
+			switch (deviceType)
+			{
+				case LcdDeviceType::LcdDeviceBW:
+					{
+                        if (bytes->Length != BW_SIZE)
+                            return -1;
+
+						lgLcdBitmap160x43x1 bmp;
+						bmp.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
+                        memcpy(&bmp.pixels, pbytes, BW_SIZE);
+
+						result = lgLcdUpdateBitmap(openContext->device, &bmp.hdr, LGLCD_SYNC_UPDATE((int)priority));
+					}
+					break;
+
+				case LcdDeviceType::LcdDeviceQVGA:
+					{
+                        if (bytes->Length != QVGA_SIZE)
+                            return -1;
+
+						lgLcdBitmapQVGAx32 bmp;
+						bmp.hdr.Format = LGLCD_BMP_FORMAT_QVGAx32;
+                        memcpy(&bmp.pixels, pbytes, QVGA_SIZE);
+
+						result = lgLcdUpdateBitmap(openContext->device, &bmp.hdr, LGLCD_SYNC_UPDATE((int)priority));
+					}
+					break;
+			}
+
+            return result;
+        }
+
+	protected:
+		delegate int LcdOnSoftButtonsCB(int device, int dwButtons, IntPtr pContext);
+
+		virtual int SoftbuttonsChanged(int a, int b, IntPtr c)
+		{
+			return 0;
+		}
 
 	protected: 
 		String^ appFriendlyName;
 		bool isPersistent;
 		bool isAutostartable;
 		LcdDeviceType deviceType;
-		LcdOnSoftButtonsCB^ onSoftButtonsDelegate;
+        GCHandle onSoftButtonsGch;
+
+        Graphics^ graphics;
+        Bitmap^ bitmap;
 
 	private:
+        bool disposed;
 		lgLcdConnectContext* connectContext;
 		lgLcdOpenByTypeContext* openContext;
-		//lgLcdSoftbuttonsChangedContext* sbChangedContext;
-		//lgLcdBitmap160x43x1* bitmap;
-		//BYTE* pixels;
-		//lgLcdBitmapHeader* bitmapHeader;
 	};
 }
