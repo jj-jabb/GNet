@@ -31,6 +31,7 @@
             this.btnConnect = new System.Windows.Forms.Button();
             this.btnDisconnect = new System.Windows.Forms.Button();
             this.btnWrite = new System.Windows.Forms.Button();
+            this.textBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnConnect
@@ -63,17 +64,26 @@
             this.btnWrite.UseVisualStyleBackColor = true;
             this.btnWrite.Click += new System.EventHandler(this.btnWrite_Click);
             // 
+            // textBox
+            // 
+            this.textBox.Location = new System.Drawing.Point(93, 43);
+            this.textBox.Name = "textBox";
+            this.textBox.Size = new System.Drawing.Size(315, 20);
+            this.textBox.TabIndex = 3;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(646, 458);
+            this.Controls.Add(this.textBox);
             this.Controls.Add(this.btnWrite);
             this.Controls.Add(this.btnDisconnect);
             this.Controls.Add(this.btnConnect);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -82,6 +92,7 @@
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnDisconnect;
         private System.Windows.Forms.Button btnWrite;
+        private System.Windows.Forms.TextBox textBox;
     }
 }
 
