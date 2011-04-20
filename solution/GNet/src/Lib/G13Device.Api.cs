@@ -183,7 +183,7 @@ namespace GNet.Lib
         {
             var inputData = new InputWrapper[scanCodes.Count];
             for (int i = 0; i < inputData.Length; i++)
-                inputData[i] = InputSimulator.KeyWrapper(scanCodes[i], false);
+                inputData[i] = InputSimulator.KeyWrapper(scanCodes[i], false, ((int)scanCodes[i] & 0x100) == 0x100);
 
             Interop.SendInput((uint)inputData.Length, inputData);
         }
@@ -216,7 +216,7 @@ namespace GNet.Lib
         {
             var inputData = new InputWrapper[scanCodes.Count];
             for (int i = 0; i < inputData.Length; i++)
-                inputData[i] = InputSimulator.KeyWrapper(scanCodes[i], true);
+                inputData[i] = InputSimulator.KeyWrapper(scanCodes[i], true, ((int)scanCodes[i] & 0x100) == 0x100);
 
             Interop.SendInput((uint)inputData.Length, inputData);
         }
@@ -250,8 +250,9 @@ namespace GNet.Lib
             var inputData = new List<InputWrapper>();
             for (int i = 0; i < scanCodes.Count; i++)
             {
-                inputData.Add(InputSimulator.KeyWrapper(scanCodes[i], false));
-                inputData.Add(InputSimulator.KeyWrapper(scanCodes[i], true));
+                var extended = ((int)scanCodes[i] & 0x100) == 0x100;
+                inputData.Add(InputSimulator.KeyWrapper(scanCodes[i], false, extended));
+                inputData.Add(InputSimulator.KeyWrapper(scanCodes[i], true, extended));
             }
 
             Interop.SendInput((uint)inputData.Count, inputData.ToArray());
