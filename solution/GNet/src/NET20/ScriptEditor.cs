@@ -47,6 +47,8 @@ function OnEvent(event, arg, family)
 end
 ";
             }
+
+            scriptRunner = new LuaRunner();
         }
 
         protected override void OnControlRemoved(ControlEventArgs e)
@@ -62,7 +64,8 @@ end
 
             try
             {
-                scriptRunner = new LuaRunner(editor.Text).Run();
+                editor.IsReadOnly = true;
+                scriptRunner.Run(editor.Text);
             }
             catch (Exception ex)
             {
@@ -81,12 +84,11 @@ end
             if (scriptRunner != null)
             {
                 scriptRunner.Stop();
-                scriptRunner.Dispose();
-                scriptRunner = null;
             }
 
             runButton.Enabled = true;
             stopButton.Enabled = false;
+            editor.IsReadOnly = false;
         }
     }
 }

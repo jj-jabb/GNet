@@ -17,15 +17,6 @@ namespace GNet
             InitializeComponent();
         }
 
-        private void newAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TabPage tabPage = new TabPage("Untitled");
-            ScriptEditor editor = new ScriptEditor();
-            editor.Dock = DockStyle.Fill;
-            tabPage.Controls.Add(editor);
-            documentTabs.TabPages.Add(tabPage);
-        }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             tbsw = new TextBoxStreamWriter(output);
@@ -34,13 +25,22 @@ namespace GNet
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach(TabPage tab in documentTabs.TabPages)
+            foreach (TabPage tab in documentTabs.TabPages)
                 foreach (Control ctrl in tab.Controls)
                 {
                     ScriptEditor editor = ctrl as ScriptEditor;
                     if (editor != null)
                         editor.StopScript();
                 }
+        }
+
+        private void newAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Untitled");
+            ScriptEditor editor = new ScriptEditor();
+            editor.Dock = DockStyle.Fill;
+            tabPage.Controls.Add(editor);
+            documentTabs.TabPages.Add(tabPage);
         }
     }
 }

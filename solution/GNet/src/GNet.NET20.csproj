@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="lua51">
@@ -48,17 +50,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HidLibrary\BackgroundWorker.cs" />
-    <Compile Include="HidLibrary\EventArgs.cs" />
-    <Compile Include="HidLibrary\HidAsyncState.cs" />
-    <Compile Include="HidLibrary\HidDevice.cs" />
-    <Compile Include="HidLibrary\HidDeviceAttributes.cs" />
-    <Compile Include="HidLibrary\HidDeviceCapabilities.cs" />
-    <Compile Include="HidLibrary\HidDeviceData.cs" />
-    <Compile Include="HidLibrary\HidDeviceEventMonitor.cs" />
-    <Compile Include="HidLibrary\HidDevices.cs" />
-    <Compile Include="HidLibrary\HidReport.cs" />
-    <Compile Include="HidLibrary\NativeMethods.cs" />
+    <Compile Include="Hid\BackgroundWorker.cs" />
+    <Compile Include="Hid\Device.cs" />
+    <Compile Include="Hid\Device.Static.cs" />
+    <Compile Include="Hid\DeviceAttributes.cs" />
+    <Compile Include="Hid\DeviceCapabilities.cs" />
+    <Compile Include="Hid\DeviceData.cs" />
+    <Compile Include="Hid\DeviceInfo.cs" />
+    <Compile Include="Hid\DeviceMode.cs" />
+    <Compile Include="Hid\DeviceReport.cs" />
+    <Compile Include="Hid\DeviceStatus.cs" />
+    <Compile Include="Hid\EventArgs.cs" />
+    <Compile Include="Hid\NativeMethods.cs" />
     <Compile Include="ICSharpCode.TextEditor\Actions\BookmarkActions.cs" />
     <Compile Include="ICSharpCode.TextEditor\Actions\CaretActions.cs" />
     <Compile Include="ICSharpCode.TextEditor\Actions\ClipBoardActions.cs" />
@@ -196,8 +199,13 @@
     <Compile Include="ICSharpCode.TextEditor\Util\WeakCollection.cs" />
     <Compile Include="Lib\G13Device.Api.cs" />
     <Compile Include="Lib\G13Device.cs" />
+    <Compile Include="Lib\G13Keys.cs" />
     <Compile Include="Lib\IO\InputSimulator.cs" />
+    <Compile Include="Lib\IO\JoystickAngle.cs" />
     <Compile Include="Lib\IO\JoystickPosition.cs" />
+    <Compile Include="Lib\LgLcd.cs" />
+    <Compile Include="Lib\LgLcd.Definitions.cs" />
+    <Compile Include="Lib\LgLcdDeviceType.cs" />
     <Compile Include="Lib\MacroSystem\Delay.cs" />
     <Compile Include="Lib\MacroSystem\KeyDown.cs" />
     <Compile Include="Lib\MacroSystem\KeyTap.cs" />
@@ -253,14 +261,6 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GNet.Lcd\src\GNet.Lcd.NET20.vcxproj">
-      <Project>{D9EFD650-E1B3-45D8-A700-B2F2B092F23F}</Project>
-      <Name>GNet.Lcd.NET20</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HidLibrary\LICENSE" />
-    <None Include="HidLibrary\README.md" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\ASPX.xshd" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\BAT-Mode.xshd" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Boo.xshd" />
@@ -300,6 +300,11 @@
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\RightArrow.cur" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\SyntaxModes.xml" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\TextEditorControl.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="LgLcd.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

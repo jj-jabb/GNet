@@ -6,7 +6,7 @@ namespace GNet
 {
     public interface IScriptRunner : IDisposable
     {
-        IScriptRunner Run();
+        void Run(string script);
         void Stop();
     }
 }

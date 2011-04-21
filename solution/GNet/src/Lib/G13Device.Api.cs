@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using HidLibrary;
+using GNet.Hid;
 using GNet.Lib.IO;
 using GNet.Lib.PInvoke;
 
@@ -140,40 +140,35 @@ namespace GNet.Lib
         {
             int mkey = (int)dkey;
             mKeyState = mkey;
-            if (KeyPressed != null)
+
+            switch (mkey)
             {
-                switch (mkey)
-                {
-                    case 1:
-                        KeyPressed(Keys.M1);
-                        break;
+                case 1:
+                    ReadWorker_SingleKeyPressed(G13Keys.M1);
+                    break;
 
-                    case 2:
-                        KeyPressed(Keys.M2);
-                        break;
+                case 2:
+                    ReadWorker_SingleKeyPressed(G13Keys.M2);
+                    break;
 
-                    case 3:
-                        KeyPressed(Keys.M3);
-                        break;
-                }
+                case 3:
+                    ReadWorker_SingleKeyPressed(G13Keys.M3);
+                    break;
             }
 
-            if (KeyReleased != null)
+            switch (mkey)
             {
-                switch (mkey)
-                {
-                    case 1:
-                        KeyReleased(Keys.M1);
-                        break;
+                case 1:
+                    ReadWorker_SingleKeyReleased(G13Keys.M1);
+                    break;
 
-                    case 2:
-                        KeyReleased(Keys.M2);
-                        break;
+                case 2:
+                    ReadWorker_SingleKeyReleased(G13Keys.M2);
+                    break;
 
-                    case 3:
-                        KeyReleased(Keys.M3);
-                        break;
-                }
+                case 3:
+                    ReadWorker_SingleKeyReleased(G13Keys.M3);
+                    break;
             }
         }
 
@@ -454,49 +449,6 @@ namespace GNet.Lib
                     return false;
             }
         }
-
-
-/*
-        IList<ScanCode> GetCodes(ushort scanCode, ushort[] scanCodes)
-        {
-            IList<ScanCode> codes = new List<ScanCode>();
-            codes.Add((ScanCode)scanCode);
-            if (scanCodes != null)
-                for (int i = 0; i < scanCodes.Length; i++)
-                    codes.Add((ScanCode)scanCodes[i]);
-
-            return codes;
-        }
-
-        IList<ScanCode> GetCodes(ScanCode scanCode, ScanCode[] scanCodes)
-        {
-            IList<ScanCode> codes = new List<ScanCode>();
-            codes.Add(scanCode);
-            if (scanCodes != null)
-                for (int i = 0; i < scanCodes.Length; i++)
-                    codes.Add(scanCodes[i]);
-
-            return codes;
-        }
-
-        IList<ScanCode> GetCodes(string keyName, string[] keyNames)
-        {
-            ScanCode code;
-            IList<ScanCode> codes = new List<ScanCode>();
-
-            if (keyName != null)
-                if (nameToCode.TryGetValue(keyName, out code))
-                    codes.Add(code);
-
-            if (keyNames != null)
-                for (int i = 0; i < keyNames.Length; i++)
-                    if (nameToCode.TryGetValue(keyNames[i], out code))
-                        codes.Add(code);
-
-            return codes;
-        }
-*/
-
 
         IList<ScanCode> GetCodes(ushort[] scanCodes)
         {

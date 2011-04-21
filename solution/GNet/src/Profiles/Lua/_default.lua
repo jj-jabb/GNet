@@ -5,7 +5,7 @@
 poll = true
 
 function WriteLcd(text)
-	ClearLcd()
+	ClearGraphics()
 	DrawString(text, 'Microsoft Sans Serif', 10, 0, '#FFFFFF', 0, 0)
 end
 

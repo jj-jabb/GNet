@@ -76,20 +76,22 @@ namespace GNet {
         property Bitmap^ LcdBitmap { Bitmap^ get() { return bitmap; } }
         property Graphics^ LcdGraphics { Graphics^ get() { return graphics; } }
 
-		void BringToFront()
+		int BringToFront()
 		{
-            if (disposed) return;
-            if (openContext == 0) return;
+            if (disposed) return 0;
+            if (openContext == 0) return 0;
 
 			int result = lgLcdSetAsLCDForegroundApp(openContext->device, 1);
+			return result;
 		}
 
-        void RemoveFromFront()
+        int RemoveFromFront()
         {
-            if (disposed) return;
-            if (openContext == 0) return;
+            if (disposed) return 0;
+            if (openContext == 0) return 0;
 
 			int result = lgLcdSetAsLCDForegroundApp(openContext->device, 0);
+			return result;
         }
 
 		bool Init()
@@ -137,15 +139,22 @@ namespace GNet {
 
 		bool Disconnect()
 		{
-            if (disposed) return false;
-			if (connectContext == 0) return false;
+			try
+			{
+				if (disposed) return false;
+				if (connectContext == 0) return false;
 
-			lgLcdDisconnect(connectContext->connection);
-			Marshal::FreeHGlobal(IntPtr((void*)connectContext->appFriendlyName));
-			delete(connectContext);
-			connectContext = 0;
+				lgLcdDisconnect(connectContext->connection);
+				Marshal::FreeHGlobal(IntPtr((void*)connectContext->appFriendlyName));
+				delete(connectContext);
+				connectContext = 0;
+			}
+			catch(Exception^ ex)
+			{
+				System::Console::WriteLine(ex->ToString());
+			}
 
-			return true;
+				return true;
 		}
 
 		int Open()
@@ -201,14 +210,22 @@ namespace GNet {
 
 		bool Close()
 		{
-            if (disposed) return false;
-			if (openContext == 0) return false;
+			try
+			{
+				if (disposed) return false;
+				if (openContext == 0) return false;
 
-			lgLcdSetAsLCDForegroundApp(openContext->device, 0);
-			lgLcdClose(openContext->device);
-			delete openContext;
-			openContext = 0;
-            onSoftButtonsGch.Free();
+				lgLcdSetAsLCDForegroundApp(openContext->device, 0);
+				openContext->onSoftbuttonsChanged.softbuttonsChangedCallback = 0;
+				onSoftButtonsGch.Free();
+				lgLcdClose(openContext->device);
+				delete openContext;
+				openContext = 0;
+			}
+			catch(Exception^ ex)
+			{
+				System::Console::WriteLine(ex->ToString());
+			}
 
 			return true;
 		}
