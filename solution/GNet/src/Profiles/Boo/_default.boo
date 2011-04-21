@@ -1,3 +1,10 @@
-﻿# Name: Default
-# Description: The default profile.
+﻿# Name:
+# Description:
 # Executables:
+
+import GNet.Lib
+
+static def Run(d as G13Device):
+	d.KeyPressed += def(key):
+		k as uint = key
+		print k

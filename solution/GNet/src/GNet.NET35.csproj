@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B9E0AB2C-34D5-4B56-8051-67D88B37D1F8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GNet</RootNamespace>
+    <AssemblyName>GNet.NET35</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug.NET35\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release.NET35\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Boo.Lang">
+      <HintPath>..\..\Boo 0.9.4.9\NET35\Boo.Lang.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Compiler">
+      <HintPath>..\..\Boo 0.9.4.9\NET35\Boo.Lang.Compiler.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Parser">
+      <HintPath>..\..\Boo 0.9.4.9\NET35\Boo.Lang.Parser.dll</HintPath>
+    </Reference>
+    <Reference Include="lua51">
+      <HintPath>..\..\LuaInterface_2.0.3\NET20\lua51.dll</HintPath>
+    </Reference>
+    <Reference Include="LuaInterface">
+      <HintPath>..\..\LuaInterface_2.0.3\NET20\LuaInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="NET35\App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="NET35\ScriptEditor.xaml.cs">
+      <DependentUpon>ScriptEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NET35\TextBoxStreamWriter.cs" />
+    <Compile Include="Scripting\BooRunner.cs" />
+    <Compile Include="Scripting\IScriptRunner.cs" />
+    <Compile Include="Scripting\LuaRunner.cs" />
+    <Page Include="NET35\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="HidLibrary\BackgroundWorker.cs" />
+    <Compile Include="HidLibrary\EventArgs.cs" />
+    <Compile Include="HidLibrary\HidAsyncState.cs" />
+    <Compile Include="HidLibrary\HidDevice.cs" />
+    <Compile Include="HidLibrary\HidDeviceAttributes.cs" />
+    <Compile Include="HidLibrary\HidDeviceCapabilities.cs" />
+    <Compile Include="HidLibrary\HidDeviceData.cs" />
+    <Compile Include="HidLibrary\HidDeviceEventMonitor.cs" />
+    <Compile Include="HidLibrary\HidDevices.cs" />
+    <Compile Include="HidLibrary\HidReport.cs" />
+    <Compile Include="HidLibrary\NativeMethods.cs" />
+    <Compile Include="Lib\G13Device.Api.cs" />
+    <Compile Include="Lib\G13Device.cs" />
+    <Compile Include="Lib\IO\InputSimulator.cs" />
+    <Compile Include="Lib\IO\JoystickPosition.cs" />
+    <Compile Include="Lib\MacroSystem\Delay.cs" />
+    <Compile Include="Lib\MacroSystem\KeyDown.cs" />
+    <Compile Include="Lib\MacroSystem\KeyTap.cs" />
+    <Compile Include="Lib\MacroSystem\KeyUp.cs" />
+    <Compile Include="Lib\MacroSystem\Macro.cs" />
+    <Compile Include="Lib\MacroSystem\MacroStopBehavior.cs" />
+    <Compile Include="Lib\MacroSystem\MouseDown.cs" />
+    <Compile Include="Lib\MacroSystem\MouseMoveTo.cs" />
+    <Compile Include="Lib\MacroSystem\MouseNudge.cs" />
+    <Compile Include="Lib\MacroSystem\MouseRecallPos.cs" />
+    <Compile Include="Lib\MacroSystem\MouseSavePos.cs" />
+    <Compile Include="Lib\MacroSystem\MouseTap.cs" />
+    <Compile Include="Lib\MacroSystem\MouseUp.cs" />
+    <Compile Include="Lib\MacroSystem\MouseWheel.cs" />
+    <Compile Include="Lib\MacroSystem\Step.cs" />
+    <Compile Include="Lib\MacroSystem\WriteText.cs" />
+    <Compile Include="Lib\PInvoke\HardwareInputData.cs" />
+    <Compile Include="Lib\PInvoke\InputWrapper.cs" />
+    <Compile Include="Lib\PInvoke\Interop.cs" />
+    <Compile Include="Lib\PInvoke\KeyboardFlags.cs" />
+    <Compile Include="Lib\PInvoke\KeyboardInputData.cs" />
+    <Compile Include="Lib\PInvoke\MouseFlags.cs" />
+    <Compile Include="Lib\PInvoke\MouseInputData.cs" />
+    <Compile Include="Lib\PInvoke\MouseKeyboardHardwareUnion.cs" />
+    <Compile Include="Lib\PInvoke\ScanCode.cs" />
+    <Compile Include="Lib\PInvoke\ScanCodeInfo.cs" />
+    <Compile Include="Lib\PInvoke\SendInputType.cs" />
+    <Compile Include="Lib\PInvoke\SetWinEventHookFlags.cs" />
+    <Compile Include="Lib\PInvoke\SystemMetric.cs" />
+    <Compile Include="Lib\PInvoke\VirtualKeyStates.cs" />
+    <Compile Include="Lib\PInvoke\Win32Point.cs" />
+    <Compile Include="Lib\PInvoke\WinEvent.cs" />
+    <Compile Include="Lib\WMI.cs" />
+    <Compile Include="NET35\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NET35\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="NET35\ScriptEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="NET35\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\GNet.Lcd\src\GNet.Lcd.NET20.vcxproj">
+      <Project>{D9EFD650-E1B3-45D8-A700-B2F2B092F23F}</Project>
+      <Name>GNet.Lcd.NET20</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\third-party\NET35\AvalonEdit\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj">
+      <Project>{A63BC6BC-C7D3-4248-9096-0ADDCEB703A7}</Project>
+      <Name>ICSharpCode.AvalonEdit</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HidLibrary\LICENSE" />
+    <None Include="HidLibrary\README.md" />
+    <None Include="Profiles\Boo\_default.boo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Profiles\Lua\_default.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

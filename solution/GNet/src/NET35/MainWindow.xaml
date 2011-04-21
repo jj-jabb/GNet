@@ -1,0 +1,53 @@
+﻿<Window
+    x:Class="GNet.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="GNet - Logitech G-series Key Profiler for .NET 4.0"
+    Height="500"
+    Width="700"
+    Loaded="Window_Loaded"
+	>
+    <Window.CommandBindings>
+        <CommandBinding Command="New" CanExecute="CommandBinding_New_CanExecute" Executed="CommandBinding_New_Executed" />
+    </Window.CommandBindings>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Height="22">
+            <MenuItem Header="Pro_file">
+                <MenuItem Header="_New..." Command="New" />
+                <MenuItem Header="_Open" Command="Open" />
+                <MenuItem Header="_Save"  Command="Save" />
+                <MenuItem Header="Save _As..." Command="SaveAs" />
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Undo"  Command="Undo" />
+                <MenuItem Header="_Redo"  Command="Redo" />
+                <Separator />
+                <MenuItem Header="Cu_t"  Command="Cut" />
+                <MenuItem Header="_Copy"  Command="Copy" />
+                <MenuItem Header="_Paste" Command="Paste" />
+                <Separator />
+                <MenuItem Header="_Profile Properties..." />
+            </MenuItem>
+        </Menu>
+        <Grid DockPanel.Dock="Bottom" Background="#FF000050">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="100" />
+            </Grid.RowDefinitions>
+            <TabControl Name="documentTabs" />
+
+            <GridSplitter
+                Grid.Row="1"
+                Width="Auto"
+                Height="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                ResizeDirection="Rows"
+                />
+            <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto">
+                <TextBox Name="output"  />
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</Window>

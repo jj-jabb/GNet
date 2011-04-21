@@ -48,7 +48,7 @@ namespace HidLibrary
 
         void monitor_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            while (monitor.CancellationPending != null)
+            while (monitor.CancellationPending != true)
             {
                 var isConnected = device.IsPathInDeviceList;
 
