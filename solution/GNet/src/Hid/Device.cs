@@ -36,6 +36,8 @@ namespace GNet.Hid
         protected int connectionCheckRate = 300;
         protected int openWait = 300;
 
+        int cancelReadHEvent = -1;
+
         public Device(int vendorId, params int[] productIds)
         {
             this.vendorId = vendorId;
@@ -56,7 +58,7 @@ namespace GNet.Hid
         public int ConnectionCheckRate { get { return connectionCheckRate; } set { connectionCheckRate = value; } }
         public int OpenWait { get { return openWait; } set { openWait = value; } }
 
-        protected virtual DeviceMode DeviceReadMode { get { return DeviceMode.NonOverlapped; } }
+        protected virtual DeviceMode DeviceReadMode { get { return DeviceMode.Overlapped; } }
 
 #if debugwrite
         protected virtual void OnConnected() { Debug.WriteLine("OnConnected"); }
@@ -95,8 +97,12 @@ namespace GNet.Hid
             if (true == readWorker.IsBusy)
             {
                 readWorker.CancelAsync();
-                if(IsOpen)
-                    NativeMethods.CancelIoEx(readHandle, IntPtr.Zero);
+                if (IsOpen)
+                    // CancelIoEx is only available on Vista +, so use an overlapped event
+                    // to cancel a ReadFile wait
+                    //NativeMethods.CancelIoEx(readHandle, IntPtr.Zero);
+                    if (cancelReadHEvent >= 0)
+                        NativeMethods.SetEvent(cancelReadHEvent);
             }
 
             if (true == isWriting)
@@ -342,6 +348,9 @@ namespace GNet.Hid
                             data = ReadData(0);
                             switch (data.Status)
                             {
+                                case DeviceData.ReadStatus.Cancelled:
+                                    break;
+
                                 case DeviceData.ReadStatus.Success:
                                     ReadWorker_DataRead(data);
                                     break;
@@ -402,14 +411,40 @@ namespace GNet.Hid
                     overlapped.OffsetHigh = 0;
                     overlapped.hEvent = NativeMethods.CreateEvent(ref security, Convert.ToInt32(false), Convert.ToInt32(true), string.Empty);
 
+
+                    var security2 = new NativeMethods.SECURITY_ATTRIBUTES();
+                    var overlapped2 = new NativeMethods.OVERLAPPED();
+                    var overlapTimeout2 = NativeMethods.WAIT_INFINITE;
+
+                    security2.lpSecurityDescriptor = IntPtr.Zero;
+                    security2.bInheritHandle = true;
+                    security2.nLength = Marshal.SizeOf(security);
+
+                    overlapped2.Offset = 0;
+                    overlapped2.OffsetHigh = 0;
+                    overlapped2.hEvent = NativeMethods.CreateEvent(ref security, Convert.ToInt32(true), Convert.ToInt32(false), string.Empty);
+
+                    int[] hEvents = new int[] { overlapped.hEvent, overlapped2.hEvent };
+
+                    cancelReadHEvent = overlapped2.hEvent;
+
                     try
                     {
                         NativeMethods.ReadFileOverlapped(readHandle, ref buffer[0], buffer.Length, ref bytesRead, ref overlapped);
 
-                        var result = NativeMethods.WaitForSingleObject(overlapped.hEvent, overlapTimeout);
+                        //var result = NativeMethods.WaitForSingleObject(overlapped.hEvent, overlapTimeout);
+                        var result = NativeMethods.WaitForMultipleObjects(2, ref hEvents[0], false, overlapTimeout);
+
+                        cancelReadHEvent = -1;
 
                         switch (result)
                         {
+                            case 1: // overlapped2.hEvent was set, indicating a cancel of readHandle
+                                NativeMethods.CancelIo(readHandle);
+                                NativeMethods.WaitForSingleObject(overlapped.hEvent, NativeMethods.WAIT_INFINITE);
+                                buffer = new byte[] { };
+                                status = DeviceData.ReadStatus.Cancelled;
+                                break;
                             case NativeMethods.WAIT_OBJECT_0: status = DeviceData.ReadStatus.Success; break;
                             case NativeMethods.WAIT_TIMEOUT:
                                 status = DeviceData.ReadStatus.WaitTimedOut;

@@ -13,6 +13,9 @@ namespace GNet
         public NewProfileDialog()
         {
             InitializeComponent();
+
+            DialogResult = DialogResult.Cancel;
+            Executables = new List<string>();
         }
 
         private void NewProfileDialog_Load(object sender, EventArgs e)
@@ -29,6 +32,16 @@ namespace GNet
 
             cbxCopyExisting.SelectedIndex = 0;
         }
+
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public string Language { get; private set; }
+        public string Device { get; private set; }
+        public List<string> Executables { get; private set; }
+        public bool LockForExecutables { get; private set; }
+        public string CopyFrom { get; private set; }
+
+        public bool OkClicked { get; private set; }
 
         private void lbxExecs_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -65,17 +78,38 @@ namespace GNet
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.OK;
 
+            Name = tbxName.Text;
+            Description = tbxDescription.Text;
+            Language = cbxLanguage.SelectedItem.ToString();
+            Device = cbxDevice.SelectedItem.ToString();
+            LockForExecutables = chkLock.Checked;
+
+            if (chkCopyExisting.Checked)
+                CopyFrom = cbxCopyExisting.SelectedItem.ToString();
+
+            foreach (var item in lbxExecs.Items)
+                Executables.Add(item.ToString());
+
+            OkClicked = true;
+            Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-
+            OkClicked = false;
+            Close();
         }
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void chkCopyExisting_CheckedChanged(object sender, EventArgs e)
+        {
+            cbxCopyExisting.Enabled = chkCopyExisting.Checked;
         }
     }
 }

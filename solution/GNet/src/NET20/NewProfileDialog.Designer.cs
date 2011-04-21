@@ -92,6 +92,7 @@
             // 
             this.cbxLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxLanguage.FormattingEnabled = true;
             this.cbxLanguage.Items.AddRange(new object[] {
             "Lua"});
@@ -228,11 +229,13 @@
             this.chkCopyExisting.TabIndex = 11;
             this.chkCopyExisting.Text = "Copy from an existing profile";
             this.chkCopyExisting.UseVisualStyleBackColor = true;
+            this.chkCopyExisting.CheckedChanged += new System.EventHandler(this.chkCopyExisting_CheckedChanged);
             // 
             // cbxCopyExisting
             // 
             this.cbxCopyExisting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbxCopyExisting.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxCopyExisting.Enabled = false;
             this.cbxCopyExisting.FormattingEnabled = true;
             this.cbxCopyExisting.Items.AddRange(new object[] {
@@ -260,6 +263,7 @@
             // 
             this.cbxDevice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbxDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxDevice.FormattingEnabled = true;
             this.cbxDevice.Items.AddRange(new object[] {
             "G13"});

@@ -287,7 +287,19 @@
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Tex-Mode.xshd" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\VBNET-Mode.xshd" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\XML-Mode.xshd" />
+    <None Include="Profiles\Boo\Default Configuration.boo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Profiles\Boo\_template.boo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Profiles\Boo\_default.boo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Profiles\Lua\_template.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Profiles\Lua\Default Configuration.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Lua\_default.lua">

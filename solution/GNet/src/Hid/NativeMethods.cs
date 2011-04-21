@@ -38,7 +38,7 @@ namespace GNet.Hid
         }
 
         [DllImport("kernel32.dll")]
-        static public extern int CancelIo(IntPtr hFile);
+        static public extern int CancelIo(SafeFileHandle hFile);
 
         [DllImport("kernel32.dll")]
         static public extern int CancelIoEx(SafeFileHandle hFile, IntPtr lpOverlapped);
@@ -59,7 +59,15 @@ namespace GNet.Hid
         static public extern bool ReadFileOverlapped(SafeFileHandle hFile, ref byte lpBuffer, int nNumberOfBytesToRead, ref int lpNumberOfBytesRead, ref OVERLAPPED lpOverlapped);
 
         [DllImport("kernel32.dll")]
+        static public extern bool ResetEvent(int hHandle);
+        [DllImport("kernel32.dll")]
+        static public extern bool SetEvent(int hHandle);
+
+        [DllImport("kernel32.dll")]
         static public extern uint WaitForSingleObject(int hHandle, int dwMilliseconds);
+
+        [DllImport("kernel32.dll")]
+        static public extern uint WaitForMultipleObjects(int nCount, ref int lpHandles, bool bWaitAll, int dwMilliseconds);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         static public extern bool WriteFileOverlapped(IntPtr hFile, ref byte lpBuffer, int nNumberOfBytesToWrite, ref int lpNumberOfBytesWritten, ref OVERLAPPED lpOverlapped);

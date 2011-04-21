@@ -12,7 +12,8 @@ namespace GNet.Hid
             WaitFail = 2,
             NoDataRead = 3,
             ReadError = 4,
-            NotConnected = 5
+            NotConnected = 5,
+            Cancelled = 6
         }
 
         public DeviceData(ReadStatus status)

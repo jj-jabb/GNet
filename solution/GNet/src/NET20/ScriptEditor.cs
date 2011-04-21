@@ -16,7 +16,7 @@ namespace GNet
     {
         IScriptRunner scriptRunner;
 
-        public ScriptEditor()
+        public ScriptEditor(string content)
         {
             InitializeComponent();
 
@@ -28,25 +28,27 @@ namespace GNet
                 HighlightingManager.Manager.AddHighlightingStrategy(h);
             }
 
-            if (File.Exists(@".\Profiles\Lua\_default.lua"))
-            {
-                using (var fs = File.OpenText(@".\Profiles\Lua\_default.lua"))
-                {
-                    editor.Text = fs.ReadToEnd();
-                }
-            }
-            else
-            {
-                editor.Text =
-@"-- Name:
--- Description:
--- Executables:
+            editor.Text = content;
 
-function OnEvent(event, arg, family)
-    OutputLogMessage(event.."" : ""..arg.."" : ""..family)
-end
-";
-            }
+//            if (File.Exists(@".\Profiles\Lua\_default.lua"))
+//            {
+//                using (var fs = File.OpenText(@".\Profiles\Lua\_default.lua"))
+//                {
+//                    editor.Text = fs.ReadToEnd();
+//                }
+//            }
+//            else
+//            {
+//                editor.Text =
+//@"-- Name:
+//-- Description:
+//-- Executables:
+//
+//function OnEvent(event, arg, family)
+//    OutputLogMessage(event.."" : ""..arg.."" : ""..family)
+//end
+//";
+//            }
 
             scriptRunner = new LuaRunner();
         }
