@@ -789,7 +789,7 @@ namespace GNet
         {
             if (isRunning)
             {
-                device.SetBacklightColor(128, 255, 255);
+                device.SetBacklightColor(255, 255, 255);
 
                 device.KeyPressed -= new G13Device.KeyHandler(device_KeyPressed);
                 device.KeyReleased -= new G13Device.KeyHandler(device_KeyReleased);
@@ -798,8 +798,7 @@ namespace GNet
                 
                 device_Removed();
 
-                if (auto != null)
-                    auto.Set();
+                auto.Set();
             }
         }
 
