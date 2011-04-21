@@ -1,6 +1,7 @@
-﻿-- Name: Default
--- Description: The default profile.
--- Executables:
+﻿--> Name: Default
+--> Description: The default profile.
+--> Executables:
+--> Lock: false
 
 poll = true
 

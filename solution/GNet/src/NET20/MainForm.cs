@@ -34,8 +34,12 @@ namespace GNet
                 }
         }
 
-        private void newAsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            NewProfileDialog d = new NewProfileDialog();
+            d.ShowDialog();
+            return;
+
             TabPage tabPage = new TabPage("Untitled");
             ScriptEditor editor = new ScriptEditor();
             editor.Dock = DockStyle.Fill;

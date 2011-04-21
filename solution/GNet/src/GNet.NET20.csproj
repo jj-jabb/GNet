@@ -245,6 +245,12 @@
     <Compile Include="NET20\MainForm.designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="NET20\NewProfileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NET20\NewProfileDialog.Designer.cs">
+      <DependentUpon>NewProfileDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="NET20\Program.cs" />
     <Compile Include="NET20\AssemblyInfo.cs" />
     <Compile Include="NET20\ScriptEditor.cs">
@@ -291,6 +297,9 @@
   <ItemGroup>
     <EmbeddedResource Include="NET20\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NET20\NewProfileDialog.resx">
+      <DependentUpon>NewProfileDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NET20\ScriptEditor.resx">
       <DependentUpon>ScriptEditor.cs</DependentUpon>
