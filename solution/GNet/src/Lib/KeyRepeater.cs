@@ -33,6 +33,9 @@ namespace GNet.Lib
 
         public void Stop()
         {
+            if (!keyRepeatRunning)
+                return;
+
             keyRepeatRunning = false;
             keyRepeatEvent.Set();
             int waitCount;
