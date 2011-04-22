@@ -259,7 +259,7 @@ namespace GNet.Lib
         //************************************************************************
         // lgLcdConnectContext
         //************************************************************************
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct lgLcdConnectContext
         {
             // "Friendly name" display in the listing
@@ -277,7 +277,7 @@ namespace GNet.Lib
         //************************************************************************
         // lgLcdConnectContextEx
         //************************************************************************
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct lgLcdConnectContextEx
         {
             // "Friendly name" display in the listing
@@ -352,10 +352,10 @@ namespace GNet.Lib
         // displayed for user when viewing the user interface of the LCD module,
         // as well as a configuration callback and context, and a flag that states
         // whether this client is startable by LCDMon
-        [DllImport("LgLcd.dll", EntryPoint = "lgLcdConnectW")]
+        [DllImport("LgLcd.dll", EntryPoint = "lgLcdConnectW", CharSet = CharSet.Unicode)]
         public static extern
             DWORD lgLcdConnect(ref lgLcdConnectContext ctx);
-        [DllImport("LgLcd.dll", EntryPoint = "lgLcdConnectExW")]
+        [DllImport("LgLcd.dll", EntryPoint = "lgLcdConnectExW", CharSet = CharSet.Unicode)]
         public static extern
             DWORD lgLcdConnectEx(ref lgLcdConnectContextEx ctx);
 

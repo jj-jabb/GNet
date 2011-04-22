@@ -66,7 +66,7 @@ namespace GNet.Lib
             base.Dispose();
         }
 
-        public void SetBacklightColor(byte red, byte green, byte blue)
+        public void SetBacklightColorBytes(byte red, byte green, byte blue)
         {
             var length = DeviceInfo.Capabilities.FeatureReportByteLength;
             var data = new byte[length];

@@ -1,4 +1,11 @@
-﻿poll = true
+﻿-- Name: <Untitled>
+-- Description: 
+-- Language: Lua
+-- Device: G13
+-- LockForExecutables: False
+-- Executables: 
+
+poll = true
 
 function WriteLcd(text)
 	ClearGraphics()
@@ -24,31 +31,31 @@ function OnEvent(event, arg, family)
 
         if arg == 4 then
         	WriteLcd('Forward (w)')
-        	SetBacklightColor('#FF5050')
+        	SetBacklightColor(255, 0, 0)
         	SetMLight(0) -- clear MLights
             PressKey('w')
         end
         if arg == 10 then
         	WriteLcd('Strafe Left (a)')
-        	SetBacklightColor('#50FF50')
+        	SetBacklightColorHtml('#50FF50')
         	SetMLight(1) -- M1
             PressKey('a')
         end
         if arg == 11 then
         	WriteLcd('Backward (s)')
-        	SetBacklightColor('#5050FF')
+        	SetBacklightColorHtml('#5050FF')
         	SetMLight(2) -- M2
             PressKey('s')
         end
         if arg == 12 then
         	WriteLcd('Strafe Right (d)')
-        	SetBacklightColor('#FFFFFF')
+        	SetBacklightColorHtml('#FFFFFF')
         	SetMLight(4) -- M4
             PressKey('d')
         end
         if arg == 22 then
         	WriteLcd('Jump (space)')
-        	SetBacklightColor('#000000') -- Backlight off (black)
+        	SetBacklightColorHtml('#000000') -- Backlight off (black)
         	SetMLight(8) -- MR
             PressKey('spacebar')
         end

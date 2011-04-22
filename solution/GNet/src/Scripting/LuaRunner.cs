@@ -96,20 +96,14 @@ namespace GNet
 
         WriteType BringToFront()
         {
-            //AddWriteDelegate((d, h) =>
-            //{
-                if (!IsOpen)
-                    return WriteType.Complete;
+            if (!IsOpen)
+                return WriteType.Complete;
 
-                var isInFront = Lcd.BringToFront();
-                if (isInFront)
-                {
-                    //Thread.Sleep(100);
-                    DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, "#FFFFFF", 0, 0);
-                }
+            var isInFront = Lcd.BringToFront();
+            if (isInFront)
+                DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, "#FFFFFF", 0, 0);
 
-                return isInFront ? WriteType.Complete : WriteType.Incomplete;
-            //});
+            return isInFront ? WriteType.Complete : WriteType.Incomplete;
         }
 
         protected override void ReadWorker_Started()
@@ -151,7 +145,7 @@ namespace GNet
         protected override void ReadWorker_Finished()
         {
             isRunning = false;
-            SetBacklightColor(128, 255, 255);
+            SetBacklightColorBytes(128, 255, 255);
             auto.Set();
             base.ReadWorker_Finished();
         }
@@ -172,10 +166,10 @@ namespace GNet
                 Register(lua, "DrawString", this, typeof(string), typeof(string), typeof(double), typeof(double), typeof(string), typeof(double), typeof(double));
                 Register(lua, "ClearLcd", this);
                 Register(lua, "ClearGraphics", this);
-                Register(lua, "SetBacklightColor", this, typeof(string));
+                Register(lua, "SetBacklightColor", this, typeof(double), typeof(double), typeof(double));
+                Register(lua, "SetBacklightColorHtml", this, typeof(string));
                 Register(lua, "SetMLight", this, typeof(double));
 
-                //string text, string fontName, double fontSize, double fontStyle, string htmlColor, double x, double y
                 Register(lua, "GetMKeyState", this, typeof(string));
                 Register(lua, "SetMKeyState", this, typeof(int), typeof(string));
 
@@ -325,15 +319,15 @@ namespace GNet
             }
 
 
-            //if (EventQueueUpdated != null)
-            //{
-            //    StringBuilder qs = new StringBuilder();
+            if (EventQueueUpdated != null)
+            {
+                StringBuilder qs = new StringBuilder();
 
-            //    foreach (var val in keyEvents)
-            //        qs.Append(val.Key).Append(val.IsPressed ? "_P" : "_R").Append(" ");
+                foreach (var val in keyEvents)
+                    qs.Append(val.Key).Append(val.IsPressed ? "_P" : "_R").Append(" ");
 
-            //    EventQueueUpdated(null, new EventArgs<string>(qs.ToString()));
-            //}
+                EventQueueUpdated(null, new EventArgs<string>(qs.ToString()));
+            }
 
             auto.Set();
         }
@@ -420,13 +414,29 @@ namespace GNet
             Lcd.DrawString(text, fontName, fontSize, fontStyle, htmlColor, x, y);
         }
 
-        public void SetBacklightColor(string htmlColor)
+        public void SetBacklightColorHtml(string htmlColor)
         {
             try
             {
                 Color color = ColorTranslator.FromHtml(htmlColor);
                 if (!color.IsEmpty)
-                    SetBacklightColor(color.R, color.G, color.B);
+                    SetBacklightColorBytes(color.R, color.G, color.B);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        public void SetBacklightColor(double red, double green, double blue)
+        {
+            try
+            {
+                byte r = (byte)red;
+                byte g = (byte)green;
+                byte b = (byte)blue;
+
+                SetBacklightColorBytes(r, g, b);
             }
             catch (Exception ex)
             {
