@@ -11,6 +11,7 @@ namespace GNet
 {
     public partial class MainForm : Form
     {
+        TextWriter originalout;
         TextBoxStreamWriter tbsw;
 
         public MainForm()
@@ -20,12 +21,15 @@ namespace GNet
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            originalout = Console.Out;
             tbsw = new TextBoxStreamWriter(output);
             Console.SetOut(tbsw);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Console.SetOut(originalout);
+
             foreach (TabPage tab in documentTabs.TabPages)
                 foreach (Control ctrl in tab.Controls)
                 {

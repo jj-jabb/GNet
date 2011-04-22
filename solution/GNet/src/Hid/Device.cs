@@ -23,8 +23,8 @@ namespace GNet.Hid
 
         protected SafeFileHandle readHandle;
 
-        readonly BackgroundWorker<DeviceReport> readWorker;
-        readonly ThreadStart writeThreadDelegate;
+        protected readonly BackgroundWorker<DeviceReport> readWorker;
+        protected readonly ThreadStart writeThreadDelegate;
 
         protected AutoResetEvent writeAuto;
         protected Thread writeThread;
@@ -32,6 +32,7 @@ namespace GNet.Hid
 
         LinkedList<WriteDelegate> writeDelegates;
 
+        protected int readDataTimeout = 0;
         protected int delayBetweenWrites = 10;
         protected int connectionCheckRate = 300;
         protected int openWait = 300;
@@ -276,6 +277,14 @@ namespace GNet.Hid
             readWorker.Update(new DeviceReport(data));
         }
 
+        protected virtual void ReadWorker_Cancelled()
+        {
+        }
+
+        protected virtual void ReadWorker_WaitTimedOut()
+        {
+        }
+
         protected virtual void ReadWorker_ReadError()
         {
             readWorker.Update(new DeviceReport(DeviceStatus.ReadError));
@@ -345,10 +354,15 @@ namespace GNet.Hid
                     {
                         try
                         {
-                            data = ReadData(0);
+                            data = ReadData(readDataTimeout);
                             switch (data.Status)
                             {
                                 case DeviceData.ReadStatus.Cancelled:
+                                    ReadWorker_Cancelled();
+                                    break;
+
+                                case DeviceData.ReadStatus.WaitTimedOut:
+                                    ReadWorker_WaitTimedOut();
                                     break;
 
                                 case DeviceData.ReadStatus.Success:

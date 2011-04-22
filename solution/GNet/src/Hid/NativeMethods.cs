@@ -60,6 +60,7 @@ namespace GNet.Hid
 
         [DllImport("kernel32.dll")]
         static public extern bool ResetEvent(int hHandle);
+
         [DllImport("kernel32.dll")]
         static public extern bool SetEvent(int hHandle);
 

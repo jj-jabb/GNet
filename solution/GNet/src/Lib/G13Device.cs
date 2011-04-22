@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 
 using GNet.Hid;
 using GNet.Lib.IO;
@@ -87,7 +88,26 @@ namespace GNet.Lib
         protected override void ReadWorker_DataRead(DeviceData data)
         {
             ReadWorker_DecodeData(data);
+
+            System.Diagnostics.Debug.WriteLine("ReadWorker_DataRead: lastPressedKey = " + lastPressedKey + ", lastReleasedKey = " + lastReleasedKey);
+
+            if (lastPressedKey == lastReleasedKey)
+            {
+                lastPressedKey = lastPressedKey = 0;
+                readDataTimeout = 0;
+            }
+            else
+            {
+                //readDataTimeout = 40;
+            }
+
             base.ReadWorker_DataRead(data);
+        }
+
+        protected override void ReadWorker_WaitTimedOut()
+        {
+            //if (lastPressedKey != 0)
+              //  FireSingleKey(lastPressedKey, true);
         }
 
         protected virtual void ReadWorker_JoystickChanged(JoystickPosition position)
@@ -164,20 +184,23 @@ namespace GNet.Lib
             }
         }
 
+        ulong lastPressedKey;
+        ulong lastReleasedKey;
+
         void FireSingleKey(ulong keys, bool pressed)
         {
             for (ulong k = (ulong)G13Keys.G1; k <= (ulong)G13Keys.G22; k <<= 1)
                 if ((keys & k) > 0)
                 {
-                    if (pressed) ReadWorker_SingleKeyPressed((G13Keys)k);
-                    else ReadWorker_SingleKeyReleased((G13Keys)k);
+                    if (pressed) { lastPressedKey = k; ReadWorker_SingleKeyPressed((G13Keys)k); }
+                    else { lastReleasedKey = k; ReadWorker_SingleKeyReleased((G13Keys)k); }
                 }
 
             for (ulong k = (ulong)G13Keys.J1; k <= (ulong)G13Keys.J3; k <<= 1)
                 if ((keys & k) > 0)
                 {
-                    if (pressed) ReadWorker_SingleKeyPressed((G13Keys)k);
-                    else ReadWorker_SingleKeyReleased((G13Keys)k);
+                    if (pressed) { lastPressedKey = k; ReadWorker_SingleKeyPressed((G13Keys)k); }
+                    else { lastReleasedKey = k; ReadWorker_SingleKeyReleased((G13Keys)k); }
                 }
 
             for (ulong k = (ulong)G13Keys.M1; k <= (ulong)G13Keys.M4; k <<= 1)

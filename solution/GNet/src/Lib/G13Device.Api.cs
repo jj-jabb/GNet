@@ -3,15 +3,27 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
+using MouseKeyboardLibrary;
+
 using GNet.Hid;
 using GNet.Lib.IO;
 using GNet.Lib.PInvoke;
+
+using WFKeys = System.Windows.Forms.Keys;
+using System.Threading;
 
 namespace GNet.Lib
 {
     public partial class G13Device
     {
-        Dictionary<string, ScanCode> nameToCode = new Dictionary<string, ScanCode>
+        static G13Device()
+        {
+            foreach (var name in Enum.GetNames(typeof(WFKeys)))
+                nameToWFKey[name.ToLower()] = (WFKeys)Enum.Parse(typeof(WFKeys), name);
+        }
+
+        static Dictionary<string, WFKeys> nameToWFKey = new Dictionary<string, WFKeys>();
+        static Dictionary<string, ScanCode> nameToCode = new Dictionary<string, ScanCode>
         {
             { "escape", (ScanCode)0x01 },
             { "f1", (ScanCode)0x3b },
@@ -274,6 +286,45 @@ namespace GNet.Lib
         }
 
         #endregion
+
+        public void PressKey_(params object[] keys)
+        {
+            WFKeys wfkey;
+
+            foreach (var key in keys)
+                if (nameToWFKey.TryGetValue(key.ToString().ToLower(), out wfkey))
+                {
+                    KeyboardSimulator.KeyDown(wfkey);
+                    //Thread.Sleep(40);
+                    //KeyboardSimulator.KeyDown(wfkey);
+                    //Thread.Sleep(40);
+                    //KeyboardSimulator.KeyDown(wfkey);
+                    //Thread.Sleep(40);
+                    //KeyboardSimulator.KeyDown(wfkey);
+                    //Thread.Sleep(40);
+                    //KeyboardSimulator.KeyDown(wfkey);
+                    //Thread.Sleep(40);
+                    //KeyboardSimulator.KeyDown(wfkey);
+                }
+        }
+
+        public void ReleaseKey_(params object[] keys)
+        {
+            WFKeys wfkey;
+
+            foreach (var key in keys)
+                if (nameToWFKey.TryGetValue(key.ToString().ToLower(), out wfkey))
+                    KeyboardSimulator.KeyUp(wfkey);
+        }
+
+        public void PressAndReleaseKey_(params object[] keys)
+        {
+            WFKeys wfkey;
+
+            foreach (var key in keys)
+                if (nameToWFKey.TryGetValue(key.ToString().ToLower(), out wfkey))
+                    KeyboardSimulator.KeyPress(wfkey);
+        }
 
         public bool IsModifierPressed(string keyName)
         {
