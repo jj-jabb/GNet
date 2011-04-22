@@ -319,15 +319,15 @@ namespace GNet
             }
 
 
-            if (EventQueueUpdated != null)
-            {
-                StringBuilder qs = new StringBuilder();
+            //if (EventQueueUpdated != null)
+            //{
+            //    StringBuilder qs = new StringBuilder();
 
-                foreach (var val in keyEvents)
-                    qs.Append(val.Key).Append(val.IsPressed ? "_P" : "_R").Append(" ");
+            //    foreach (var val in keyEvents)
+            //        qs.Append(val.Key).Append(val.IsPressed ? "_P" : "_R").Append(" ");
 
-                EventQueueUpdated(null, new EventArgs<string>(qs.ToString()));
-            }
+            //    EventQueueUpdated(null, new EventArgs<string>(qs.ToString()));
+            //}
 
             auto.Set();
         }

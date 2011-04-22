@@ -1,11 +1,4 @@
-﻿-- Name: <Untitled>
--- Description: 
--- Language: Lua
--- Device: G13
--- LockForExecutables: False
--- Executables: 
-
-poll = true
+﻿poll = true
 
 function WriteLcd(text)
 	ClearGraphics()
