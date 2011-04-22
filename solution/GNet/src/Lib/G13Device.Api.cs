@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using MouseKeyboardLibrary;
-
 using GNet.Hid;
 using GNet.Lib.IO;
 using GNet.Lib.PInvoke;
@@ -286,45 +284,6 @@ namespace GNet.Lib
         }
 
         #endregion
-
-        public void PressKey_(params object[] keys)
-        {
-            WFKeys wfkey;
-
-            foreach (var key in keys)
-                if (nameToWFKey.TryGetValue(key.ToString().ToLower(), out wfkey))
-                {
-                    KeyboardSimulator.KeyDown(wfkey);
-                    //Thread.Sleep(40);
-                    //KeyboardSimulator.KeyDown(wfkey);
-                    //Thread.Sleep(40);
-                    //KeyboardSimulator.KeyDown(wfkey);
-                    //Thread.Sleep(40);
-                    //KeyboardSimulator.KeyDown(wfkey);
-                    //Thread.Sleep(40);
-                    //KeyboardSimulator.KeyDown(wfkey);
-                    //Thread.Sleep(40);
-                    //KeyboardSimulator.KeyDown(wfkey);
-                }
-        }
-
-        public void ReleaseKey_(params object[] keys)
-        {
-            WFKeys wfkey;
-
-            foreach (var key in keys)
-                if (nameToWFKey.TryGetValue(key.ToString().ToLower(), out wfkey))
-                    KeyboardSimulator.KeyUp(wfkey);
-        }
-
-        public void PressAndReleaseKey_(params object[] keys)
-        {
-            WFKeys wfkey;
-
-            foreach (var key in keys)
-                if (nameToWFKey.TryGetValue(key.ToString().ToLower(), out wfkey))
-                    KeyboardSimulator.KeyPress(wfkey);
-        }
 
         public bool IsModifierPressed(string keyName)
         {

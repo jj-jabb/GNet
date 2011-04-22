@@ -203,6 +203,7 @@
     <Compile Include="Lib\IO\InputSimulator.cs" />
     <Compile Include="Lib\IO\JoystickAngle.cs" />
     <Compile Include="Lib\IO\JoystickPosition.cs" />
+    <Compile Include="Lib\KeyRepeater.cs" />
     <Compile Include="Lib\LgLcd.cs" />
     <Compile Include="Lib\LgLcd.Definitions.cs" />
     <Compile Include="Lib\LgLcdDeviceType.cs" />
@@ -239,13 +240,6 @@
     <Compile Include="Lib\PInvoke\Win32Point.cs" />
     <Compile Include="Lib\PInvoke\WinEvent.cs" />
     <Compile Include="Lib\WMI.cs" />
-    <Compile Include="MouseKeyboardLibrary\GlobalHook.cs" />
-    <Compile Include="MouseKeyboardLibrary\Keyboard.cs" />
-    <Compile Include="MouseKeyboardLibrary\KeyboardHook.cs" />
-    <Compile Include="MouseKeyboardLibrary\KeyboardSimulator.cs" />
-    <Compile Include="MouseKeyboardLibrary\Mouse.cs" />
-    <Compile Include="MouseKeyboardLibrary\MouseHook.cs" />
-    <Compile Include="MouseKeyboardLibrary\MouseSimulator.cs" />
     <Compile Include="NET20\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -333,7 +327,6 @@
     <Content Include="LgLcd.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="MouseKeyboardLibrary\Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
