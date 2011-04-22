@@ -32,7 +32,9 @@ namespace GNet.Hid
 
         LinkedList<WriteDelegate> writeDelegates;
 
-        protected int readDataTimeout = 0;
+        // timeout on read after to refresh the read event 
+        // (seemed like it would "sleep" after a little while)
+        protected int readDataTimeout = 10000;
         protected int delayBetweenWrites = 10;
         protected int connectionCheckRate = 300;
         protected int openWait = 300;
@@ -462,6 +464,8 @@ namespace GNet.Hid
                             case NativeMethods.WAIT_OBJECT_0: status = DeviceData.ReadStatus.Success; break;
                             case NativeMethods.WAIT_TIMEOUT:
                                 status = DeviceData.ReadStatus.WaitTimedOut;
+                                NativeMethods.CancelIo(readHandle);
+                                NativeMethods.WaitForSingleObject(overlapped.hEvent, NativeMethods.WAIT_INFINITE);
                                 buffer = new byte[] { };
                                 break;
                             case NativeMethods.WAIT_FAILED:

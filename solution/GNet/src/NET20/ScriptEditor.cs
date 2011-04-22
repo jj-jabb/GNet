@@ -51,6 +51,26 @@ namespace GNet
 //            }
 
             scriptRunner = new LuaRunner();
+            ((LuaRunner)scriptRunner).EventQueueUpdated += new EventHandler<Hid.EventArgs<string>>(ScriptEditor_EventQueueUpdated);
+        }
+
+        string eventQueue;
+        void ScriptEditor_EventQueueUpdated(object sender, Hid.EventArgs<string> e)
+        {
+            if (eventQueue == e.Data)
+                return;
+
+            eventQueue = e.Data;
+
+            if (InvokeRequired)
+                Invoke(new Action<string>(UpdateEventQueueLabel), e.Data);
+            else
+                UpdateEventQueueLabel(e.Data);
+        }
+
+        void UpdateEventQueueLabel(string s)
+        {
+            lblEventQueue.Text = s;
         }
 
         protected override void OnControlRemoved(ControlEventArgs e)

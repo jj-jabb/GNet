@@ -28,8 +28,6 @@ namespace GNet
 
         void InvokeWrite(char value)
         {
-            System.Diagnostics.Debug.Write(value);
-            base.Write(value);
             if (_output != null && !_output.IsDisposed)
                 _output.AppendText(value.ToString()); // When character data is written, append it to the text box.
         }

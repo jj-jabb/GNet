@@ -29,14 +29,16 @@
         private void InitializeComponent()
         {
             this.buttonPanel = new System.Windows.Forms.Panel();
-            this.runButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
+            this.runButton = new System.Windows.Forms.Button();
             this.editor = new ICSharpCode.TextEditor.TextEditorControl();
+            this.lblEventQueue = new System.Windows.Forms.Label();
             this.buttonPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonPanel
             // 
+            this.buttonPanel.Controls.Add(this.lblEventQueue);
             this.buttonPanel.Controls.Add(this.stopButton);
             this.buttonPanel.Controls.Add(this.runButton);
             this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -44,17 +46,6 @@
             this.buttonPanel.Name = "buttonPanel";
             this.buttonPanel.Size = new System.Drawing.Size(563, 25);
             this.buttonPanel.TabIndex = 0;
-            // 
-            // runButton
-            // 
-            this.runButton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.runButton.Location = new System.Drawing.Point(0, 0);
-            this.runButton.Name = "runButton";
-            this.runButton.Size = new System.Drawing.Size(75, 25);
-            this.runButton.TabIndex = 0;
-            this.runButton.Text = "Run";
-            this.runButton.UseVisualStyleBackColor = true;
-            this.runButton.Click += new System.EventHandler(this.runButton_Click);
             // 
             // stopButton
             // 
@@ -68,6 +59,17 @@
             this.stopButton.UseVisualStyleBackColor = true;
             this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
             // 
+            // runButton
+            // 
+            this.runButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.runButton.Location = new System.Drawing.Point(0, 0);
+            this.runButton.Name = "runButton";
+            this.runButton.Size = new System.Drawing.Size(75, 25);
+            this.runButton.TabIndex = 0;
+            this.runButton.Text = "Run";
+            this.runButton.UseVisualStyleBackColor = true;
+            this.runButton.Click += new System.EventHandler(this.runButton_Click);
+            // 
             // editor
             // 
             this.editor.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -76,6 +78,14 @@
             this.editor.Name = "editor";
             this.editor.Size = new System.Drawing.Size(563, 429);
             this.editor.TabIndex = 1;
+            // 
+            // lblEventQueue
+            // 
+            this.lblEventQueue.AutoSize = true;
+            this.lblEventQueue.Location = new System.Drawing.Point(156, 6);
+            this.lblEventQueue.Name = "lblEventQueue";
+            this.lblEventQueue.Size = new System.Drawing.Size(0, 13);
+            this.lblEventQueue.TabIndex = 2;
             // 
             // ScriptEditor
             // 
@@ -86,6 +96,7 @@
             this.Name = "ScriptEditor";
             this.Size = new System.Drawing.Size(563, 454);
             this.buttonPanel.ResumeLayout(false);
+            this.buttonPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -96,5 +107,6 @@
         private ICSharpCode.TextEditor.TextEditorControl editor;
         private System.Windows.Forms.Button runButton;
         private System.Windows.Forms.Button stopButton;
+        private System.Windows.Forms.Label lblEventQueue;
     }
 }

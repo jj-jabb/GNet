@@ -190,8 +190,6 @@ namespace GNet.Lib
 
         int LcdOnSoftButtonsCB(int device, int dwButtons, IntPtr pContext)
         {
-            System.Diagnostics.Debug.WriteLine("LcdOnSoftButtonsCB: " + device + ", " + dwButtons);
-
             if (SoftButtonsChanged != null)
                 SoftButtonsChanged(dwButtons);
 
