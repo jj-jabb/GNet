@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
+using GNet.Lib.PInvoke;
+using GNet.Lib.IO;
+
 namespace GNet.Lib
 {
     public class KeyRepeater : IDisposable
@@ -13,14 +16,14 @@ namespace GNet.Lib
         bool keyRepeatRunning;
         bool keyRepeatThreadComplete;
 
-        uint lastKeyPressed;
-        uint lastKeyReleased;
+        ScanCode lastKeyPressed;
 
         public KeyRepeater()
         {
             keyRepeatDelegate = new ThreadStart(KeyRepeatThread);
             keyRepeatEvent = new AutoResetEvent(false);
             keyRepeatRunning = true;
+            keyRepeatThread = new Thread(keyRepeatDelegate);
         }
 
         public void Start()
@@ -43,13 +46,13 @@ namespace GNet.Lib
 
         void KeyRepeatThread()
         {
-            uint repeatingKey = 0;
+            ScanCode repeatingKey = 0;
 
             keyRepeatThreadComplete = false;
 
             while (keyRepeatRunning)
             {
-                if (lastKeyPressed != 0 && lastKeyPressed != lastKeyReleased)
+                if (lastKeyPressed != 0)
                 {
                     repeatingKey = lastKeyPressed;
                     Thread.Sleep(300);
@@ -61,19 +64,40 @@ namespace GNet.Lib
                 while (
                     lastKeyPressed != 0 &&
                     keyRepeatRunning &&
-                    repeatingKey == lastKeyPressed &&
-                    lastKeyPressed != lastKeyReleased)
+                    repeatingKey == lastKeyPressed)
                 {
                     KeyRepeat(repeatingKey);
-                    Thread.Sleep(40);
+                    Thread.Sleep(30);
                 }
+
+                keyRepeatEvent.WaitOne();
             }
 
             keyRepeatThreadComplete = true;
         }
 
-        protected virtual void KeyRepeat(uint repeatingKey)
+        protected virtual void KeyRepeat(ScanCode repeatingKey)
         {
+            var inputData = new InputWrapper[1]
+            {
+                InputSimulator.KeyWrapper(repeatingKey, false, ((int)repeatingKey & 0x100) == 0x100)
+            };
+
+            Interop.SendInput((uint)inputData.Length, inputData);
+        }
+
+        public void KeyDown(ScanCode scanCode)
+        {
+            lastKeyPressed = scanCode;
+            keyRepeatEvent.Set();
+        }
+
+        public void KeyUp(ScanCode scanCode)
+        {
+            if (scanCode == lastKeyPressed)
+                lastKeyPressed = 0;
+
+            keyRepeatEvent.Set();
         }
 
         public void Dispose()

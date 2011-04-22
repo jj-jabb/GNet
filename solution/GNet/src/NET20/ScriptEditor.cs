@@ -55,7 +55,7 @@ namespace GNet
 
         protected override void OnControlRemoved(ControlEventArgs e)
         {
-            StopScript();
+            DisposeScript();
             base.OnControlRemoved(e);
         }
 
@@ -91,6 +91,14 @@ namespace GNet
             runButton.Enabled = true;
             stopButton.Enabled = false;
             editor.IsReadOnly = false;
+        }
+
+        public void DisposeScript()
+        {
+            if (scriptRunner != null)
+                scriptRunner.Dispose();
+
+            scriptRunner = null;
         }
     }
 }

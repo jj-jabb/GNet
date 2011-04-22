@@ -20,11 +20,15 @@ namespace GNet.Lib
         KeyStateStruct currentState = new KeyStateStruct();
         JoystickPosition joystick;
 
+        KeyRepeater keyRepeater;
+
         public G13Device(string lcdAppName = "G13 GNet Profiler")
             : base(Logitech, G13)
         {
             this.lcdAppName = lcdAppName ?? "G13 GNet Profiler";
             SingleKeyEvents = true;
+            keyRepeater = new KeyRepeater();
+            keyRepeater.Start();
         }
 
         public LgLcd Lcd { get { return lcd; } }
@@ -57,6 +61,7 @@ namespace GNet.Lib
 
         public override void Dispose()
         {
+            keyRepeater.Stop();
             Stop();
             base.Dispose();
         }

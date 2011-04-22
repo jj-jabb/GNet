@@ -191,6 +191,8 @@ namespace GNet.Lib
                 inputData[i] = InputSimulator.KeyWrapper(scanCodes[i], false, ((int)scanCodes[i] & 0x100) == 0x100);
 
             Interop.SendInput((uint)inputData.Length, inputData);
+
+            keyRepeater.KeyDown(scanCodes[scanCodes.Count - 1]);
         }
 
         public void PressKey(params ScanCode[] scanCodes)
@@ -221,7 +223,10 @@ namespace GNet.Lib
         {
             var inputData = new InputWrapper[scanCodes.Count];
             for (int i = 0; i < inputData.Length; i++)
+            {
+                keyRepeater.KeyUp(scanCodes[i]);
                 inputData[i] = InputSimulator.KeyWrapper(scanCodes[i], true, ((int)scanCodes[i] & 0x100) == 0x100);
+            }
 
             Interop.SendInput((uint)inputData.Length, inputData);
         }

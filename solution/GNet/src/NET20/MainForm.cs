@@ -35,7 +35,7 @@ namespace GNet
                 {
                     ScriptEditor editor = ctrl as ScriptEditor;
                     if (editor != null)
-                        editor.StopScript();
+                        editor.DisposeScript();
                 }
         }
 
