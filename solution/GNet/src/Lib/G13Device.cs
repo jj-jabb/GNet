@@ -68,6 +68,9 @@ namespace GNet.Lib
 
         public void SetBacklightColorBytes(byte red, byte green, byte blue)
         {
+            if (DeviceInfo == null)
+                return;
+
             var length = DeviceInfo.Capabilities.FeatureReportByteLength;
             var data = new byte[length];
             data[0] = 7;
@@ -80,6 +83,9 @@ namespace GNet.Lib
 
         public void SetMLight(byte key)
         {
+            if (DeviceInfo == null)
+                return;
+
             var length = DeviceInfo.Capabilities.FeatureReportByteLength;
             var data = new byte[length];
             data[0] = 5;

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 using Microsoft.Win32.SafeHandles;
 
@@ -13,6 +14,7 @@ using LuaInterface;
 using GNet.Hid;
 using GNet.Lib;
 using GNet.Lib.IO;
+using GNet.Lib.MKHook;
 
 namespace GNet
 {
@@ -22,12 +24,37 @@ namespace GNet
         {
             public G13Keys Key;
             public bool IsPressed;
+
+            public KeyEventArgs KeyboardEvent;
+
+            public MouseEventArgs MouseEvent;
+
             public readonly bool IsEmpty;
 
             public KeyEvent(G13Keys key, bool isPressed)
             {
                 Key = key;
                 IsPressed = isPressed;
+                KeyboardEvent = null;
+                MouseEvent = null;
+                IsEmpty = false;
+            }
+
+            public KeyEvent(KeyEventArgs e, bool isPressed)
+            {
+                Key = G13Keys.None;
+                IsPressed = isPressed;
+                KeyboardEvent = e;
+                MouseEvent = null;
+                IsEmpty = false;
+            }
+
+            public KeyEvent(MouseEventArgs e, bool isPressed)
+            {
+                Key = G13Keys.None;
+                IsPressed = isPressed;
+                KeyboardEvent = null;
+                MouseEvent = e;
                 IsEmpty = false;
             }
 
@@ -36,6 +63,8 @@ namespace GNet
                 Key = (G13Keys)0;
                 IsPressed = false;
                 IsEmpty = isEmpty;
+                KeyboardEvent = null;
+                MouseEvent = null;
             }
 
             public static KeyEvent Empty = new KeyEvent(true);
@@ -44,6 +73,9 @@ namespace GNet
         Queue<KeyEvent> keyEvents;
 
         LuaFunction onEvent;
+        LuaFunction onKEvent;
+        LuaFunction onMEvent;
+
         bool isRunning;
         string contents;
         DateTime startTime;
@@ -51,13 +83,30 @@ namespace GNet
         Thread thread;
         AutoResetEvent auto;
 
+        MouseHook mouseHook;
+        KeyboardHook keyboardHook;
+
+        int lastKeyDown;
+
         public LuaRunner()
         {
             keyEvents = new Queue<KeyEvent>();
+
+            mouseHook = new MouseHook();
+            keyboardHook = new KeyboardHook();
+
+            mouseHook.MouseDown += new MouseEventHandler(mouseHook_MouseDown);
+            mouseHook.MouseUp += new MouseEventHandler(mouseHook_MouseUp);
+
+            keyboardHook.KeyDown += new KeyEventHandler(keyboardHook_KeyDown);
+            keyboardHook.KeyUp += new KeyEventHandler(keyboardHook_KeyUp);
         }
 
         public void Run(string script)
         {
+            mouseHook.Start();
+            keyboardHook.Start();
+
             contents = script;
             if (contents == null)
                 return;
@@ -67,14 +116,15 @@ namespace GNet
             Start();
         }
 
-        public event EventHandler<EventArgs<string>> EventQueueUpdated;
+        public override void Stop()
+        {
+            keyboardHook.Stop();
+            mouseHook.Stop();
 
-        //public override void Stop()
-        //{
-        //    base.Stop();
-        //    isRunning = false;
-        //    auto.Set();
-        //}
+            base.Stop();
+        }
+
+        public event EventHandler<EventArgs<string>> EventQueueUpdated;
 
         void OpenLcd()
         {
@@ -153,6 +203,7 @@ namespace GNet
         void RunThread()
         {
             KeyEvent e = KeyEvent.Empty;
+
             BringToFront();
             Lua lua = null;
             try
@@ -191,6 +242,8 @@ namespace GNet
                 lua.DoString(contents);
 
                 onEvent = lua.GetFunction("OnEvent");
+                onKEvent = lua.GetFunction("OnKeyEvent");
+                onMEvent = lua.GetFunction("OnMouseEvent");
             }
             catch (Exception ex)
             {
@@ -216,11 +269,12 @@ namespace GNet
                 {
                     for (e = getKeyEvent(); e.IsEmpty == false; e = getKeyEvent())
                     {
-                        if (e.IsPressed)
+                        if (e.Key != G13Keys.None)
+                        {
                             try
                             {
                                 var keyName = e.Key.ToString();
-                                var evnt = keyName.Substring(0, 1) + "_PRESSED";
+                                var evnt = keyName.Substring(0, 1) + (e.IsPressed ? "_PRESSED" : "_RELEASED");
                                 var arg = int.Parse(keyName.Substring(1));
                                 onEvent.Call(evnt, arg, "lhc");
                             }
@@ -228,18 +282,42 @@ namespace GNet
                             {
                                 OutputLogMessage(ex.ToString());
                             }
-                        else
+                        }
+                        else if (e.KeyboardEvent != null)
+                        {
                             try
                             {
-                                var keyName = e.Key.ToString();
-                                var evnt = keyName.Substring(0, 1) + "_RELEASED";
-                                var arg = int.Parse(keyName.Substring(1));
-                                onEvent.Call(evnt, arg, "lhc");
+                                onEvent.Call(
+                                    "KBD_" + (e.IsPressed ? "_PRESSED" : "_RELEASED"),
+                                    e.KeyboardEvent.KeyCode.ToString(),
+                                    "lhc",
+                                    e.KeyboardEvent.Shift.ToString(),
+                                    e.KeyboardEvent.Alt.ToString(),
+                                    e.KeyboardEvent.Control.ToString()
+                                    );
                             }
                             catch (Exception ex)
                             {
                                 OutputLogMessage(ex.ToString());
                             }
+                        }
+                        else if (e.MouseEvent != null)
+                        {
+                            try
+                            {
+                                onEvent.Call(
+                                    "MOU_" + (e.IsPressed ? "_PRESSED" : "_RELEASED"),
+                                    e.MouseEvent.Button.ToString(),
+                                    "lhc",
+                                    e.MouseEvent.X.ToString(),
+                                    e.MouseEvent.Y.ToString()
+                                    );
+                            }
+                            catch (Exception ex)
+                            {
+                                OutputLogMessage(ex.ToString());
+                            }
+                        }
 
                         if (!isRunning)
                             break;
@@ -328,6 +406,54 @@ namespace GNet
 
             //    EventQueueUpdated(null, new EventArgs<string>(qs.ToString()));
             //}
+
+            auto.Set();
+        }
+
+        void keyboardHook_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == lastKeyDown)
+                return;
+
+            lastKeyDown = e.KeyValue;
+
+            lock (keyEvents)
+            {
+                keyEvents.Enqueue(new KeyEvent(e, true));
+            }
+
+            auto.Set();
+        }
+
+        void keyboardHook_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == lastKeyDown)
+                lastKeyDown = 0;
+
+            lock (keyEvents)
+            {
+                keyEvents.Enqueue(new KeyEvent(e, false));
+            }
+
+            auto.Set();
+        }
+
+        void mouseHook_MouseDown(object sender, MouseEventArgs e)
+        {
+            lock (keyEvents)
+            {
+                keyEvents.Enqueue(new KeyEvent(e, true));
+            }
+
+            auto.Set();
+        }
+
+        void mouseHook_MouseUp(object sender, MouseEventArgs e)
+        {
+            lock (keyEvents)
+            {
+                keyEvents.Enqueue(new KeyEvent(e, false));
+            }
 
             auto.Set();
         }

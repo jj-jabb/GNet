@@ -5,6 +5,8 @@ namespace GNet.Lib
     [Flags]
     public enum G13Keys : ulong
     {
+        None = 0,
+
         // G keys
         G1 = 0x0000000001,
         G2 = 0x0000000002,

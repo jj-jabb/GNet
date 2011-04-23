@@ -223,6 +223,9 @@
     <Compile Include="Lib\MacroSystem\MouseWheel.cs" />
     <Compile Include="Lib\MacroSystem\Step.cs" />
     <Compile Include="Lib\MacroSystem\WriteText.cs" />
+    <Compile Include="Lib\MKHook\GlobalHook.cs" />
+    <Compile Include="Lib\MKHook\KeyboardHook.cs" />
+    <Compile Include="Lib\MKHook\MouseHook.cs" />
     <Compile Include="Lib\PInvoke\HardwareInputData.cs" />
     <Compile Include="Lib\PInvoke\InputWrapper.cs" />
     <Compile Include="Lib\PInvoke\Interop.cs" />
