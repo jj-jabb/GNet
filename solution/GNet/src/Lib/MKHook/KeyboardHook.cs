@@ -44,6 +44,10 @@ namespace GNet.Lib.MKHook
                 KeyboardHookStruct keyboardHookStruct =
                     (KeyboardHookStruct)Marshal.PtrToStructure(lParam, typeof(KeyboardHookStruct));
 
+                if ((keyboardHookStruct.flags & 0x00000010) > 0)
+                    // ignore injected values
+                    return CallNextHookEx(_handleToHook, nCode, wParam, lParam);
+
                 // Is Control being held down?
                 bool control = ((GetKeyState(VK_LCONTROL) & 0x80) != 0) ||
                                ((GetKeyState(VK_RCONTROL) & 0x80) != 0);

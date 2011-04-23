@@ -60,6 +60,10 @@ namespace GNet.Lib.MKHook
                 MouseLLHookStruct mouseHookStruct =
                     (MouseLLHookStruct)Marshal.PtrToStructure(lParam, typeof(MouseLLHookStruct));
 
+                if ((mouseHookStruct.flags & 0x00000001) > 0)
+                    // ignore injected values
+                    return CallNextHookEx(_handleToHook, nCode, wParam, lParam);
+
                 MouseButtons button = GetButton(wParam);
                 MouseEventType eventType = GetEventType(wParam);
 
