@@ -111,7 +111,6 @@ namespace GNet
                 tabPage.Controls.Add(editor);
                 documentTabs.TabPages.Add(tabPage);
             }
-
         }
     }
 }

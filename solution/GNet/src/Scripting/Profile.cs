@@ -70,6 +70,16 @@ namespace GNet.Scripting
             }
         }
 
+        Dictionary<string, string> configuration;
+        int headerLineCount;
+
+        public Profile(string filepath)
+        {
+            Filepath = filepath;
+            Executables = new List<string>();
+            configuration = new Dictionary<string, string>();
+        }
+
         public string Filepath { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -79,27 +89,31 @@ namespace GNet.Scripting
         public HookOptions KeyboardHook { get; set; }
         public HookOptions MouseHook { get; set; }
 
-        public Dictionary<string, string> Configuration { get; private set; }
-
         public string Contents { get; set; }
-
-        public Profile(string filepath)
-        {
-            Filepath = filepath;
-            Executables = new List<string>();
-            Configuration = new Dictionary<string, string>();
-        }
+        public int HeaderLineCount { get; set; }
 
         public abstract ScriptLanguage Language { get; }
         protected abstract string LineStart { get; }
 
-        public void ParseHeader()
+        public int ParseHeader()
+        {
+            using (var reader = File.OpenText(Filepath))
+            {
+                return ParseHeader(reader);
+            }
+        }
+
+        public int ParseHeader(StreamReader reader)
         {
             string line;
             string key;
             string value;
 
-            if(LineStart == null)
+            headerLineCount = 0;
+
+            #region validate inputs
+
+            if (LineStart == null)
                 throw new ArgumentNullException("LineStart is not defined.");
 
             if (Filepath == null)
@@ -108,36 +122,42 @@ namespace GNet.Scripting
             if (!File.Exists(Filepath))
                 throw new FileNotFoundException("File '" + Filepath + "' does not exist.");
 
-            using (var reader = File.OpenText(Filepath))
+            #endregion
+
+            #region read header
+
+            var lineStartLength = LineStart.Length;
+            var configSplit = new char[] { ':' };
+            string[] split;
+
+            while (!reader.EndOfStream)
             {
-                var lineStartLength = LineStart.Length;
-                var configSplit = new char[] { ':' };
-                string[] split;
+                line = reader.ReadLine();
+                headerLineCount++;
 
-                while (!reader.EndOfStream)
+                if (!line.StartsWith(LineStart))
+                    break;
+
+                line = line.Substring(lineStartLength);
+                split = line.Split(configSplit, 2, StringSplitOptions.None);
+                if (split.Length == 2)
                 {
-                    line = reader.ReadLine();
-
-                    if (!line.StartsWith(LineStart))
-                        break;
-
-                    line = line.Substring(lineStartLength);
-                    split = line.Split(configSplit, 2, StringSplitOptions.None);
-                    if (split.Length == 2)
-                    {
-                        key = split[0].Trim();
-                        value = split[1].Trim();
-                        if (key.Length > 0 && value.Length > 0)
-                            Configuration[key] = value;
-                    }
+                    key = split[0].Trim();
+                    value = split[1].Trim();
+                    if (key.Length > 0 && value.Length > 0)
+                        configuration[key] = value;
                 }
-
-                Configuration["Filepath"] = Filepath;
             }
 
-            foreach (var k in Configuration.Keys)
+            configuration["Filepath"] = Filepath;
+
+            #endregion
+
+            foreach (var k in configuration.Keys)
             {
-                value = Configuration[k];
+                value = configuration[k];
+
+                #region parse config values
 
                 switch (k)
                 {
@@ -157,7 +177,7 @@ namespace GNet.Scripting
                         catch
                         {
                             Device = DeviceType.G13;
-                            Configuration[k] = "G13";
+                            configuration[k] = "G13";
                         }
                         break;
 
@@ -198,7 +218,7 @@ namespace GNet.Scripting
                         catch
                         {
                             KeyboardHook = HookOptions.None;
-                            Configuration[k] = "None";
+                            configuration[k] = "None";
                         }
                         break;
 
@@ -210,11 +230,49 @@ namespace GNet.Scripting
                         catch
                         {
                             MouseHook = HookOptions.None;
-                            Configuration[k] = "None";
+                            configuration[k] = "None";
                         }
                         break;
                 }
+
+                #endregion
             }
+
+            return headerLineCount;
+        }
+
+        public void Save()
+        {
+            using (var fs = File.CreateText(Filepath))
+            {
+                WriteProperty(fs, "Filepath", Filepath);
+                WriteProperty(fs, "Name", Name);
+                WriteProperty(fs, "Description", Description);
+                WriteProperty(fs, "Device", Device.ToString());
+                WriteProperty(fs, "Lock", Lock.ToString());
+
+                StringBuilder executables = new StringBuilder();
+                foreach (var exec in Executables)
+                    executables.Append("\"").Append(exec).Append("\" ");
+
+                WriteProperty(fs, "Executables", executables.ToString());
+
+                WriteProperty(fs, "KeyboardHook", KeyboardHook.ToString());
+                WriteProperty(fs, "MouseHook", MouseHook.ToString());
+
+                fs.WriteLine();
+
+                fs.WriteLine(Contents);
+            }
+        }
+
+        void WriteProperty(StreamWriter fs, string name, string value)
+        {
+            fs.Write(LineStart);
+            fs.Write(" ");
+            fs.Write(name);
+            fs.Write(": ");
+            fs.WriteLine(value);
         }
     }
 }
