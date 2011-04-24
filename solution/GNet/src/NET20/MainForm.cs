@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-using GNet.Lib.MKHook;
+using GNet.Scripting;
 
 namespace GNet
 {
@@ -16,34 +16,20 @@ namespace GNet
         TextWriter originalout;
         TextBoxStreamWriter tbsw;
 
-        //MouseHook mouseHook = new MouseHook();
-        //KeyboardHook keyboardHook = new KeyboardHook();
-
         public MainForm()
         {
             InitializeComponent();
+
+            //Profile luap = Profile.GetProfile(".\\Profiles\\Lua\\_default.lua");
+            //luap.ParseHeader();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //mouseHook.MouseDown += new MouseEventHandler(mouseHook_MouseDown);
-            //keyboardHook.KeyDown += new KeyEventHandler(keyboardHook_KeyDown);
-            //mouseHook.Start();
-            //keyboardHook.Start();
-
             originalout = Console.Out;
             tbsw = new TextBoxStreamWriter(output);
             Console.SetOut(tbsw);
         }
-
-        //void keyboardHook_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    System.Diagnostics.Debug.WriteLine(e.KeyCode.ToString());
-        //}
-
-        //void mouseHook_MouseDown(object sender, MouseEventArgs e)
-        //{
-        //}
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {

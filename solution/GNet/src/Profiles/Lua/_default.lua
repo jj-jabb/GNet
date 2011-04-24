@@ -1,9 +1,12 @@
-﻿-- Name: <Untitled>
--- Description: 
--- Language: Lua
--- Device: G13
--- LockForExecutables: False
--- Executables: 
+﻿--= Filename:
+--= Name: Untitled
+--= Description:
+--= Language: Lua
+--= Device: G13
+--= Lock: False
+--= Executables:
+--= KeyboardHook: None
+--= MouseHook: None
 
 poll = false
 

@@ -16,7 +16,7 @@ using GNet.Lib;
 using GNet.Lib.IO;
 using GNet.Lib.MKHook;
 
-namespace GNet
+namespace GNet.Scripting
 {
     public class LuaRunner : G13Device, IScriptRunner
     {

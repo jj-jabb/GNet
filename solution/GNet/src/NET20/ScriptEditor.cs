@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
+using GNet.Scripting;
+
 namespace GNet
 {
     public partial class ScriptEditor : UserControl

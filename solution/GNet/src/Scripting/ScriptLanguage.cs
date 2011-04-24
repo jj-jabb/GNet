@@ -4,9 +4,10 @@ using System.Text;
 
 namespace GNet.Scripting
 {
-    public interface IScriptRunner : IDisposable
+    public enum ScriptLanguage
     {
-        void Run(string script);
-        void Stop();
+        Undefined,
+        Boo,
+        Lua
     }
 }

@@ -11,6 +11,8 @@ namespace GNet.Lib.MKHook
     /// </summary>
     public class MouseHook : GlobalHook
     {
+        bool ignoreInjectedValues;
+        public bool IgnoreInjectedValues { get { return ignoreInjectedValues; } set { ignoreInjectedValues = value; } }
 
         #region MouseEventType Enum
 
@@ -40,11 +42,10 @@ namespace GNet.Lib.MKHook
 
         #region Constructor
 
-        public MouseHook()
+        public MouseHook(bool ignoreInjectedValues = true)
         {
-
+            this.ignoreInjectedValues = ignoreInjectedValues;
             _hookType = WH_MOUSE_LL;
-
         }
 
         #endregion
@@ -60,7 +61,7 @@ namespace GNet.Lib.MKHook
                 MouseLLHookStruct mouseHookStruct =
                     (MouseLLHookStruct)Marshal.PtrToStructure(lParam, typeof(MouseLLHookStruct));
 
-                if ((mouseHookStruct.flags & 0x00000001) > 0)
+                if (ignoreInjectedValues && (mouseHookStruct.flags & 0x00000001) > 0)
                     // ignore injected values
                     return CallNextHookEx(_handleToHook, nCode, wParam, lParam);
 

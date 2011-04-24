@@ -11,6 +11,8 @@ namespace GNet.Lib.MKHook
     /// </summary>
     public class KeyboardHook : GlobalHook
     {
+        bool ignoreInjectedValues;
+        public bool IgnoreInjectedValues { get { return ignoreInjectedValues; } set { ignoreInjectedValues = value; } }
 
         #region Events
 
@@ -22,11 +24,10 @@ namespace GNet.Lib.MKHook
 
         #region Constructor
 
-        public KeyboardHook()
+        public KeyboardHook(bool ignoreInjectedValues = true)
         {
-
+            this.ignoreInjectedValues = ignoreInjectedValues;
             _hookType = WH_KEYBOARD_LL;
-
         }
 
         #endregion
@@ -44,7 +45,7 @@ namespace GNet.Lib.MKHook
                 KeyboardHookStruct keyboardHookStruct =
                     (KeyboardHookStruct)Marshal.PtrToStructure(lParam, typeof(KeyboardHookStruct));
 
-                if ((keyboardHookStruct.flags & 0x00000010) > 0)
+                if (ignoreInjectedValues && (keyboardHookStruct.flags & 0x00000010) > 0)
                     // ignore injected values
                     return CallNextHookEx(_handleToHook, nCode, wParam, lParam);
 

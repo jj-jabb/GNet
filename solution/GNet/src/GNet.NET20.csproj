@@ -263,9 +263,13 @@
     <Compile Include="NET20\ScriptEditor.designer.cs">
       <DependentUpon>ScriptEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Scripting\DeviceType.cs" />
+    <Compile Include="Scripting\HookOptions.cs" />
+    <Compile Include="Scripting\Profile.cs" />
     <Compile Include="NET20\TextBoxStreamWriter.cs" />
     <Compile Include="Scripting\IScriptRunner.cs" />
     <Compile Include="Scripting\LuaRunner.cs" />
+    <Compile Include="Scripting\ScriptLanguage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

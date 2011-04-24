@@ -4,9 +4,10 @@ using System.Text;
 
 namespace GNet.Scripting
 {
-    public interface IScriptRunner : IDisposable
+    public enum HookOptions
     {
-        void Run(string script);
-        void Stop();
+        None,
+        IgnoreInjected,
+        All
     }
 }

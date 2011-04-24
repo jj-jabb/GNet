@@ -4,9 +4,8 @@ using System.Text;
 
 namespace GNet.Scripting
 {
-    public interface IScriptRunner : IDisposable
+    public enum DeviceType
     {
-        void Run(string script);
-        void Stop();
+        G13
     }
 }
