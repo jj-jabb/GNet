@@ -48,6 +48,10 @@
             this.ofdBrowse = new System.Windows.Forms.OpenFileDialog();
             this.lblDevice = new System.Windows.Forms.Label();
             this.cbxDevice = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cbxKeyboardHook = new System.Windows.Forms.ComboBox();
+            this.cbxMouseHook = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.gbxExecutables.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -77,7 +81,7 @@
             this.tbxName.Name = "tbxName";
             this.tbxName.Size = new System.Drawing.Size(448, 20);
             this.tbxName.TabIndex = 2;
-            this.tbxName.Text = "<Untitled>";
+            this.tbxName.Text = "Untitled";
             // 
             // tbxDescription
             // 
@@ -121,7 +125,7 @@
             this.gbxExecutables.Controls.Add(this.lbxExecs);
             this.gbxExecutables.Location = new System.Drawing.Point(12, 117);
             this.gbxExecutables.Name = "gbxExecutables";
-            this.gbxExecutables.Size = new System.Drawing.Size(514, 228);
+            this.gbxExecutables.Size = new System.Drawing.Size(514, 225);
             this.gbxExecutables.TabIndex = 6;
             this.gbxExecutables.TabStop = false;
             this.gbxExecutables.Text = "Associated Executables";
@@ -130,7 +134,7 @@
             // 
             this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnRemove.Enabled = false;
-            this.btnRemove.Location = new System.Drawing.Point(168, 199);
+            this.btnRemove.Location = new System.Drawing.Point(168, 196);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(75, 23);
             this.btnRemove.TabIndex = 12;
@@ -141,7 +145,7 @@
             // btnSelect
             // 
             this.btnSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSelect.Location = new System.Drawing.Point(87, 199);
+            this.btnSelect.Location = new System.Drawing.Point(87, 196);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(75, 23);
             this.btnSelect.TabIndex = 11;
@@ -152,7 +156,7 @@
             // btnExecBrowse
             // 
             this.btnExecBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnExecBrowse.Location = new System.Drawing.Point(6, 199);
+            this.btnExecBrowse.Location = new System.Drawing.Point(6, 196);
             this.btnExecBrowse.Name = "btnExecBrowse";
             this.btnExecBrowse.Size = new System.Drawing.Size(75, 23);
             this.btnExecBrowse.TabIndex = 10;
@@ -169,14 +173,14 @@
             this.lbxExecs.Location = new System.Drawing.Point(6, 20);
             this.lbxExecs.Name = "lbxExecs";
             this.lbxExecs.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbxExecs.Size = new System.Drawing.Size(502, 173);
+            this.lbxExecs.Size = new System.Drawing.Size(502, 160);
             this.lbxExecs.TabIndex = 0;
             this.lbxExecs.SelectedIndexChanged += new System.EventHandler(this.lbxExecs_SelectedIndexChanged);
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(289, 442);
+            this.btnOk.Location = new System.Drawing.Point(289, 547);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 7;
@@ -187,7 +191,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(370, 442);
+            this.btnCancel.Location = new System.Drawing.Point(370, 547);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 8;
@@ -198,7 +202,7 @@
             // btnHelp
             // 
             this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnHelp.Location = new System.Drawing.Point(451, 442);
+            this.btnHelp.Location = new System.Drawing.Point(451, 547);
             this.btnHelp.Name = "btnHelp";
             this.btnHelp.Size = new System.Drawing.Size(75, 23);
             this.btnHelp.TabIndex = 9;
@@ -211,19 +215,20 @@
             this.chkLock.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.chkLock.AutoSize = true;
-            this.chkLock.Location = new System.Drawing.Point(12, 351);
+            this.chkLock.Location = new System.Drawing.Point(15, 348);
             this.chkLock.Name = "chkLock";
             this.chkLock.Size = new System.Drawing.Size(229, 17);
             this.chkLock.TabIndex = 10;
             this.chkLock.Text = "Lock profile while application(s) are running";
             this.chkLock.UseVisualStyleBackColor = true;
+            this.chkLock.Visible = false;
             // 
             // chkCopyExisting
             // 
             this.chkCopyExisting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.chkCopyExisting.AutoSize = true;
-            this.chkCopyExisting.Location = new System.Drawing.Point(12, 374);
+            this.chkCopyExisting.Location = new System.Drawing.Point(15, 371);
             this.chkCopyExisting.Name = "chkCopyExisting";
             this.chkCopyExisting.Size = new System.Drawing.Size(157, 17);
             this.chkCopyExisting.TabIndex = 11;
@@ -240,7 +245,7 @@
             this.cbxCopyExisting.FormattingEnabled = true;
             this.cbxCopyExisting.Items.AddRange(new object[] {
             "Default Configuration"});
-            this.cbxCopyExisting.Location = new System.Drawing.Point(31, 397);
+            this.cbxCopyExisting.Location = new System.Drawing.Point(31, 394);
             this.cbxCopyExisting.Name = "cbxCopyExisting";
             this.cbxCopyExisting.Size = new System.Drawing.Size(495, 21);
             this.cbxCopyExisting.TabIndex = 12;
@@ -272,11 +277,67 @@
             this.cbxDevice.Size = new System.Drawing.Size(448, 21);
             this.cbxDevice.TabIndex = 13;
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 449);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(81, 13);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Keyboard Hook";
+            // 
+            // cbxKeyboardHook
+            // 
+            this.cbxKeyboardHook.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbxKeyboardHook.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbxKeyboardHook.FormattingEnabled = true;
+            this.cbxKeyboardHook.Items.AddRange(new object[] {
+            "None",
+            "Ignore Injected Events",
+            "All"});
+            this.cbxKeyboardHook.Location = new System.Drawing.Point(99, 446);
+            this.cbxKeyboardHook.Name = "cbxKeyboardHook";
+            this.cbxKeyboardHook.Size = new System.Drawing.Size(427, 21);
+            this.cbxKeyboardHook.TabIndex = 16;
+            // 
+            // cbxMouseHook
+            // 
+            this.cbxMouseHook.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbxMouseHook.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbxMouseHook.FormattingEnabled = true;
+            this.cbxMouseHook.Items.AddRange(new object[] {
+            "None",
+            "Ignore Injected Events",
+            "All"});
+            this.cbxMouseHook.Location = new System.Drawing.Point(99, 473);
+            this.cbxMouseHook.Name = "cbxMouseHook";
+            this.cbxMouseHook.Size = new System.Drawing.Size(427, 21);
+            this.cbxMouseHook.TabIndex = 18;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 476);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(68, 13);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Mouse Hook";
+            // 
             // NewProfileDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(538, 477);
+            this.ClientSize = new System.Drawing.Size(538, 582);
+            this.Controls.Add(this.cbxMouseHook);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.cbxKeyboardHook);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lblDevice);
             this.Controls.Add(this.cbxDevice);
             this.Controls.Add(this.cbxCopyExisting);
@@ -294,7 +355,7 @@
             this.Controls.Add(this.lblName);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "NewProfileDialog";
+            this.ScriptName = "NewProfileDialog";
             this.Text = "New Profile";
             this.Load += new System.EventHandler(this.NewProfileDialog_Load);
             this.gbxExecutables.ResumeLayout(false);
@@ -325,5 +386,9 @@
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Label lblDevice;
         private System.Windows.Forms.ComboBox cbxDevice;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cbxKeyboardHook;
+        private System.Windows.Forms.ComboBox cbxMouseHook;
+        private System.Windows.Forms.Label label2;
     }
 }

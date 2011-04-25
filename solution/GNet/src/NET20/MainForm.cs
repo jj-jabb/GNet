@@ -50,74 +50,109 @@ namespace GNet
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Profile newProfile;
             NewProfileDialog d = new NewProfileDialog();
+
             var result = d.ShowDialog();
-
-            string lineStart = "";
-            string extension = ".txt";
-
             if (result == DialogResult.OK)
             {
+                var fileName = MakeSafeFilename(d.ScriptName);
+                string ext;
+                var basePath = "Profiles\\" + d.Language + "\\";
 
                 switch (d.Language)
                 {
                     case "Lua":
-                        lineStart = "-- ";
-                        extension = ".lua";
+                        ext = ".lua";
                         break;
 
                     case "Boo":
-                        lineStart = "# ";
-                        extension = ".boo";
+                        ext = ".boo";
+                        break;
+
+                    default:
+                        ext = ".txt";
                         break;
                 }
 
-                StringBuilder script = new StringBuilder();
-                script.Append(lineStart).Append("Name: ").Append(d.Name).Append(Environment.NewLine);
-                script.Append(lineStart).Append("Description: ").Append(d.Description).Append(Environment.NewLine);
-                script.Append(lineStart).Append("Language: ").Append(d.Language).Append(Environment.NewLine);
-                script.Append(lineStart).Append("Device: ").Append(d.Device).Append(Environment.NewLine);
-                script.Append(lineStart).Append("LockForExecutables: ").Append(d.LockForExecutables).Append(Environment.NewLine);
-                script.Append(lineStart).Append("Executables: ");
-
-                for(int i = 0; i < d.Executables.Count; i++)
+                if (File.Exists(basePath + fileName + ext))
                 {
-                    if (i > 0)
-                        script.Append(", ");
-
-                    script.Append("\"").Append(d.Executables[i]).Append("\"");
+                    int fileCount = 1;
+                    while (File.Exists(basePath + fileName + fileCount + ext))
+                        fileCount++;
+                    fileName += fileCount;
                 }
-                
-                script.Append(Environment.NewLine).Append(Environment.NewLine);
-                
-                var basePath= "Profiles\\" + d.Language + "\\";
 
-                //var copyFrom = d.CopyFrom ?? "_template" + extension;
+                fileName = fileName + ext;
 
-                //if (copyFrom != null)
-                //{
-                //    if ((copyFrom == "Default Configuration") && !File.Exists(basePath + "Default Configuration" + extension))
-                //        if (File.Exists(basePath + "_default" + extension))
-                //            File.Copy(basePath + "Default Configuration" + extension, basePath + "_default" + extension);
+                bool copied = false;
+                if (d.CopyFrom != null)
+                {
+                    var copyFrom = basePath + d.CopyFrom + ext;
+                    if (File.Exists(copyFrom))
+                    {
+                        File.Copy(copyFrom, basePath + fileName);
+                        copied = true;
+                    }
+                }
 
+                if (!copied)
+                {
+                    var templatePath = basePath + "_template" + Path.GetExtension(fileName);
+                    if (File.Exists(templatePath))
+                        File.Copy(templatePath, basePath + fileName);
+                    else
+                        using (var fs = File.CreateText(basePath + fileName)) { };
+                }
 
-                //}
+                newProfile = Profile.GetProfile(basePath + fileName);
+                newProfile.ReadFile();
 
-                var profile = new LuaProfile(basePath + "_default" + extension);
-                profile.ReadFile();
+                newProfile.Name = d.ScriptName;
+                newProfile.Description = d.Description;
+                newProfile.Device = (DeviceType)Enum.Parse(typeof(DeviceType), d.Device);
+                newProfile.Lock = d.LockForExecutables;
 
-                //using (var fs = File.OpenText(basePath + "_default" + extension))
-                //{
-                //    script.Append(fs.ReadToEnd());
-                //}
+                for (int i = 0; i < d.Executables.Count; i++)
+                    newProfile.Executables.Add(d.Executables[i]);
 
-                
-                TabPage tabPage = new TabPage(d.Name);
-                ScriptEditor editor = new ScriptEditor(profile);
+                newProfile.KeyboardHook = d.KeyboardHook;
+                newProfile.MouseHook = d.MouseHook;
+
+                newProfile.Save();
+                newProfile.ReadFile();
+
+                TabPage tabPage = new TabPage(d.ScriptName);
+                ScriptEditor editor = new ScriptEditor(newProfile);
                 editor.Dock = DockStyle.Fill;
                 tabPage.Controls.Add(editor);
                 documentTabs.TabPages.Add(tabPage);
             }
+        }
+
+        public static string MakeSafeFilename(string filename)
+        {
+            char[] invalidChars = Path.GetInvalidFileNameChars();
+            char fc;
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < filename.Length; i++)
+            {
+                fc = filename[i];
+
+                for (int j = 0; j < invalidChars.Length; j++)
+                    if (fc == invalidChars[j])
+                    {
+                        sb.Append("%").Append(((byte)fc).ToString("x"));
+                        fc = '\0';
+                        break;
+                    }
+
+                if (fc != '\0')
+                    sb.Append(fc);
+            }
+
+            return sb.ToString();
         }
     }
 }

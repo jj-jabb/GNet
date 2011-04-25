@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+using GNet.Scripting;
+
 namespace GNet
 {
     public partial class NewProfileDialog : Form
@@ -31,15 +33,19 @@ namespace GNet
                 cbxDevice.Enabled = false;
 
             cbxCopyExisting.SelectedIndex = 0;
+            cbxKeyboardHook.SelectedIndex = 0;
+            cbxMouseHook.SelectedIndex = 0;
         }
 
-        public string Name { get; private set; }
+        public string ScriptName { get; private set; }
         public string Description { get; private set; }
         public string Language { get; private set; }
         public string Device { get; private set; }
         public List<string> Executables { get; private set; }
         public bool LockForExecutables { get; private set; }
         public string CopyFrom { get; private set; }
+        public HookOptions KeyboardHook { get; private set; }
+        public HookOptions MouseHook { get; private set; }
 
         public bool OkClicked { get; private set; }
 
@@ -80,7 +86,7 @@ namespace GNet
         {
             DialogResult = DialogResult.OK;
 
-            Name = tbxName.Text;
+            ScriptName = tbxName.Text;
             Description = tbxDescription.Text;
             Language = cbxLanguage.SelectedItem.ToString();
             Device = cbxDevice.SelectedItem.ToString();
@@ -91,6 +97,10 @@ namespace GNet
 
             foreach (var item in lbxExecs.Items)
                 Executables.Add(item.ToString());
+
+            KeyboardHook = (HookOptions)cbxKeyboardHook.SelectedIndex;
+            MouseHook = (HookOptions)cbxMouseHook.SelectedIndex;
+            
 
             OkClicked = true;
             Close();

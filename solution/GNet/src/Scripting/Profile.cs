@@ -9,6 +9,7 @@ namespace GNet.Scripting
 {
     public class GenericProfile : Profile
     {
+        public GenericProfile() { }
         public GenericProfile(string filepath) : base(filepath) { }
 
         public override ScriptLanguage Language
@@ -16,7 +17,7 @@ namespace GNet.Scripting
             get { return ScriptLanguage.Undefined; }
         }
 
-        protected override string LineStart
+        protected override string HeaderLineStart
         {
             get { return "#"; }
         }
@@ -24,6 +25,7 @@ namespace GNet.Scripting
 
     public class LuaProfile : Profile
     {
+        public LuaProfile() { }
         public LuaProfile(string filepath) : base(filepath) { }
 
         public override ScriptLanguage Language
@@ -31,7 +33,7 @@ namespace GNet.Scripting
             get { return ScriptLanguage.Lua; }
         }
 
-        protected override string LineStart
+        protected override string HeaderLineStart
         {
             get { return "--="; }
         }
@@ -39,6 +41,7 @@ namespace GNet.Scripting
 
     public class BooProfile : Profile
     {
+        public BooProfile() { }
         public BooProfile(string filepath) : base(filepath) { }
 
         public override ScriptLanguage Language
@@ -46,7 +49,7 @@ namespace GNet.Scripting
             get { return ScriptLanguage.Boo; }
         }
 
-        protected override string LineStart
+        protected override string HeaderLineStart
         {
             get { return "#="; }
         }
@@ -75,8 +78,13 @@ namespace GNet.Scripting
         private string p;
 
         public Profile(string filepath)
+            : this()
         {
             Filepath = filepath;
+        }
+
+        public Profile()
+        {
             Executables = new List<string>();
             configuration = new Dictionary<string, string>();
         }
@@ -94,7 +102,7 @@ namespace GNet.Scripting
         public int HeaderLineCount { get; set; }
 
         public abstract ScriptLanguage Language { get; }
-        protected abstract string LineStart { get; }
+        protected abstract string HeaderLineStart { get; }
 
         public void ReadFile()
         {
@@ -124,7 +132,7 @@ namespace GNet.Scripting
 
             #region validate inputs
 
-            if (LineStart == null)
+            if (HeaderLineStart == null)
                 throw new ArgumentNullException("LineStart is not defined.");
 
             if (Filepath == null)
@@ -137,7 +145,7 @@ namespace GNet.Scripting
 
             #region read header
 
-            var lineStartLength = LineStart.Length;
+            var lineStartLength = HeaderLineStart.Length;
             var configSplit = new char[] { ':' };
             string[] split;
 
@@ -146,7 +154,7 @@ namespace GNet.Scripting
                 line = reader.ReadLine();
                 headerLineCount++;
 
-                if (!line.StartsWith(LineStart))
+                if (!line.StartsWith(HeaderLineStart))
                     break;
 
                 line = line.Substring(lineStartLength);
@@ -256,8 +264,8 @@ namespace GNet.Scripting
         {
             using (var fs = File.CreateText(Filepath))
             {
-                WriteProperty(fs, "Filepath", Filepath);
                 WriteProperty(fs, "Name", Name);
+                WriteProperty(fs, "Filepath", Filepath);
                 WriteProperty(fs, "Description", Description);
                 WriteProperty(fs, "Device", Device.ToString());
                 WriteProperty(fs, "Lock", Lock.ToString());
@@ -271,15 +279,30 @@ namespace GNet.Scripting
                 WriteProperty(fs, "KeyboardHook", KeyboardHook.ToString());
                 WriteProperty(fs, "MouseHook", MouseHook.ToString());
 
-                fs.WriteLine();
+                string line;
+                bool inHeader = true;
+                using (var sr = new StringReader(Contents))
+                {
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (inHeader)
+                        {
+                            if (!line.StartsWith(HeaderLineStart))
+                                inHeader = false;
+                        }
 
-                fs.WriteLine(Contents);
+                        if (!inHeader)
+                            fs.WriteLine(line);
+                    }
+                }
+
+                //fs.WriteLine(Contents);
             }
         }
 
         void WriteProperty(StreamWriter fs, string name, string value)
         {
-            fs.Write(LineStart);
+            fs.Write(HeaderLineStart);
             fs.Write(" ");
             fs.Write(name);
             fs.Write(": ");
