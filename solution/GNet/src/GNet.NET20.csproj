@@ -264,7 +264,14 @@
       <DependentUpon>ScriptEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Scripting\DeviceType.cs" />
+    <Compile Include="Scripting\G13Script.cs" />
+    <Compile Include="Scripting\G13Script.IO.cs" />
+    <Compile Include="Scripting\IG13DeviceScript.cs" />
+    <Compile Include="Scripting\G13KeyState.cs" />
+    <Compile Include="Scripting\G13Scriptable.cs" />
     <Compile Include="Scripting\HookOptions.cs" />
+    <Compile Include="Scripting\IDeviceScript.cs" />
+    <Compile Include="Scripting\LuaScript.cs" />
     <Compile Include="Scripting\Profile.cs" />
     <Compile Include="NET20\TextBoxStreamWriter.cs" />
     <Compile Include="Scripting\IScriptRunner.cs" />

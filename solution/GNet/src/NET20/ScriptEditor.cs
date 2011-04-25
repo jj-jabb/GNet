@@ -16,9 +16,11 @@ namespace GNet
 {
     public partial class ScriptEditor : UserControl
     {
-        IScriptRunner scriptRunner;
+        //IScriptRunner scriptRunner;
+        IDeviceScript script;
+        Profile profile;
 
-        public ScriptEditor(string content)
+        public ScriptEditor(Profile profile)
         {
             InitializeComponent();
 
@@ -30,30 +32,12 @@ namespace GNet
                 HighlightingManager.Manager.AddHighlightingStrategy(h);
             }
 
-            editor.Text = content;
+            this.profile = profile;
+            editor.Text = profile.Contents;
 
-//            if (File.Exists(@".\Profiles\Lua\_default.lua"))
-//            {
-//                using (var fs = File.OpenText(@".\Profiles\Lua\_default.lua"))
-//                {
-//                    editor.Text = fs.ReadToEnd();
-//                }
-//            }
-//            else
-//            {
-//                editor.Text =
-//@"-- Name:
-//-- Description:
-//-- Executables:
-//
-//function OnEvent(event, arg, family)
-//    OutputLogMessage(event.."" : ""..arg.."" : ""..family)
-//end
-//";
-//            }
+            script = new LuaScript();
+            script.Profile = profile;
 
-            scriptRunner = new LuaRunner();
-            ((LuaRunner)scriptRunner).EventQueueUpdated += new EventHandler<Hid.EventArgs<string>>(ScriptEditor_EventQueueUpdated);
         }
 
         string eventQueue;
@@ -89,7 +73,8 @@ namespace GNet
             try
             {
                 editor.IsReadOnly = true;
-                scriptRunner.Run(editor.Text);
+                profile.Contents = editor.Text;
+                script.Start();
             }
             catch (Exception ex)
             {
@@ -105,10 +90,7 @@ namespace GNet
 
         public void StopScript()
         {
-            if (scriptRunner != null)
-            {
-                scriptRunner.Stop();
-            }
+            script.Stop();
 
             runButton.Enabled = true;
             stopButton.Enabled = false;
@@ -117,10 +99,7 @@ namespace GNet
 
         public void DisposeScript()
         {
-            if (scriptRunner != null)
-                scriptRunner.Dispose();
-
-            scriptRunner = null;
+            script.Stop();
         }
     }
 }

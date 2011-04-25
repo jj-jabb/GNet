@@ -72,6 +72,7 @@ namespace GNet.Scripting
 
         Dictionary<string, string> configuration;
         int headerLineCount;
+        private string p;
 
         public Profile(string filepath)
         {
@@ -95,15 +96,25 @@ namespace GNet.Scripting
         public abstract ScriptLanguage Language { get; }
         protected abstract string LineStart { get; }
 
-        public int ParseHeader()
+        public void ReadFile()
         {
+            ReadHeader();
+
             using (var reader = File.OpenText(Filepath))
             {
-                return ParseHeader(reader);
+                Contents = reader.ReadToEnd();
             }
         }
 
-        public int ParseHeader(StreamReader reader)
+        public int ReadHeader()
+        {
+            using (var reader = File.OpenText(Filepath))
+            {
+                return ReadHeader(reader);
+            }
+        }
+
+        public int ReadHeader(StreamReader reader)
         {
             string line;
             string key;

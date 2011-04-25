@@ -26,6 +26,8 @@ namespace GNet
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            G13Scriptable.Init();
+
             originalout = Console.Out;
             tbsw = new TextBoxStreamWriter(output);
             Console.SetOut(tbsw);
@@ -42,6 +44,8 @@ namespace GNet
                     if (editor != null)
                         editor.DisposeScript();
                 }
+
+            G13Scriptable.Deinit();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -99,14 +103,17 @@ namespace GNet
 
                 //}
 
-                using (var fs = File.OpenText(basePath + "_default" + extension))
-                {
-                    script.Append(fs.ReadToEnd());
-                }
+                var profile = new LuaProfile(basePath + "_default" + extension);
+                profile.ReadFile();
+
+                //using (var fs = File.OpenText(basePath + "_default" + extension))
+                //{
+                //    script.Append(fs.ReadToEnd());
+                //}
 
                 
                 TabPage tabPage = new TabPage(d.Name);
-                ScriptEditor editor = new ScriptEditor(script.ToString());
+                ScriptEditor editor = new ScriptEditor(profile);
                 editor.Dock = DockStyle.Fill;
                 tabPage.Controls.Add(editor);
                 documentTabs.TabPages.Add(tabPage);

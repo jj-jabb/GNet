@@ -198,6 +198,9 @@ namespace GNet.Lib
 
         void UpdateBitmap(int priority)
         {
+            if (!isOpen)
+                return;
+
             var bitdata = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
 
             LgLcd.lgLcdBitmap160x43x1 bmp = LgLcd.lgLcdBitmap160x43x1.New;
