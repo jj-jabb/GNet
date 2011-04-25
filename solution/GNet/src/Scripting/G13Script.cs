@@ -62,7 +62,7 @@ namespace GNet.Scripting
             public static KeyEvent Empty = new KeyEvent(true);
         }
 
-        G13Scriptable device = G13Scriptable.Current;
+        G13Device device = G13Device.Current;
 
         Queue<KeyEvent> keyEvents;
 
@@ -88,7 +88,7 @@ namespace GNet.Scripting
             keyboardHook.KeyUp += new KeyEventHandler(keyboardHook_KeyUp);
         }
 
-        public G13Scriptable Device
+        public G13Device Device
         {
             get
             {

@@ -18,7 +18,7 @@ using GNet.Lib.MKHook;
 
 namespace GNet.Scripting
 {
-    public class LuaRunner : G13Device, IScriptRunner
+    public class LuaRunner : G13Device_OLD, IScriptRunner
     {
         struct KeyEvent
         {

@@ -6,6 +6,6 @@ namespace GNet.Scripting
 {
     public interface IG13DeviceScript : IDeviceScript
     {
-        G13Scriptable Device { get; set; }
+        G13Device Device { get; set; }
     }
 }

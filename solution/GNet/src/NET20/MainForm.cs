@@ -26,7 +26,7 @@ namespace GNet
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            G13Scriptable.Init();
+            G13Device.Init();
 
             originalout = Console.Out;
             tbsw = new TextBoxStreamWriter(output);
@@ -45,7 +45,7 @@ namespace GNet
                         editor.DisposeScript();
                 }
 
-            G13Scriptable.Deinit();
+            G13Device.Deinit();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)

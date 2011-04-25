@@ -5,28 +5,61 @@ using System.Text;
 using System.Threading;
 
 using GNet.Hid;
+using GNet.Lib;
 using GNet.Lib.IO;
 
-namespace GNet.Lib
+namespace GNet.Scripting
 {
-    public partial class G13Device : Device
+    public class G13Device : Device
     {
+        static G13Device current;
+
+        public static void Init()
+        {
+            if (current != null)
+                return;
+
+            current = new G13Device();
+            current.Start();
+        }
+
+        public static void Deinit()
+        {
+            if (current == null)
+                return;
+
+            current.Dispose();
+            current = null;
+        }
+
+        public static G13Device Current
+        {
+            get
+            {
+                return current;
+            }
+        }
+
         const int Logitech = 0x046d;
         const int G13 = 0xc21c;
 
         LgLcd lcd;
         string lcdAppName;
         int mKeyState = 0;
-        KeyStateStruct currentState = new KeyStateStruct();
+        G13KeyState currentState = new G13KeyState();
         JoystickPosition joystick;
+        IG13DeviceScript _script;
+        object scriptLock;
+        ReaderWriterLock scriptLocker;
 
         KeyRepeater keyRepeater;
 
-        public G13Device(string lcdAppName = "G13 GNet Profiler")
+        G13Device()
             : base(Logitech, G13)
         {
-            this.lcdAppName = lcdAppName ?? "G13 GNet Profiler";
-            SingleKeyEvents = true;
+            this.lcdAppName = "G13 GNet Profiler";
+            scriptLock = new object();
+            scriptLocker = new ReaderWriterLock();
             keyRepeater = new KeyRepeater();
             keyRepeater.Start();
         }
@@ -36,7 +69,36 @@ namespace GNet.Lib
         public int MKeyState { get { return mKeyState; } }
         public JoystickPosition Joystick { get { return joystick; } }
         public JoystickAngle JoystickAngle { get { return new JoystickAngle(joystick.X, joystick.Y); } }
-        public bool SingleKeyEvents { get; set; }
+        public KeyRepeater KeyRepeater { get { return keyRepeater; } }
+
+        public IG13DeviceScript Script
+        {
+            get
+            {
+                lock (scriptLock)
+                {
+                    return _script;
+                }
+            }
+            set
+            {
+                lock (scriptLock)
+                {
+                    if (_script != null)
+                    {
+                        if (_script.IsRunning)
+                            _script.Stop();
+                        
+                        if (_script != null)
+                            _script.Device = null;
+                    }
+
+                    _script = value;
+                    if (_script != null)
+                        _script.Device = this;
+                }
+            }
+        }
 
         public override void Start()
         {
@@ -96,6 +158,17 @@ namespace GNet.Lib
             SetFeature(data, DeviceInfo.Capabilities.FeatureReportByteLength);
         }
 
+        protected override void ReadWorker_Opened()
+        {
+            Lcd.OpenByType();
+            Lcd.Clear();
+        }
+
+        protected override void ReadWorker_Closed()
+        {
+            lcd.Disconnect();
+        }
+
         protected override void ReadWorker_DataRead(DeviceData data)
         {
             ReadWorker_DecodeData(data);
@@ -106,33 +179,13 @@ namespace GNet.Lib
         {
         }
 
-        protected virtual void ReadWorker_JoystickChanged(JoystickPosition position)
-        {
-        }
-
-        protected virtual void ReadWorker_KeyStateChanged(KeyStateStruct newState)
-        {
-        }
-
-        protected virtual void ReadWorker_KeysPressed(ulong keys)
-        {
-        }
-
-        protected virtual void ReadWorker_KeysReleased(ulong keys)
-        {
-        }
-
-        protected virtual void ReadWorker_SingleKeyPressed(G13Keys key)
-        {
-        }
-
-        protected virtual void ReadWorker_SingleKeyReleased(G13Keys key)
-        {
-        }
-
         protected void ReadWorker_DecodeData(DeviceData data)
         {
-            KeyStateStruct state = new KeyStateStruct();
+            G13KeyState state = new G13KeyState();
+
+            var script = Script;
+            if (script == null || !script.IsRunning)
+                return;
 
             if (DeviceData.ReadStatus.Success == data.Status)
             {
@@ -145,7 +198,7 @@ namespace GNet.Lib
                 if (j.X != joystick.X || j.Y != joystick.Y)
                 {
                     joystick = j;
-                    ReadWorker_JoystickChanged(j);
+                    script.JoystickChanged(j);
                 }
 
                 state.B0 = bytes[3];
@@ -154,7 +207,7 @@ namespace GNet.Lib
                 state.B3 = bytes[6];
                 state.B4 = bytes[7] < 0x80 ? bytes[7] : (byte)(bytes[7] - 0x80);
 
-                ReadWorker_KeyStateChanged(state);
+                script.KeyStateChanged(state);
 
                 var keys = currentState.UL ^ state.UL;
                 var pressed = (keys & state.UL) > 0;
@@ -164,75 +217,57 @@ namespace GNet.Lib
                 {
                     if (pressed)
                     {
-                        if (SingleKeyEvents)
-                            FireSingleKey(keys, true);
+                        if (script.SingleKeyEvents)
+                            FireSingleKey(script, keys, true);
                         else
-                            ReadWorker_KeysPressed(keys);
+                            script.KeysPressed(keys);
                     }
                     else
                     {
-                        if (SingleKeyEvents)
-                            FireSingleKey(keys, false);
+                        if (script.SingleKeyEvents)
+                            FireSingleKey(script, keys, false);
                         else
-                            ReadWorker_KeysReleased(keys);
+                            script.KeysReleased(keys);
                     }
                 }
             }
         }
 
-        void FireSingleKey(ulong keys, bool pressed)
+        void FireSingleKey(IDeviceScript script, ulong keys, bool pressed)
         {
             for (ulong k = (ulong)G13Keys.G1; k <= (ulong)G13Keys.G22; k <<= 1)
                 if ((keys & k) > 0)
                 {
-                    if (pressed) ReadWorker_SingleKeyPressed((G13Keys)k);
-                    else ReadWorker_SingleKeyReleased((G13Keys)k);
+                    if (pressed) script.SingleKeyPressed((G13Keys)k);
+                    else script.SingleKeyReleased((G13Keys)k);
                 }
 
             for (ulong k = (ulong)G13Keys.J1; k <= (ulong)G13Keys.J3; k <<= 1)
                 if ((keys & k) > 0)
                 {
-                    if (pressed) ReadWorker_SingleKeyPressed((G13Keys)k);
-                    else ReadWorker_SingleKeyReleased((G13Keys)k);
+                    if (pressed) script.SingleKeyPressed((G13Keys)k);
+                    else script.SingleKeyReleased((G13Keys)k);
                 }
 
             for (ulong k = (ulong)G13Keys.M1; k <= (ulong)G13Keys.M4; k <<= 1)
                 if ((keys & k) > 0)
                 {
-                    if (pressed) ReadWorker_SingleKeyPressed((G13Keys)k);
-                    else ReadWorker_SingleKeyReleased((G13Keys)k);
+                    if (pressed) script.SingleKeyPressed((G13Keys)k);
+                    else script.SingleKeyReleased((G13Keys)k);
                 }
 
             for (ulong k = (ulong)G13Keys.L1; k <= (ulong)G13Keys.L5; k <<= 1)
                 if ((keys & k) > 0)
                 {
-                    if (pressed) ReadWorker_SingleKeyPressed((G13Keys)k);
-                    else ReadWorker_SingleKeyReleased((G13Keys)k);
+                    if (pressed) script.SingleKeyPressed((G13Keys)k);
+                    else script.SingleKeyReleased((G13Keys)k);
                 }
 
             if ((keys & (ulong)G13Keys.L6) > 0)
             {
-                if (pressed) ReadWorker_SingleKeyPressed(G13Keys.L6);
-                else ReadWorker_SingleKeyReleased(G13Keys.L6);
+                if (pressed) script.SingleKeyPressed(G13Keys.L6);
+                else script.SingleKeyReleased(G13Keys.L6);
             }
-        }
-
-        [StructLayout(LayoutKind.Explicit)]
-        protected struct KeyStateStruct
-        {
-            [FieldOffset(0)]
-            public byte B0;
-            [FieldOffset(1)]
-            public byte B1;
-            [FieldOffset(2)]
-            public byte B2;
-            [FieldOffset(3)]
-            public byte B3;
-            [FieldOffset(4)]
-            public byte B4;
-
-            [FieldOffset(0)]
-            public ulong UL;
         }
     }
 }

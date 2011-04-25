@@ -197,8 +197,8 @@
     <Compile Include="ICSharpCode.TextEditor\Util\TipSplitter.cs" />
     <Compile Include="ICSharpCode.TextEditor\Util\TipText.cs" />
     <Compile Include="ICSharpCode.TextEditor\Util\WeakCollection.cs" />
-    <Compile Include="Lib\G13Device.Api.cs" />
-    <Compile Include="Lib\G13Device.cs" />
+    <Compile Include="Lib\G13Device_OLD.Api.cs" />
+    <Compile Include="Lib\G13Device_OLD.cs" />
     <Compile Include="Lib\G13Keys.cs" />
     <Compile Include="Lib\IO\InputSimulator.cs" />
     <Compile Include="Lib\IO\JoystickAngle.cs" />
@@ -268,7 +268,7 @@
     <Compile Include="Scripting\G13Script.IO.cs" />
     <Compile Include="Scripting\IG13DeviceScript.cs" />
     <Compile Include="Scripting\G13KeyState.cs" />
-    <Compile Include="Scripting\G13Scriptable.cs" />
+    <Compile Include="Scripting\G13Device.cs" />
     <Compile Include="Scripting\HookOptions.cs" />
     <Compile Include="Scripting\IDeviceScript.cs" />
     <Compile Include="Scripting\LuaScript.cs" />

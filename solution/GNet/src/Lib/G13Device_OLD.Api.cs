@@ -12,9 +12,9 @@ using System.Threading;
 
 namespace GNet.Lib
 {
-    public partial class G13Device
+    public partial class G13Device_OLD
     {
-        static G13Device()
+        static G13Device_OLD()
         {
             foreach (var name in Enum.GetNames(typeof(WFKeys)))
                 nameToWFKey[name.ToLower()] = (WFKeys)Enum.Parse(typeof(WFKeys), name);
