@@ -88,8 +88,9 @@ namespace GNet.Scripting
                     {
                         if (_script.IsRunning)
                             _script.Stop();
-
-                        _script.Device = null;
+                        
+                        if (_script != null)
+                            _script.Device = null;
                     }
 
                     _script = value;
