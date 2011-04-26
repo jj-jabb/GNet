@@ -271,7 +271,7 @@ namespace GNet.Scripting
             using (var fs = File.CreateText(Filepath))
             {
                 WriteProperty(fs, "Name", Name);
-                WriteProperty(fs, "Filepath", Filepath);
+                //WriteProperty(fs, "Filepath", Filepath);
                 WriteProperty(fs, "Description", Description);
                 WriteProperty(fs, "Device", Device.ToString());
                 WriteProperty(fs, "Lock", Lock.ToString());

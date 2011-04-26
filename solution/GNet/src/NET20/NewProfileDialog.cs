@@ -22,15 +22,18 @@ namespace GNet
 
         private void NewProfileDialog_Load(object sender, EventArgs e)
         {
-            cbxLanguage.SelectedIndex = 0;
-
             if (cbxLanguage.Items.Count <= 1)
                 cbxLanguage.Enabled = false;
 
-            cbxDevice.SelectedIndex = 0;
-
             if (cbxDevice.Items.Count <= 1)
                 cbxDevice.Enabled = false;
+
+            if (readFromProfile)
+                return;
+
+            cbxLanguage.SelectedIndex = 0;
+
+            cbxDevice.SelectedIndex = 0;
 
             cbxCopyExisting.SelectedIndex = 0;
             cbxKeyboardHook.SelectedIndex = 0;
@@ -46,6 +49,7 @@ namespace GNet
         public string CopyFrom { get; private set; }
         public HookOptions KeyboardHook { get; private set; }
         public HookOptions MouseHook { get; private set; }
+        public bool IsEnabled { get; private set; }
 
         public bool OkClicked { get; private set; }
 
@@ -82,6 +86,28 @@ namespace GNet
                 lbxExecs.Items.RemoveAt(indices.Pop());
         }
 
+        bool readFromProfile;
+        public void ReadFromProfile(Profile profile)
+        {
+            readFromProfile = true;
+            tbxName.Text = profile.Name;
+            tbxDescription.Text = profile.Description;
+            cbxLanguage.SelectedItem = profile.Language.ToString();
+            cbxDevice.SelectedItem = profile.Device.ToString();
+            chkLock.Checked = profile.Lock;
+
+            foreach (var item in profile.Executables)
+                Executables.Add(item);
+
+            cbxKeyboardHook.SelectedItem = HookOptionsExtensions.DisplayValue(profile.KeyboardHook);
+            cbxMouseHook.SelectedItem = HookOptionsExtensions.DisplayValue(profile.MouseHook);
+
+            cbxIsEnabled.Checked = profile.IsEnabled;
+
+            chkCopyExisting.Visible = false;
+            cbxCopyExisting.Visible = false;
+        }
+
         private void btnOk_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
@@ -100,7 +126,8 @@ namespace GNet
 
             KeyboardHook = (HookOptions)cbxKeyboardHook.SelectedIndex;
             MouseHook = (HookOptions)cbxMouseHook.SelectedIndex;
-            
+
+            IsEnabled = cbxIsEnabled.Checked;
 
             OkClicked = true;
             Close();
@@ -114,7 +141,6 @@ namespace GNet
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-
         }
 
         private void chkCopyExisting_CheckedChanged(object sender, EventArgs e)

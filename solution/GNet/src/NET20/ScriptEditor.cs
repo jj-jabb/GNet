@@ -57,7 +57,7 @@ namespace GNet
 
         public Profile Profile { get { return profile; } }
         public TextEditorControl Editor { get { return editor; } }
-        //public IDeviceScript Script { get { return script; } }
+        public IDeviceScript Script { get { return script; } }
 
         string eventQueue;
         void ScriptEditor_EventQueueUpdated(object sender, Hid.EventArgs<string> e)

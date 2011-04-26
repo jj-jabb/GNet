@@ -141,6 +141,8 @@ namespace GNet
                 newProfile.KeyboardHook = d.KeyboardHook;
                 newProfile.MouseHook = d.MouseHook;
 
+                newProfile.IsEnabled = d.IsEnabled;
+
                 newProfile.Save();
                 newProfile.ReadFile();
 
@@ -179,28 +181,52 @@ namespace GNet
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TabPage tabPage = documentTabs.SelectedTab;
-            if (tabPage == null)
-                return;
-
-            ScriptEditor editor = null;
-            foreach (var control in tabPage.Controls)
+            var editor = CurrentEditor;
+            if (editor != null && editor.Profile != null)
             {
-                editor = control as ScriptEditor;
-                if (editor != null)
-                    break;
-            }
-
-            if (editor == null)
-                return;
-
-            if (editor.Profile != null)
+                editor.Profile.Contents = editor.Editor.Text;
                 editor.Profile.Save();
+            }
         }
 
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        ScriptEditor CurrentEditor
         {
+            get
+            {
+                if (documentTabs.SelectedTab == null)
+                    return null;
 
+                TabPage tabPage = documentTabs.SelectedTab;
+                if (tabPage == null)
+                    return null;
+
+                ScriptEditor editor = null;
+                foreach (var control in tabPage.Controls)
+                {
+                    editor = control as ScriptEditor;
+                    if (editor != null)
+                        break;
+                }
+
+                return editor;
+            }
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (documentTabs.SelectedTab == null)
+                return;
+
+            var editor = CurrentEditor;
+            if (editor != null && editor.Profile != null)
+            {
+                editor.Profile.Contents = editor.Editor.Text;
+                editor.Profile.Save();
+                if (editor.Script != null)
+                    editor.Script.Stop();
+            }
+
+            documentTabs.TabPages.Remove(documentTabs.SelectedTab);
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -230,7 +256,33 @@ namespace GNet
 
         private void profilePropertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var editor = CurrentEditor;
+            if (editor == null)
+                return;
 
+            NewProfileDialog d = new NewProfileDialog();
+            d.Text = "Profile properties for " + editor.Profile.Name;
+            d.ReadFromProfile(editor.Profile);
+            var result = d.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                editor.Profile.Name = d.ScriptName;
+                editor.Profile.Description = d.Description;
+                editor.Profile.Device = (DeviceType)Enum.Parse(typeof(DeviceType), d.Device);
+                editor.Profile.Lock = d.LockForExecutables;
+
+                for (int i = 0; i < d.Executables.Count; i++)
+                    editor.Profile.Executables.Add(d.Executables[i]);
+
+                editor.Profile.KeyboardHook = d.KeyboardHook;
+                editor.Profile.MouseHook = d.MouseHook;
+
+                editor.Profile.IsEnabled = d.IsEnabled;
+
+                editor.Profile.Save();
+                editor.Profile.ReadFile();
+                editor.Editor.Text = editor.Profile.Contents;
+            }
         }
     }
 }
