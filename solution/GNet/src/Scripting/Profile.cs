@@ -97,6 +97,7 @@ namespace GNet.Scripting
         public List<string> Executables { get; set; }
         public HookOptions KeyboardHook { get; set; }
         public HookOptions MouseHook { get; set; }
+        public bool IsEnabled { get; set; }
 
         public string Contents { get; set; }
         public int HeaderLineCount { get; set; }
@@ -252,6 +253,11 @@ namespace GNet.Scripting
                             configuration[k] = "None";
                         }
                         break;
+
+                    case "IsEnabled":
+                        IsEnabled = value.ToLower() == "true" ? true : false;
+                        break;
+
                 }
 
                 #endregion
@@ -278,6 +284,7 @@ namespace GNet.Scripting
 
                 WriteProperty(fs, "KeyboardHook", KeyboardHook.ToString());
                 WriteProperty(fs, "MouseHook", MouseHook.ToString());
+                WriteProperty(fs, "IsEnabled", IsEnabled.ToString());
 
                 string line;
                 bool inHeader = true;

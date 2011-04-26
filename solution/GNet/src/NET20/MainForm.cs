@@ -19,9 +19,6 @@ namespace GNet
         public MainForm()
         {
             InitializeComponent();
-
-            //Profile luap = Profile.GetProfile(".\\Profiles\\Lua\\_default.lua");
-            //luap.ParseHeader();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -46,6 +43,31 @@ namespace GNet
                 }
 
             G13Device.Deinit();
+        }
+
+        private string MakeSafeFilename(string filename)
+        {
+            char[] invalidChars = Path.GetInvalidFileNameChars();
+            char fc;
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < filename.Length; i++)
+            {
+                fc = filename[i];
+
+                for (int j = 0; j < invalidChars.Length; j++)
+                    if (fc == invalidChars[j])
+                    {
+                        sb.Append("%").Append(((byte)fc).ToString("x"));
+                        fc = '\0';
+                        break;
+                    }
+
+                if (fc != '\0')
+                    sb.Append(fc);
+            }
+
+            return sb.ToString();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -122,37 +144,93 @@ namespace GNet
                 newProfile.Save();
                 newProfile.ReadFile();
 
-                TabPage tabPage = new TabPage(d.ScriptName);
+                TabPage tabPage = new TabPage(newProfile.Name);
                 ScriptEditor editor = new ScriptEditor(newProfile);
                 editor.Dock = DockStyle.Fill;
                 tabPage.Controls.Add(editor);
                 documentTabs.TabPages.Add(tabPage);
+                documentTabs.SelectedTab = tabPage;
             }
         }
 
-        public static string MakeSafeFilename(string filename)
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            char[] invalidChars = Path.GetInvalidFileNameChars();
-            char fc;
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < filename.Length; i++)
+            var ofd = new OpenFileDialog()
             {
-                fc = filename[i];
+                Filter = "GNet Script|*.lua;*.boo",
+                InitialDirectory = ".\\Profiles\\",
+                RestoreDirectory = false
+            };
 
-                for (int j = 0; j < invalidChars.Length; j++)
-                    if (fc == invalidChars[j])
-                    {
-                        sb.Append("%").Append(((byte)fc).ToString("x"));
-                        fc = '\0';
-                        break;
-                    }
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                var profile = Profile.GetProfile(ofd.FileName);
+                profile.ReadFile();
 
-                if (fc != '\0')
-                    sb.Append(fc);
+                TabPage tabPage = new TabPage(profile.Name);
+                ScriptEditor editor = new ScriptEditor(profile);
+                editor.Dock = DockStyle.Fill;
+                tabPage.Controls.Add(editor);
+                documentTabs.TabPages.Add(tabPage);
+                documentTabs.SelectedTab = tabPage;
+
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = documentTabs.SelectedTab;
+            if (tabPage == null)
+                return;
+
+            ScriptEditor editor = null;
+            foreach (var control in tabPage.Controls)
+            {
+                editor = control as ScriptEditor;
+                if (editor != null)
+                    break;
             }
 
-            return sb.ToString();
+            if (editor == null)
+                return;
+
+            if (editor.Profile != null)
+                editor.Profile.Save();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void profilePropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

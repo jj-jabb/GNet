@@ -25,11 +25,26 @@ namespace GNet
             InitializeComponent();
 
             HighlightingManager.Manager.AddSyntaxModeFileProvider(new ResourceSyntaxModeProvider());
-            var h = HighlightingManager.Manager.FindHighlighter("Lua");
-            if (h != null)
+            IHighlightingStrategy h;
+            switch(profile.Language)
             {
-                editor.SetHighlighting("Lua");
-                HighlightingManager.Manager.AddHighlightingStrategy(h);
+                case ScriptLanguage.Lua:
+                    h = HighlightingManager.Manager.FindHighlighter("Lua");
+                    if (h != null)
+                    {
+                        editor.SetHighlighting("Lua");
+                        HighlightingManager.Manager.AddHighlightingStrategy(h);
+                    }
+                    break;
+
+                case ScriptLanguage.Boo:
+                    h = HighlightingManager.Manager.FindHighlighter("Boo");
+                    if (h != null)
+                    {
+                        editor.SetHighlighting("Boo");
+                        HighlightingManager.Manager.AddHighlightingStrategy(h);
+                    }
+                    break;
             }
 
             this.profile = profile;
@@ -39,6 +54,10 @@ namespace GNet
             script.Profile = profile;
 
         }
+
+        public Profile Profile { get { return profile; } }
+        public TextEditorControl Editor { get { return editor; } }
+        //public IDeviceScript Script { get { return script; } }
 
         string eventQueue;
         void ScriptEditor_EventQueueUpdated(object sender, Hid.EventArgs<string> e)
