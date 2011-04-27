@@ -23,6 +23,22 @@ namespace GNet
             notifyIcon1.Icon = Properties.Resources.TrayIcon;
             notifyIcon1.ContextMenuStrip = trayMenuStrip;
             //notifyIcon1.Visible = false;
+            Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
+        }
+
+        void Application_ApplicationExit(object sender, EventArgs e)
+        {
+            Console.SetOut(originalout);
+
+            foreach (TabPage tab in documentTabs.TabPages)
+                foreach (Control ctrl in tab.Controls)
+                {
+                    ScriptEditor editor = ctrl as ScriptEditor;
+                    if (editor != null)
+                        editor.DisposeScript();
+                }
+
+            G13Device.Deinit();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -230,17 +246,6 @@ namespace GNet
 
         private void Quit()
         {
-            Console.SetOut(originalout);
-
-            foreach (TabPage tab in documentTabs.TabPages)
-                foreach (Control ctrl in tab.Controls)
-                {
-                    ScriptEditor editor = ctrl as ScriptEditor;
-                    if (editor != null)
-                        editor.DisposeScript();
-                }
-
-            G13Device.Deinit();
             quit = true;
             Application.Exit();
         }

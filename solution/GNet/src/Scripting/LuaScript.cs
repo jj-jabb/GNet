@@ -180,6 +180,8 @@ namespace GNet.Scripting
             if (lua != null)
                 lua.Close();
 
+            Lcd.RemoveFromFront();
+
             lock (auto)
             {
                 auto.Close();

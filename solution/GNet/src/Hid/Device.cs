@@ -368,7 +368,28 @@ namespace GNet.Hid
                                     break;
 
                                 case DeviceData.ReadStatus.Success:
-                                    ReadWorker_DataRead(data);
+                                        bool trueSuccess = false;
+                                        for (int i = 0; i < data.Bytes.Length; i++)
+                                        {
+                                            if (data.Bytes[i] != 0)
+                                            {
+                                                trueSuccess = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (trueSuccess)
+                                        {
+                                            ReadWorker_DataRead(data);
+                                        }
+                                        else if (!IsPathInDeviceList(DeviceInfo.Path))
+                                        {
+                                            IsConnected = false;
+                                            Close();
+                                            wasOpen = false;
+                                            ReadWorker_Closed();
+                                            ReadWorker_Disconnected();
+                                        }
                                     break;
 
                                 case DeviceData.ReadStatus.ReadError:

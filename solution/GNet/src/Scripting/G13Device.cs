@@ -162,6 +162,9 @@ namespace GNet.Scripting
         {
             Lcd.OpenByType();
             Lcd.Clear();
+
+            if (Script != null && Script.IsRunning)
+                Lcd.BringToFront();
         }
 
         protected override void ReadWorker_Closed()

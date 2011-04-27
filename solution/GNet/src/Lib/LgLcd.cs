@@ -123,8 +123,12 @@ namespace GNet.Lib
             if (!isInited)
                 return true;
 
-            if (isConnected && !Disconnect())
-                return false;
+            if (isConnected)
+                Disconnect();
+
+            // force close/disconnect
+            isOpen = false;
+            isConnected = false;
 
             if (ERROR_SUCCESS == lgLcdDeInit())
             {
@@ -140,8 +144,12 @@ namespace GNet.Lib
             if (!isConnected)
                 return true;
 
-            if (isOpen && !Close())
-                return false;
+            if (isOpen)
+            {
+                Close();
+                // force close
+                isOpen = false;
+            }
 
             if (ERROR_SUCCESS == lgLcdDisconnect(connectContext.connection))
             {
