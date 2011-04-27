@@ -15,10 +15,13 @@ namespace GNet
     {
         TextWriter originalout;
         TextBoxStreamWriter tbsw;
+        bool quit;
 
         public MainForm()
         {
             InitializeComponent();
+            notifyIcon1.Icon = Properties.Resources.TrayIcon;
+            //notifyIcon1.Visible = false;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -32,17 +35,12 @@ namespace GNet
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Console.SetOut(originalout);
-
-            foreach (TabPage tab in documentTabs.TabPages)
-                foreach (Control ctrl in tab.Controls)
-                {
-                    ScriptEditor editor = ctrl as ScriptEditor;
-                    if (editor != null)
-                        editor.DisposeScript();
-                }
-
-            G13Device.Deinit();
+            if (!quit)
+            {
+                e.Cancel = true;
+                this.Hide();
+                //WindowState = FormWindowState.Minimized;
+            }
         }
 
         private string MakeSafeFilename(string filename)
@@ -229,6 +227,23 @@ namespace GNet
             documentTabs.TabPages.Remove(documentTabs.SelectedTab);
         }
 
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Console.SetOut(originalout);
+
+            foreach (TabPage tab in documentTabs.TabPages)
+                foreach (Control ctrl in tab.Controls)
+                {
+                    ScriptEditor editor = ctrl as ScriptEditor;
+                    if (editor != null)
+                        editor.DisposeScript();
+                }
+
+            G13Device.Deinit();
+            quit = true;
+            Application.Exit();
+        }
+
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -283,6 +298,29 @@ namespace GNet
                 editor.Profile.ReadFile();
                 editor.Editor.Text = editor.Profile.Contents;
             }
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            notifyIcon1.BalloonTipTitle = "GNet Profiler";
+            notifyIcon1.BalloonTipText = "GNet Profiler has been minimized.";
+
+            if (FormWindowState.Minimized == this.WindowState)
+            {
+                notifyIcon1.Visible = true;
+                notifyIcon1.ShowBalloonTip(500);
+                this.Hide();
+            }
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                //notifyIcon1.Visible = false;
+            }
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
         }
     }
 }

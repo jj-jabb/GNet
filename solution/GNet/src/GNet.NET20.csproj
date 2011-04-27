@@ -263,6 +263,11 @@
     <Compile Include="NET20\ScriptEditor.designer.cs">
       <DependentUpon>ScriptEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Scripting\DeviceType.cs" />
     <Compile Include="Scripting\G13Script.cs" />
     <Compile Include="Scripting\G13Script.IO.cs" />
@@ -278,9 +283,7 @@
     <Compile Include="Scripting\LuaRunner.cs" />
     <Compile Include="Scripting\ScriptLanguage.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\ASPX.xshd" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\BAT-Mode.xshd" />
@@ -302,6 +305,10 @@
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Tex-Mode.xshd" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\VBNET-Mode.xshd" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\XML-Mode.xshd" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="Profiles\Boo\Default Configuration.boo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -338,6 +345,7 @@
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\TextEditorControl.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\Resources\TrayIcon.ico" />
     <Content Include="LgLcd.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
