@@ -15,6 +15,12 @@ namespace GNet.Lib.PInvoke
         public static extern int GetSystemMetrics(SystemMetric smIndex);
 
         [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+        
+        [DllImport("user32.dll")]
+        public static extern int ShowWindow(IntPtr hwnd, int cmdShow);
+
+        [DllImport("user32.dll")]
         public static extern ushort VkKeyScan(char ch);
 
         [DllImport("user32.dll")]
