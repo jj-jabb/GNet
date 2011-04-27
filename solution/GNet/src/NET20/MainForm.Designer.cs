@@ -51,10 +51,15 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.output = new System.Windows.Forms.TextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.trayMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openTrayMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitTrayMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.trayMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -240,6 +245,34 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
+            // trayMenuStrip
+            // 
+            this.trayMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openTrayMenuItem,
+            this.toolStripSeparator2,
+            this.exitTrayMenuItem});
+            this.trayMenuStrip.Name = "trayMenuStrip";
+            this.trayMenuStrip.Size = new System.Drawing.Size(153, 76);
+            // 
+            // openTrayMenuItem
+            // 
+            this.openTrayMenuItem.Name = "openTrayMenuItem";
+            this.openTrayMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openTrayMenuItem.Text = "Open";
+            this.openTrayMenuItem.Click += new System.EventHandler(this.openTrayMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            // 
+            // exitTrayMenuItem
+            // 
+            this.exitTrayMenuItem.Name = "exitTrayMenuItem";
+            this.exitTrayMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitTrayMenuItem.Text = "Exit";
+            this.exitTrayMenuItem.Click += new System.EventHandler(this.exitTrayMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -261,6 +294,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
+            this.trayMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -290,6 +324,10 @@
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip trayMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem openTrayMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem exitTrayMenuItem;
     }
 }
 

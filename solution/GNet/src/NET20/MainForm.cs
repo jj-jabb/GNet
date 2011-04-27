@@ -21,6 +21,7 @@ namespace GNet
         {
             InitializeComponent();
             notifyIcon1.Icon = Properties.Resources.TrayIcon;
+            notifyIcon1.ContextMenuStrip = trayMenuStrip;
             //notifyIcon1.Visible = false;
         }
 
@@ -227,7 +228,7 @@ namespace GNet
             documentTabs.TabPages.Remove(documentTabs.SelectedTab);
         }
 
-        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Quit()
         {
             Console.SetOut(originalout);
 
@@ -242,6 +243,11 @@ namespace GNet
             G13Device.Deinit();
             quit = true;
             Application.Exit();
+        }
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Quit();
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -321,6 +327,17 @@ namespace GNet
         {
             this.Show();
             this.WindowState = FormWindowState.Normal;
+        }
+
+        private void openTrayMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+        }
+
+        private void exitTrayMenuItem_Click(object sender, EventArgs e)
+        {
+            Quit();
         }
     }
 }
