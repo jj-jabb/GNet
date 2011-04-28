@@ -256,6 +256,7 @@
     <Compile Include="NET20\NewProfileDialog.Designer.cs">
       <DependentUpon>NewProfileDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Scripting\ProfileManager.cs" />
     <Compile Include="NET20\Program.cs" />
     <Compile Include="NET20\AssemblyInfo.cs" />
     <Compile Include="NET20\ScriptEditor.cs">

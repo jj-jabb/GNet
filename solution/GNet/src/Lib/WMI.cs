@@ -25,6 +25,12 @@ namespace GNet.Lib
             }
         }
 
+        public static void DisposeCurrent()
+        {
+            current.Dispose();
+            current = null;
+        }
+
         bool disposed;
         IntPtr hEvent = IntPtr.Zero;
 

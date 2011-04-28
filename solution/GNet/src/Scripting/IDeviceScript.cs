@@ -20,5 +20,8 @@ namespace GNet.Scripting
 
         void Start();
         void Stop();
+
+        event EventHandler Started;
+        event EventHandler Stopped;
     }
 }

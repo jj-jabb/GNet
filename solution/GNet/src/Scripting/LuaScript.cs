@@ -18,7 +18,6 @@ namespace GNet.Scripting
         LuaFunction onKEvent;
         LuaFunction onMEvent;
 
-        Lua lua;
         DateTime startTime;
 
         public LuaScript()
@@ -90,6 +89,9 @@ namespace GNet.Scripting
                 if (lua != null)
                     lua.Close();
                 Console.WriteLine(ex.ToString());
+                Stop();
+                //OnStopped();
+
                 return;
             }
 
@@ -186,6 +188,8 @@ namespace GNet.Scripting
             {
                 auto.Close();
             }
+
+            OnStopped();
         }
 
         #region Lua API Calls

@@ -1,5 +1,5 @@
 ﻿--= Filename:
---= Name: Untitled
+--= Name: Default Configuration
 --= Description:
 --= Language: Lua
 --= Device: G13

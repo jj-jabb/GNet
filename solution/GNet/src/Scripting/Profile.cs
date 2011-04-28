@@ -305,6 +305,8 @@ namespace GNet.Scripting
 
                 //fs.WriteLine(Contents);
             }
+
+            ProfileManager.Current.LoadProfiles();
         }
 
         void WriteProperty(StreamWriter fs, string name, string value)

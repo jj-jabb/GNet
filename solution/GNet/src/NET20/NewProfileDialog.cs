@@ -33,11 +33,24 @@ namespace GNet
 
             cbxLanguage.SelectedIndex = 0;
 
+            cbxCopyExisting.DataSource = GetCopyableProfiles();
+            cbxCopyExisting.DisplayMember = "Name";
+
             cbxDevice.SelectedIndex = 0;
 
             cbxCopyExisting.SelectedIndex = 0;
             cbxKeyboardHook.SelectedIndex = 0;
             cbxMouseHook.SelectedIndex = 0;
+        }
+
+        private IList<Profile> GetCopyableProfiles()
+        {
+            var profiles = new List<Profile>();
+            foreach (var profile in ProfileManager.Current.profiles)
+                if (profile.Language.ToString() == cbxLanguage.SelectedItem.ToString())
+                    profiles.Add(profile);
+
+            return profiles;
         }
 
         public string ScriptName { get; private set; }
@@ -146,6 +159,12 @@ namespace GNet
         private void chkCopyExisting_CheckedChanged(object sender, EventArgs e)
         {
             cbxCopyExisting.Enabled = chkCopyExisting.Checked;
+        }
+
+        private void cbxLanguage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cbxCopyExisting.DataSource = GetCopyableProfiles();
+            cbxCopyExisting.DisplayMember = "Name";
         }
     }
 }

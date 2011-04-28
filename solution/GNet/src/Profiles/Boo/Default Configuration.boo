@@ -1,5 +1,5 @@
 ﻿#= Filename:
-#= Name: Untitled
+#= Name: Default Configuration
 #= Description:
 #= Language: Boo
 #= Device: G13

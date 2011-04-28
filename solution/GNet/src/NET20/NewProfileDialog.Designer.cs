@@ -105,6 +105,7 @@
             this.cbxLanguage.Name = "cbxLanguage";
             this.cbxLanguage.Size = new System.Drawing.Size(448, 21);
             this.cbxLanguage.TabIndex = 4;
+            this.cbxLanguage.SelectedIndexChanged += new System.EventHandler(this.cbxLanguage_SelectedIndexChanged);
             // 
             // lblLanguage
             // 

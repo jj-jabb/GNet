@@ -74,6 +74,8 @@ namespace GNet.Scripting
 
         int lastKeyDown;
 
+        bool onStoppedCalled;
+
         public G13Script()
         {
             keyEvents = new Queue<KeyEvent>();
@@ -163,6 +165,9 @@ namespace GNet.Scripting
             auto = new AutoResetEvent(false);
             thread = new Thread(new ThreadStart(RunThread));
             thread.Start();
+
+            onStoppedCalled = false;
+            OnStarted();
         }
 
         public void Stop()
@@ -179,10 +184,31 @@ namespace GNet.Scripting
 
             Device.Script = null;
             OnStop();
+            OnStopped();
+        }
+
+        protected void OnStarted()
+        {
+            if (onStoppedCalled)
+                return;
+
+            onStoppedCalled = true;
+            
+            if (Started != null)
+                Started(this, EventArgs.Empty);
+        }
+
+        protected void OnStopped()
+        {
+            if (Stopped != null)
+                Stopped(this, EventArgs.Empty);
         }
 
         protected virtual void OnStart() { }
         protected virtual void OnStop() { }
+
+        public event EventHandler Started;
+        public event EventHandler Stopped;
 
         protected abstract void RunThread();
 

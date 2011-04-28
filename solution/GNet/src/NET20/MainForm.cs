@@ -24,33 +24,21 @@ namespace GNet
             notifyIcon1.ContextMenuStrip = trayMenuStrip;
             //notifyIcon1.Visible = false;
             Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
+
         }
 
-        void Application_ApplicationExit(object sender, EventArgs e)
-        {
-            Console.SetOut(originalout);
-
-            foreach (TabPage tab in documentTabs.TabPages)
-                foreach (Control ctrl in tab.Controls)
-                {
-                    ScriptEditor editor = ctrl as ScriptEditor;
-                    if (editor != null)
-                        editor.DisposeScript();
-                }
-
-            G13Device.Deinit();
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
+        void MainForm_Load(object sender, EventArgs e)
         {
             G13Device.Init();
 
             originalout = Console.Out;
             tbsw = new TextBoxStreamWriter(output);
             Console.SetOut(tbsw);
+
+            var c = ProfileManager.Current;
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!quit)
             {
@@ -58,6 +46,23 @@ namespace GNet
                 this.Hide();
                 //WindowState = FormWindowState.Minimized;
             }
+        }
+
+        void Application_ApplicationExit(object sender, EventArgs e)
+        {
+            Console.SetOut(originalout);
+
+            //foreach (TabPage tab in documentTabs.TabPages)
+            //    foreach (Control ctrl in tab.Controls)
+            //    {
+            //        ScriptEditor editor = ctrl as ScriptEditor;
+            //        if (editor != null)
+            //            editor.DisposeScript();
+            //    }
+
+            ProfileManager.DisposeCurrent();
+
+            G13Device.Deinit();
         }
 
         private string MakeSafeFilename(string filename)
@@ -237,9 +242,9 @@ namespace GNet
             {
                 editor.Profile.Contents = editor.Editor.Text;
                 editor.Profile.Save();
-                if (editor.Script != null)
-                    editor.Script.Stop();
             }
+
+            ProfileManager.Current.Stop();
 
             documentTabs.TabPages.Remove(documentTabs.SelectedTab);
         }

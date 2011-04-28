@@ -16,8 +16,9 @@ namespace GNet
 {
     public partial class ScriptEditor : UserControl
     {
+        delegate void OnScriptStoppedHandler();
         //IScriptRunner scriptRunner;
-        IDeviceScript script;
+        //IDeviceScript script;
         Profile profile;
 
         public ScriptEditor(Profile profile)
@@ -50,14 +51,26 @@ namespace GNet
             this.profile = profile;
             editor.Text = profile.Contents;
 
-            script = new LuaScript();
-            script.Profile = profile;
+            ProfileManager.Current.ScriptStopped += new EventHandler(Current_ScriptStopped);
+        }
 
+        void Current_ScriptStopped(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+                Invoke(new OnScriptStoppedHandler(OnScriptStopped));
+            else
+                OnScriptStopped();
+        }
+
+        void OnScriptStopped()
+        {
+            runButton.Enabled = true;
+            stopButton.Enabled = false;
+            editor.IsReadOnly = false;
         }
 
         public Profile Profile { get { return profile; } }
         public TextEditorControl Editor { get { return editor; } }
-        public IDeviceScript Script { get { return script; } }
 
         string eventQueue;
         void ScriptEditor_EventQueueUpdated(object sender, Hid.EventArgs<string> e)
@@ -80,7 +93,6 @@ namespace GNet
 
         protected override void OnControlRemoved(ControlEventArgs e)
         {
-            DisposeScript();
             base.OnControlRemoved(e);
         }
 
@@ -93,11 +105,11 @@ namespace GNet
             {
                 editor.IsReadOnly = true;
                 profile.Contents = editor.Text;
-                script.Start();
+                ProfileManager.Current.SetProfile(profile).Start();
             }
             catch (Exception ex)
             {
-                StopScript();
+                ProfileManager.Current.SetProfile(profile).Stop();
                 Console.WriteLine(ex.ToString());
             }
         }
@@ -109,16 +121,11 @@ namespace GNet
 
         public void StopScript()
         {
-            script.Stop();
+            ProfileManager.Current.Stop();
 
             runButton.Enabled = true;
             stopButton.Enabled = false;
             editor.IsReadOnly = false;
-        }
-
-        public void DisposeScript()
-        {
-            script.Stop();
         }
     }
 }
