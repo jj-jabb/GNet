@@ -198,6 +198,18 @@
     <Compile Include="ICSharpCode.TextEditor\Util\TipSplitter.cs" />
     <Compile Include="ICSharpCode.TextEditor\Util\TipText.cs" />
     <Compile Include="ICSharpCode.TextEditor\Util\WeakCollection.cs" />
+    <Compile Include="ProfilePropertiesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProfilePropertiesDialog.designer.cs">
+      <DependentUpon>ProfilePropertiesDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScriptEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ScriptEditor.designer.cs">
+      <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Scripting\G13Keys.cs" />
     <Compile Include="IO\GlobalHook.cs" />
     <Compile Include="IO\InputSimulator.cs" />
@@ -243,12 +255,16 @@
     <Compile Include="Scripting\IG13DeviceScript.cs" />
     <Compile Include="Scripting\LuaScript.cs" />
     <Compile Include="Scripting\Profile.cs" />
+    <Compile Include="Scripting\ProfileHeader.cs" />
     <Compile Include="Scripting\ProfileManager.cs" />
     <Compile Include="Scripting\ScriptLanguage.cs" />
     <Compile Include="WinFormsTextBoxStreamWriter.cs" />
     <Compile Include="WMI.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProfilePropertiesDialog.resx">
+      <DependentUpon>ProfilePropertiesDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -260,26 +276,29 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="ICSharpCode.TextEditor\Resources\ASPX.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\BAT-Mode.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\Boo.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\Coco-Mode.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\CPP-Mode.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\CSharp-Mode.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\HTML-Mode.xshd" />
+    <EmbeddedResource Include="ScriptEditor.resx">
+      <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\ASPX.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\BAT-Mode.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Boo.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Coco-Mode.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\CPP-Mode.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\CSharp-Mode.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\HTML-Mode.xshd" />
     <None Include="ICSharpCode.TextEditor\Resources\ICSharpCode.TextEditor.snk" />
-    <None Include="ICSharpCode.TextEditor\Resources\Java-Mode.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\JavaScript-Mode.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\Lua.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\Mode.xsd">
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Java-Mode.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\JavaScript-Mode.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Lua.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Mode.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="ICSharpCode.TextEditor\Resources\Patch-Mode.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\PHP-Mode.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\Python.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\Tex-Mode.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\VBNET-Mode.xshd" />
-    <None Include="ICSharpCode.TextEditor\Resources\XML-Mode.xshd" />
+    </EmbeddedResource>
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Patch-Mode.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\PHP-Mode.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Python.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Tex-Mode.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\VBNET-Mode.xshd" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\XML-Mode.xshd" />
     <None Include="Profiles\Boo\Default Configuration.boo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -289,13 +308,22 @@
     <None Include="Profiles\Boo\_template.boo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Profiles\Default Configuration.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Profiles\Lua\Default Configuration.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Profiles\Default Configuration.lua.header">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Lua\_default.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Lua\_template.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Profiles\_default.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
@@ -309,9 +337,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ICSharpCode.TextEditor\Resources\RightArrow.cur" />
-    <Content Include="ICSharpCode.TextEditor\Resources\SyntaxModes.xml" />
-    <Content Include="ICSharpCode.TextEditor\Resources\TextEditorControl.bmp" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\RightArrow.cur" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\SyntaxModes.xml" />
+    <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\TextEditorControl.bmp" />
     <Content Include="IO\Hook Readme.txt" />
     <Content Include="LgLcd.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

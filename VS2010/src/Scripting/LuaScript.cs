@@ -174,6 +174,14 @@ namespace GNet.Scripting
 
             ClearKeyEvents();
 
+            Lcd.RemoveFromFront();
+
+            inputEvent.Close();
+
+            var inputExit = CreateInputExit();
+            inputExit.Set();
+            inputExit.Close();
+
             try
             {
                 onEvent.Call("PROFILE_DEACTIVATED", 0, "lhc");
@@ -185,14 +193,6 @@ namespace GNet.Scripting
 
             if (lua != null)
                 lua.Close();
-
-            Lcd.RemoveFromFront();
-
-            inputEvent.Close();
-
-            var inputExit = CreateInputExit();
-            inputExit.Set();
-            inputExit.Close();
         }
 
         #region Lua API Calls

@@ -69,7 +69,7 @@ namespace GNet.Scripting
                     script.Stop();
             }
 
-            switch (profile.Language)
+            switch (profile.Header.Language)
             {
                 case ScriptLanguage.Lua:
                     script = luaScript;
@@ -106,9 +106,9 @@ namespace GNet.Scripting
                 return;
 
             List<Profile> profileList;
-            if (profilesByExePath.TryGetValue(filePath, out profileList) && profileList.Count > 0 && profileList[0].IsEnabled)
+            if (profilesByExePath.TryGetValue(filePath, out profileList) && profileList.Count > 0 && profileList[0].Header.IsEnabled)
             {
-                profileList[0].ReadFile();
+                profileList[0].Load();
                 SetProfile(profileList[0]);
                 Start();
             }
@@ -126,32 +126,33 @@ namespace GNet.Scripting
             profilesByName = new Dictionary<string, List<Profile>>();
 
             var profilePath = ".\\Profiles\\";
-            foreach (var path in Directory.GetDirectories(profilePath))
-                foreach (var file in Directory.GetFiles(path))
-                    if (!Path.GetFileName(file).StartsWith("_"))
+
+            foreach (var headerFile in Directory.GetFiles(profilePath))
+                if (headerFile.EndsWith(".header"))
+                {
+                    profile = new Profile(headerFile);
+
+                    if (profile.Header.Executable != null)
                     {
-                        profiles.Add(profile = Profile.GetProfile(file));
-                        profile.ReadHeader();
-
-                        foreach (var exec in profile.Executables)
-                            if (profilesByExePath.TryGetValue(exec, out profileList))
-                                profileList.Add(profile);
-                            else
-                            {
-                                profileList = new List<Profile>();
-                                profileList.Add(profile);
-                                profilesByExePath[exec] = profileList;
-                            }
-
-                        if (profilesByName.TryGetValue(profile.Name, out profileList))
+                        if (profilesByExePath.TryGetValue(profile.Header.Executable, out profileList))
                             profileList.Add(profile);
                         else
                         {
                             profileList = new List<Profile>();
                             profileList.Add(profile);
-                            profilesByName[profile.Name] = profileList;
+                            profilesByExePath[profile.Header.Executable] = profileList;
                         }
                     }
+
+                    if (profilesByName.TryGetValue(profile.Header.Name, out profileList))
+                        profileList.Add(profile);
+                    else
+                    {
+                        profileList = new List<Profile>();
+                        profileList.Add(profile);
+                        profilesByName[profile.Header.Name] = profileList;
+                    }
+                }
 
             System.Diagnostics.Debug.WriteLine("");
         }

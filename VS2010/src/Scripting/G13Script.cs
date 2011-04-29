@@ -152,15 +152,15 @@ namespace GNet.Scripting
             if (Profile == null || Profile.Contents == null)
                 return;
 
-            if (Profile.KeyboardHook != HookOptions.None)
+            if (Profile.Header.KeyboardHook != HookOptions.None)
             {
-                keyboardHook.IgnoreInjectedValues = Profile.KeyboardHook == HookOptions.IgnoreInjected;
+                keyboardHook.IgnoreInjectedValues = Profile.Header.KeyboardHook == HookOptions.IgnoreInjected;
                 keyboardHook.Start();
             }
 
-            if (Profile.MouseHook != HookOptions.None)
+            if (Profile.Header.MouseHook != HookOptions.None)
             {
-                mouseHook.IgnoreInjectedValues = Profile.MouseHook == HookOptions.IgnoreInjected;
+                mouseHook.IgnoreInjectedValues = Profile.Header.MouseHook == HookOptions.IgnoreInjected;
                 mouseHook.Start();
             }
 
