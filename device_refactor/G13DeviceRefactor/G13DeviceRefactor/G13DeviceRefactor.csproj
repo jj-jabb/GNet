@@ -64,9 +64,10 @@
     <Compile Include="Hid\DeviceReport.cs" />
     <Compile Include="Hid\DeviceStatus.cs" />
     <Compile Include="Hid\NativeMethods.cs" />
-    <Compile Include="IO\LgLcd.cs" />
-    <Compile Include="IO\LgLcd.Sdk.cs" />
-    <Compile Include="IO\LgLcdDeviceType.cs" />
+    <Compile Include="LgLcd\G13Lcd.cs" />
+    <Compile Include="LgLcd\Connection.cs" />
+    <Compile Include="LgLcd\Lcd.cs" />
+    <Compile Include="LgLcd\Sdk.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

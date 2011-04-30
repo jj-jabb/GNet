@@ -9,7 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using GNet.Hid;
-using GNet.IO;
+using GNet.LgLcd;
 
 namespace G13DeviceRefactor
 {
@@ -19,6 +19,7 @@ namespace G13DeviceRefactor
         const int G13 = 0xc21c;
 
         Device device;
+        G13Lcd lcd;
 
         public Form1()
         {
@@ -28,9 +29,9 @@ namespace G13DeviceRefactor
         private void Form1_Load(object sender, EventArgs e)
         {
             device = new Device(Logitech, G13);
+            lcd = new G13Lcd("G13 LCD Test");
 
-            LgLcd.Manager.Notified += new LgLcd.NotificationEventHandler(Manager_Notified);
-            LgLcd.Manager.Connect("G13 Test");
+            lcd.Connection.Notified += new Connection.NotificationEventHandler(Manager_Notified);
         }
 
         void Manager_Notified(int code, int param1, int param2, int param3, int param4)
