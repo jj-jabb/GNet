@@ -79,11 +79,11 @@ namespace GNet.Hid
 
         public bool Start()
         {
-            if (!Connect())
-                return false;
+            //if (!Connect())
+            //    return false;
 
-            if (!Open())
-                return false;
+            //if (!Open())
+            //    return false;
 
             StartRead();
             StartWrite();
@@ -171,8 +171,7 @@ namespace GNet.Hid
 
         protected void CancelRead()
         {
-            //if (cancelEventOverlapped.hEvent >= 0)
-                NativeMethods.SetEvent(cancelEventOverlapped.hEvent);
+            NativeMethods.SetEvent(cancelEventOverlapped.hEvent);
         }
 
         protected virtual void ReadThread_Cancelled()
@@ -201,18 +200,23 @@ namespace GNet.Hid
 
         protected virtual void ReadThread_NoDataRead()
         {
-            if (!IsPathInDeviceList(DeviceInfo.Path))
-            {
-                IsConnected = false;
-                Close();
+            PollForConnect();
+        }
 
-                while (runReadThread)
-                {
-                    if (Connect() && Open())
-                        break;
-                    else
-                        Thread.Sleep(ConnectionCheckRate);
-                }
+        void PollForConnect()
+        {
+            if (Connect() && Open())
+                return;
+
+            IsConnected = false;
+            Close();
+
+            while (runReadThread)
+            {
+                if (Connect() && Open())
+                    break;
+                else
+                    Thread.Sleep(ConnectionCheckRate);
             }
         }
 
@@ -224,6 +228,12 @@ namespace GNet.Hid
             {
                 try
                 {
+                    if (!IsOpen)
+                        PollForConnect();
+
+                    if (!runReadThread)
+                        break;
+
                     data = ReadData(readDataTimeout);
 
                     switch (data.Status)
@@ -417,15 +427,15 @@ namespace GNet.Hid
 
                             while (writeDelegateLink != null)
                             {
+                                if (!IsConnected || !runWriteThread)
+                                    break;
+
                                 next = writeDelegateLink.Next;
 
                                 if (WriteType.Complete == writeDelegateLink.Value(this, safe))
                                     writeDelegates.Remove(writeDelegateLink);
 
                                 writeDelegateLink = next;
-
-                                if (!runWriteThread)
-                                    break;
                             }
                         }
                     }
