@@ -47,5 +47,10 @@ namespace G13DeviceRefactor
         {
             device.Stop();
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            device.Stop();
+        }
     }
 }

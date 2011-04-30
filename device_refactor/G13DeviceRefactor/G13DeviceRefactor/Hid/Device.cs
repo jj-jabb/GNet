@@ -25,13 +25,14 @@ namespace GNet.Hid
         protected int vendorId;
         protected int[] productIds;
 
-        int cancelReadHEvent = -1;
+        //int cancelReadHEvent = -1;
         SafeFileHandle readHandle;
 
         // timeout on read after to refresh the read event 
         // (seemed like it would "sleep" after a little while)
         protected int readDataTimeout = 10000;
         protected int delayBetweenWrites = 10;
+        protected int connectionCheckRate = 300;
 
         bool runReadThread;
         bool runWriteThread;
@@ -48,6 +49,12 @@ namespace GNet.Hid
         EventWaitHandle readExit;
         EventWaitHandle writeExit;
 
+        NativeMethods.SECURITY_ATTRIBUTES cancelEventSecurity;
+        NativeMethods.OVERLAPPED cancelEventOverlapped;
+
+        NativeMethods.SECURITY_ATTRIBUTES readEventSecurity;
+        NativeMethods.OVERLAPPED readEventOverlapped;
+
         public Device(int vendorId, params int[] productIds)
         {
             this.vendorId = vendorId;
@@ -57,6 +64,9 @@ namespace GNet.Hid
             
             writeDelegates = new LinkedList<WriteDelegate>();
             writeThreadDelegate = new ThreadStart(WriteThread);
+
+            CreateOverlappedEvent(out cancelEventSecurity, out cancelEventOverlapped);
+            CreateOverlappedEvent(out readEventSecurity, out readEventOverlapped);
         }
 
         public DeviceInfo DeviceInfo { get; private set; }
@@ -65,6 +75,7 @@ namespace GNet.Hid
         public bool IsOpen { get; private set; }
         public bool IsConnected { get; private set; }
         public int DelayBetweenWrites { get { return delayBetweenWrites; } set { delayBetweenWrites = value; } }
+        public int ConnectionCheckRate { get { return connectionCheckRate; } set { connectionCheckRate = value; } }
 
         public bool Start()
         {
@@ -160,8 +171,8 @@ namespace GNet.Hid
 
         protected void CancelRead()
         {
-            if (cancelReadHEvent >= 0)
-                NativeMethods.SetEvent(cancelReadHEvent);
+            //if (cancelEventOverlapped.hEvent >= 0)
+                NativeMethods.SetEvent(cancelEventOverlapped.hEvent);
         }
 
         protected virtual void ReadThread_Cancelled()
@@ -190,7 +201,19 @@ namespace GNet.Hid
 
         protected virtual void ReadThread_NoDataRead()
         {
-            Stop();
+            if (!IsPathInDeviceList(DeviceInfo.Path))
+            {
+                IsConnected = false;
+                Close();
+
+                while (runReadThread)
+                {
+                    if (Connect() && Open())
+                        break;
+                    else
+                        Thread.Sleep(ConnectionCheckRate);
+                }
+            }
         }
 
         void ReadThread()
@@ -263,42 +286,18 @@ namespace GNet.Hid
                 {
                     #region Read Overlapped
 
-                    var readEventSecurity = new NativeMethods.SECURITY_ATTRIBUTES();
-                    var readEventOverlapped = new NativeMethods.OVERLAPPED();
+
                     var readEventOverlapTimeout = timeout <= 0 ? NativeMethods.WAIT_INFINITE : timeout;
-
-                    readEventSecurity.lpSecurityDescriptor = IntPtr.Zero;
-                    readEventSecurity.bInheritHandle = true;
-                    readEventSecurity.nLength = Marshal.SizeOf(readEventSecurity);
-
-                    readEventOverlapped.Offset = 0;
-                    readEventOverlapped.OffsetHigh = 0;
-                    readEventOverlapped.hEvent = NativeMethods.CreateEvent(ref readEventSecurity, Convert.ToInt32(false), Convert.ToInt32(true), string.Empty);
-
-
-                    var cancelEventSecurity = new NativeMethods.SECURITY_ATTRIBUTES();
-                    var cancelEventOverlapped = new NativeMethods.OVERLAPPED();
-
-                    cancelEventSecurity.lpSecurityDescriptor = IntPtr.Zero;
-                    cancelEventSecurity.bInheritHandle = true;
-                    cancelEventSecurity.nLength = Marshal.SizeOf(readEventSecurity);
-
-                    cancelEventOverlapped.Offset = 0;
-                    cancelEventOverlapped.OffsetHigh = 0;
-                    cancelEventOverlapped.hEvent = NativeMethods.CreateEvent(ref readEventSecurity, Convert.ToInt32(true), Convert.ToInt32(false), string.Empty);
-
                     int[] hEvents = new int[] { readEventOverlapped.hEvent, cancelEventOverlapped.hEvent };
 
-                    cancelReadHEvent = cancelEventOverlapped.hEvent;
+                    NativeMethods.ResetEvent(cancelEventOverlapped.hEvent);
 
                     try
                     {
                         NativeMethods.ReadFileOverlapped(readHandle, ref buffer[0], buffer.Length, ref bytesRead, ref readEventOverlapped);
 
                         var result = NativeMethods.WaitForMultipleObjects(2, ref hEvents[0], false, readEventOverlapTimeout);
-
-                        cancelReadHEvent = -1;
-
+                        
                         switch (result)
                         {
                             case NativeMethods.WAIT_OBJECT_0:
@@ -452,9 +451,26 @@ namespace GNet.Hid
 
         #endregion
 
+        void CreateOverlappedEvent(out NativeMethods.SECURITY_ATTRIBUTES security, out NativeMethods.OVERLAPPED overlappedEvent)
+        {
+            security = new NativeMethods.SECURITY_ATTRIBUTES
+            {
+                lpSecurityDescriptor = IntPtr.Zero,
+                bInheritHandle = true,
+                nLength = Marshal.SizeOf(cancelEventSecurity)
+            };
+
+            overlappedEvent = new NativeMethods.OVERLAPPED
+            {
+                Offset = 0,
+                OffsetHigh = 0,
+                hEvent = NativeMethods.CreateEvent(ref cancelEventSecurity, Convert.ToInt32(true), Convert.ToInt32(false), string.Empty)
+            };
+        }
+
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Close();
         }
     }
 }
