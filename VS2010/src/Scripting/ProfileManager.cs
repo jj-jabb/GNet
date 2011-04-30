@@ -20,6 +20,11 @@ namespace GNet.Scripting
             }
         }
 
+        public static string Basepath
+        {
+            get { return Environment.CurrentDirectory + ".\\Profiles\\"; }
+        }
+
         public static void DisposeCurrent()
         {
             current.Dispose();
@@ -125,7 +130,7 @@ namespace GNet.Scripting
             profilesByExePath = new Dictionary<string, List<Profile>>();
             profilesByName = new Dictionary<string, List<Profile>>();
 
-            var profilePath = ".\\Profiles\\";
+            var profilePath = ProfileManager.Basepath;
 
             foreach (var headerFile in Directory.GetFiles(profilePath))
                 if (headerFile.EndsWith(".header"))

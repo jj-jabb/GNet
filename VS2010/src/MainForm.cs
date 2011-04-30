@@ -182,7 +182,7 @@ namespace GNet
             var ofd = new OpenFileDialog()
             {
                 Filter = "GNet Script Header|*.header",
-                InitialDirectory = ".\\Profiles\\",
+                InitialDirectory = ProfileManager.Basepath,
                 RestoreDirectory = true
             };
 
@@ -387,12 +387,24 @@ namespace GNet
 
         private void runToolStripButton_Click(object sender, EventArgs e)
         {
-
+            var editor = CurrentEditor;
+            if (editor != null && editor.Profile != null)
+            {
+                editor.Profile.Contents = editor.Editor.Text;
+                editor.Profile.Save();
+                stopToolStripButton.Enabled = true;
+                runToolStripButton.Enabled = false;
+                documentTabs.Enabled = false;
+                ProfileManager.Current.SetProfile(editor.Profile).Start();
+            }
         }
 
         private void stopToolStripButton_Click(object sender, EventArgs e)
         {
-
+            ProfileManager.Current.Stop();
+            stopToolStripButton.Enabled = false;
+            runToolStripButton.Enabled = true;
+            documentTabs.Enabled = true;
         }
     }
 }

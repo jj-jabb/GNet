@@ -88,7 +88,7 @@ namespace GNet.Scripting
             if (Header.Filepath == null)
                 return this;
 
-            var path = ".\\Profiles\\" + header.Filepath;
+            var path = ProfileManager.Basepath + header.Filepath;
             if (!File.Exists(path))
                 return this;
                 
@@ -105,7 +105,7 @@ namespace GNet.Scripting
             if (Header.Filepath == null)
                 return this;
 
-            var path = ".\\Profiles\\" + header.Filepath;
+            var path = ProfileManager.Basepath + header.Filepath;
 
             using (var fs = File.CreateText(path))
             {

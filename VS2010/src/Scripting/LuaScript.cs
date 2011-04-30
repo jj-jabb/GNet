@@ -114,6 +114,9 @@ namespace GNet.Scripting
                 {
                     for (e = GetKeyEvent(); e.IsEmpty == false; e = GetKeyEvent())
                     {
+                        System.Diagnostics.Debug.WriteLine(e.Key);
+                        #region check input
+
                         if (e.Key != G13Keys.None)
                         {
                             try
@@ -164,8 +167,13 @@ namespace GNet.Scripting
                             }
                         }
 
+                        #endregion
+
                         if (!IsRunning)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Not Running - break");
                             break;
+                        }
                     }
                 }
 
@@ -174,6 +182,7 @@ namespace GNet.Scripting
 
             ClearKeyEvents();
 
+            SetBacklightColor(128, 255, 255);
             Lcd.RemoveFromFront();
 
             inputEvent.Close();

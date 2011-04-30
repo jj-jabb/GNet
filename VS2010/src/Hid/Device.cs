@@ -98,7 +98,8 @@ namespace GNet.Hid
                     //NativeMethods.CancelIoEx(readHandle, IntPtr.Zero);
                     if (cancelReadHEvent >= 0)
                         NativeMethods.SetEvent(cancelReadHEvent);
-                readExit.WaitOne(1000);
+                if (!readExit.WaitOne(1000))
+                    System.Diagnostics.Debug.WriteLine("Device.Stop: readExit timed out");
                 readExit.Close();
             }
 
@@ -113,7 +114,8 @@ namespace GNet.Hid
 
                 var writeExit = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeviceWriteExit");
                 writeEvent.Set();
-                writeExit.WaitOne(1000);
+                if (!writeExit.WaitOne(1000))
+                    System.Diagnostics.Debug.WriteLine("Device.Stop: writeExit timed out");
                 writeExit.Close();
                 writeEvent.Close();
             }

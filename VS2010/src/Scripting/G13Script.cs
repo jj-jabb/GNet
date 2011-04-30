@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 using GNet;
 using GNet.IO;
+using System.Diagnostics;
 
 namespace GNet.Scripting
 {
@@ -152,6 +153,8 @@ namespace GNet.Scripting
             if (Profile == null || Profile.Contents == null)
                 return;
 
+            G13Device.Current.Start();
+
             if (Profile.Header.KeyboardHook != HookOptions.None)
             {
                 keyboardHook.IgnoreInjectedValues = Profile.Header.KeyboardHook == HookOptions.IgnoreInjected;
@@ -187,14 +190,18 @@ namespace GNet.Scripting
             keyboardHook.Stop();
             mouseHook.Stop();
 
+            //Device.KeyRepeater.ClearKey();
+
             var inputExit = CreateInputExit();
             IsRunning = false;
 
             inputEvent.Set();
-            inputExit.WaitOne();
+            if (!inputExit.WaitOne(1000))
+                System.Diagnostics.Debug.WriteLine("G13Script.Stop: inputExit timed out");
             inputEvent.Close();
             inputExit.Close();
 
+            G13Device.Current.Stop();
             Device.Script = null;
             OnStop();
             OnStopped();
@@ -240,6 +247,7 @@ namespace GNet.Scripting
             if (!IsRunning)
                 return;
 
+            Debug.WriteLine("AddKeyEvent: locking");
             lock (keyEvents)
             {
                 keyEvents.Enqueue(new KeyEvent(key, isPressed));
@@ -289,19 +297,24 @@ namespace GNet.Scripting
                     }
                 }
             }
+            Debug.WriteLine("AddKeyEvent: unlocked");
 
             inputEvent.Set();
         }
 
         protected KeyEvent GetKeyEvent()
         {
+            KeyEvent keyEvent = KeyEvent.Empty;
+
+            Debug.WriteLine("GetKeyEvent: locking");
             lock (keyEvents)
             {
                 if (keyEvents.Count > 0)
-                    return keyEvents.Dequeue();
-
-                return KeyEvent.Empty;
+                    keyEvent = keyEvents.Dequeue();
             }
+            Debug.WriteLine("GetKeyEvent: unlocked");
+
+            return keyEvent;
         }
 
         protected void ClearKeyEvents()

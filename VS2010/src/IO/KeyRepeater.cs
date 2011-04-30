@@ -20,13 +20,17 @@ namespace GNet.IO
         {
             keyRepeatDelegate = new ThreadStart(KeyRepeatThread);
             keyRepeatEvent = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\KeyRepeatEvent");
-            keyRepeatRunning = true;
-            keyRepeatThread = new Thread(keyRepeatDelegate);
         }
 
         public void Start()
         {
+            if (keyRepeatRunning)
+                return;
+
+            keyRepeatThread = new Thread(keyRepeatDelegate);
             keyRepeatThread.Start();
+
+            keyRepeatRunning = true;
         }
 
         public void Stop()
@@ -37,7 +41,8 @@ namespace GNet.IO
             var keyRepeatStop = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\KeyRepeatStop");
             keyRepeatRunning = false;
             keyRepeatEvent.Set();
-            keyRepeatStop.WaitOne();
+            if (!keyRepeatStop.WaitOne(1000))
+                System.Diagnostics.Debug.WriteLine("KeyRepeater.Stop: keyRepeatStop timed out");
             keyRepeatStop.Close();
         }
 
@@ -55,7 +60,7 @@ namespace GNet.IO
                 }
 
                 if (!keyRepeatRunning)
-                    return;
+                    break;
 
                 while (
                     lastKeyPressed != 0 &&
@@ -65,6 +70,9 @@ namespace GNet.IO
                     KeyRepeat(repeatingKey);
                     Thread.Sleep(30);
                 }
+
+                if (!keyRepeatRunning)
+                    break;
 
                 keyRepeatEvent.WaitOne();
             }
@@ -97,6 +105,12 @@ namespace GNet.IO
             if (scanCode == lastKeyPressed)
                 lastKeyPressed = 0;
 
+            keyRepeatEvent.Set();
+        }
+
+        public void ClearKey()
+        {
+            lastKeyPressed = 0;
             keyRepeatEvent.Set();
         }
 

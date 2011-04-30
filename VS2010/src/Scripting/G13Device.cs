@@ -20,7 +20,7 @@ namespace GNet.Scripting
                 return;
 
             current = new G13Device();
-            current.Start();
+            //current.Start();
         }
 
         public static void Deinit()
@@ -59,7 +59,6 @@ namespace GNet.Scripting
             this.lcdAppName = "G13 GNet Profiler";
             scriptLock = new object();
             keyRepeater = new KeyRepeater();
-            keyRepeater.Start();
         }
 
         public LgLcd Lcd { get { return lcd; } }
@@ -85,7 +84,9 @@ namespace GNet.Scripting
                     if (_script != null)
                     {
                         if (_script.IsRunning)
+                        {
                             _script.Stop();
+                        }
                         
                         if (_script != null)
                             _script.Device = null;
@@ -108,11 +109,14 @@ namespace GNet.Scripting
                 Console.WriteLine("Could not initialize the G13 LCD; is the Logitech Gamepanel Software 3.06 installed?");
             }
 
+            keyRepeater.Start();
             base.Start();
         }
 
         public override void Stop()
         {
+            keyRepeater.ClearKey();
+            keyRepeater.Stop();
             base.Stop();
 
             if (lcd != null)
@@ -121,7 +125,6 @@ namespace GNet.Scripting
 
         public override void Dispose()
         {
-            keyRepeater.Stop();
             Stop();
             base.Dispose();
         }
