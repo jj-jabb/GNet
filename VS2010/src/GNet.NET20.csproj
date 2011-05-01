@@ -200,6 +200,12 @@
     <Compile Include="LgLcd\G13Lcd.cs" />
     <Compile Include="LgLcd\Lcd.cs" />
     <Compile Include="LgLcd\Sdk.cs" />
+    <Compile Include="ManageProfilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManageProfilesForm.Designer.cs">
+      <DependentUpon>ManageProfilesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProfilePropertiesDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -262,6 +268,9 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ManageProfilesForm.resx">
+      <DependentUpon>ManageProfilesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProfilePropertiesDialog.resx">
       <DependentUpon>ProfilePropertiesDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -307,6 +316,12 @@
     <None Include="Profiles\Boo\_template.boo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Profiles\Sample.boo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Profiles\Sample.boo.header">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Profiles\Default Configuration.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -345,7 +360,6 @@
     </Content>
     <None Include="Resources\TrayIcon.ico" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

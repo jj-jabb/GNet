@@ -17,14 +17,17 @@ namespace GNet
         WinFormsTextBoxStreamWriter tbsw;
         bool quit;
 
+        ManageProfilesForm manageProfilesForm;
+
         public MainForm()
         {
             InitializeComponent();
+            
             notifyIcon1.Icon = Properties.Resources.TrayIcon;
             notifyIcon1.ContextMenuStrip = trayMenuStrip;
             //notifyIcon1.Visible = false;
-            Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
 
+            Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
         }
 
         void MainForm_Load(object sender, EventArgs e)
@@ -401,6 +404,12 @@ namespace GNet
             stopToolStripButton.Enabled = false;
             runToolStripButton.Enabled = true;
             documentTabs.Enabled = true;
+        }
+
+        private void manageProfilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var manageProfilesForm = new ManageProfilesForm();
+            manageProfilesForm.Show();
         }
     }
 }

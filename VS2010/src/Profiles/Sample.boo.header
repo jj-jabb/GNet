@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProfileHeader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Headerpath>Sample.boo.header</Headerpath>
+  <Filepath>Sample.boo</Filepath>
+  <Name>Boo Sample</Name>
+  <Description />
+  <Device>G13</Device>
+  <Lock>false</Lock>
+  <Executable />
+  <KeyboardHook>None</KeyboardHook>
+  <MouseHook>None</MouseHook>
+  <Language>Boo</Language>
+  <IsEnabled>true</IsEnabled>
+</ProfileHeader>

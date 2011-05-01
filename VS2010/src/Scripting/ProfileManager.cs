@@ -121,7 +121,7 @@ namespace GNet.Scripting
 
         public bool IsRunForExeEnabled { get; set; }
 
-        public void LoadProfiles()
+        public List<Profile> LoadProfiles()
         {
             Profile profile;
             List<Profile> profileList;
@@ -136,6 +136,7 @@ namespace GNet.Scripting
                 if (headerFile.EndsWith(".header"))
                 {
                     profile = new Profile(headerFile);
+                    profiles.Add(profile);
 
                     if (profile.Header.Executable != null)
                     {
@@ -159,7 +160,7 @@ namespace GNet.Scripting
                     }
                 }
 
-            System.Diagnostics.Debug.WriteLine("");
+            return profiles;
         }
 
         public void Dispose()
