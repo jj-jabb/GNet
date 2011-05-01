@@ -33,11 +33,11 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.profileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageProfilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +66,6 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.documentTabs = new System.Windows.Forms.TabControl();
             this.output = new System.Windows.Forms.TextBox();
-            this.manageProfilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.trayMenuStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -90,12 +89,11 @@
             // 
             this.profileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
-            this.openToolStripMenuItem,
+            this.manageProfilesToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.closeToolStripMenuItem,
             this.toolStripSeparator1,
-            this.quitToolStripMenuItem,
-            this.manageProfilesToolStripMenuItem});
+            this.quitToolStripMenuItem});
             this.profileToolStripMenuItem.Name = "profileToolStripMenuItem";
             this.profileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.profileToolStripMenuItem.Text = "File";
@@ -106,13 +104,6 @@
             this.newToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.newToolStripMenuItem.Text = "New...";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
-            // 
-            // openToolStripMenuItem
-            // 
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
@@ -141,6 +132,13 @@
             this.quitToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
+            // 
+            // manageProfilesToolStripMenuItem
+            // 
+            this.manageProfilesToolStripMenuItem.Name = "manageProfilesToolStripMenuItem";
+            this.manageProfilesToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.manageProfilesToolStripMenuItem.Text = "Manage Profiles...";
+            this.manageProfilesToolStripMenuItem.Click += new System.EventHandler(this.manageProfilesToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -395,13 +393,6 @@
             this.output.TabIndex = 0;
             this.output.WordWrap = false;
             // 
-            // manageProfilesToolStripMenuItem
-            // 
-            this.manageProfilesToolStripMenuItem.Name = "manageProfilesToolStripMenuItem";
-            this.manageProfilesToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.manageProfilesToolStripMenuItem.Text = "Manage Profiles...";
-            this.manageProfilesToolStripMenuItem.Click += new System.EventHandler(this.manageProfilesToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -439,7 +430,6 @@
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;

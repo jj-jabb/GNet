@@ -98,9 +98,11 @@
             this.cbxLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cbxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbxLanguage.Enabled = false;
             this.cbxLanguage.FormattingEnabled = true;
             this.cbxLanguage.Items.AddRange(new object[] {
-            "Lua"});
+            "Lua",
+            "Boo"});
             this.cbxLanguage.Location = new System.Drawing.Point(78, 63);
             this.cbxLanguage.Name = "cbxLanguage";
             this.cbxLanguage.Size = new System.Drawing.Size(448, 21);
@@ -344,7 +346,7 @@
             this.cbxIsEnabled.Text = "Enabled";
             this.cbxIsEnabled.UseVisualStyleBackColor = true;
             // 
-            // NewProfileDialog
+            // ProfilePropertiesDialog
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -376,7 +378,7 @@
             this.MaximumSize = new System.Drawing.Size(546, 417);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(546, 417);
-            this.Name = "NewProfileDialog";
+            this.Name = "ProfilePropertiesDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "New Profile";
             this.Load += new System.EventHandler(this.NewProfileDialog_Load);

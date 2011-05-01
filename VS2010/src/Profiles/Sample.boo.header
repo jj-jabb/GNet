@@ -3,7 +3,7 @@
   <Headerpath>Sample.boo.header</Headerpath>
   <Filepath>Sample.boo</Filepath>
   <Name>Boo Sample</Name>
-  <Description />
+  <Description>Sample profile using the Boo language</Description>
   <Device>G13</Device>
   <Lock>false</Lock>
   <Executable />

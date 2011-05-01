@@ -86,12 +86,12 @@ namespace GNet
             cbxMouseHook.SelectedIndex = 0;
         }
 
-        private IList<Profile> GetCopyableProfiles()
+        private IList<ProfileHeader> GetCopyableProfiles()
         {
-            var profiles = new List<Profile>();
+            var profiles = new List<ProfileHeader>();
             foreach (var profile in ProfileManager.Current.profiles)
                 if (profile.Header.Language.ToString() == cbxLanguage.SelectedItem.ToString())
-                    profiles.Add(profile);
+                    profiles.Add(profile.Header);
 
             return profiles;
         }

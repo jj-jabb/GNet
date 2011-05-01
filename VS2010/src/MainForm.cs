@@ -17,7 +17,7 @@ namespace GNet
         WinFormsTextBoxStreamWriter tbsw;
         bool quit;
 
-        ManageProfilesForm manageProfilesForm;
+        List<Profile> openProfiles;
 
         public MainForm()
         {
@@ -26,6 +26,8 @@ namespace GNet
             notifyIcon1.Icon = Properties.Resources.TrayIcon;
             notifyIcon1.ContextMenuStrip = trayMenuStrip;
             //notifyIcon1.Visible = false;
+
+            openProfiles = new List<Profile>();
 
             Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
         }
@@ -176,37 +178,33 @@ namespace GNet
             }
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        public void Open(string headerPath)
         {
-            var ofd = new OpenFileDialog()
-            {
-                Filter = "GNet Script Header|*.header",
-                InitialDirectory = ProfileManager.Basepath,
-                RestoreDirectory = true
-            };
+            foreach (var p in openProfiles)
+                if (p.Header.Headerpath == headerPath)
+                    // already open
+                    return;
 
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                var profile = new Profile(ofd.FileName).Load();
+            var profile = new Profile(headerPath).Load();
+            openProfiles.Add(profile);
 
-                TabPage tabPage = new TabPage(profile.Header.Name);
-                ScriptEditor editor = new ScriptEditor(profile);
-                editor.Dock = DockStyle.Fill;
-                tabPage.Controls.Add(editor);
-                documentTabs.TabPages.Add(tabPage);
-                documentTabs.SelectedTab = tabPage;
+            TabPage tabPage = new TabPage(profile.Header.Name);
+            ScriptEditor editor = new ScriptEditor(profile);
+            editor.Dock = DockStyle.Fill;
+            tabPage.Controls.Add(editor);
+            documentTabs.TabPages.Add(tabPage);
+            documentTabs.SelectedTab = tabPage;
 
-                this.saveToolStripMenuItem.Enabled = true;
-                this.saveToolStripButton.Enabled = true;
+            this.saveToolStripMenuItem.Enabled = true;
+            this.saveToolStripButton.Enabled = true;
 
-                this.closeToolStripMenuItem.Enabled = true;
-                this.closeToolStripButton.Enabled = true;
+            this.closeToolStripMenuItem.Enabled = true;
+            this.closeToolStripButton.Enabled = true;
 
-                this.profilePropertiesToolStripMenuItem.Enabled = true;
-                this.profileToolStripButton.Enabled = true;
+            this.profilePropertiesToolStripMenuItem.Enabled = true;
+            this.profileToolStripButton.Enabled = true;
 
-                this.runToolStripButton.Enabled = true;
-            }
+            this.runToolStripButton.Enabled = true;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -257,6 +255,16 @@ namespace GNet
             ProfileManager.Current.Stop();
 
             documentTabs.TabPages.Remove(documentTabs.SelectedTab);
+
+            for (int i = 0; i < openProfiles.Count; i++)
+            {
+                var p = openProfiles[i];
+                if (p.Header.Headerpath == editor.Profile.Header.Headerpath)
+                {
+                    openProfiles.RemoveAt(i);
+                    break;
+                }
+            }
 
             if (documentTabs.TabPages.Count == 0)
             {
@@ -366,7 +374,7 @@ namespace GNet
 
         private void openToolStripButton_Click(object sender, EventArgs e)
         {
-            this.openToolStripMenuItem_Click(sender, e);
+            this.manageProfilesToolStripMenuItem_Click(sender, e);
         }
 
         private void saveToolStripButton_Click(object sender, EventArgs e)
@@ -408,8 +416,8 @@ namespace GNet
 
         private void manageProfilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var manageProfilesForm = new ManageProfilesForm();
-            manageProfilesForm.Show();
+            var manageProfilesForm = new ManageProfilesForm(this);
+            manageProfilesForm.ShowDialog();
         }
     }
 }

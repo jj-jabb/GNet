@@ -206,6 +206,9 @@
     <Compile Include="ManageProfilesForm.Designer.cs">
       <DependentUpon>ManageProfilesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProfileListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ProfilePropertiesDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -317,19 +320,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Sample.boo">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Sample.boo.header">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Default Configuration.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Lua\Default Configuration.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Default Configuration.lua.header">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Lua\_default.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -338,7 +341,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\_default.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

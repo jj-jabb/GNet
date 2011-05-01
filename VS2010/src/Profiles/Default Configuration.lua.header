@@ -3,7 +3,7 @@
   <Headerpath>Default Configuration.lua.header</Headerpath>
   <Filepath>Default Configuration.lua</Filepath>
   <Name>Default Configuration</Name>
-  <Description />
+  <Description>The Default Configuration (really a showcase of available Lua functionality)</Description>
   <Device>G13</Device>
   <Lock>false</Lock>
   <Executable />
