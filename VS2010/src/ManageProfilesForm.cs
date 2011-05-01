@@ -19,31 +19,37 @@ namespace GNet
 
         private void ManageProfilesForm_Load(object sender, EventArgs e)
         {
-            ListViewItem lv;
+            string groupName;
+            ListViewItem lvi;
             
-            Dictionary<ScriptLanguage, string> groups;
+            Dictionary<ScriptLanguage, string> groups = new Dictionary<ScriptLanguage,string>();
 
             foreach (var profile in ProfileManager.Current.LoadProfiles())
             {
-                lvProfiles.Items.Add(lv = new ListViewItem
+                groupName = profile.Header.Language.ToString();
+
+                if (!groups.ContainsKey(profile.Header.Language))
+                {
+                    groups[profile.Header.Language] = groupName;
+                    lvProfiles.Groups.Add(groupName, groupName + " Profiles");
+                }
+
+
+                lvProfiles.Items.Add(lvi = new ListViewItem
                 {
                     Checked = profile.Header.IsEnabled,
                     Name = profile.Header.Name,
-                    Text = profile.Header.Name
+                    Text = profile.Header.Name,
+                    Group = lvProfiles.Groups[groupName],
+                    Tag = profile
                 });
 
-
                 //lv.SubItems.Add(profile.Header.Name);
-                lv.SubItems.Add("Desc");//profile.Header.Description);
-                lv.SubItems.Add("Exec");//profile.Header.Executable);
+                lvi.SubItems.Add("Desc");//profile.Header.Description);
+                lvi.SubItems.Add("Exec");//profile.Header.Executable);
 
-                lv.UseItemStyleForSubItems = true;
+                lvi.UseItemStyleForSubItems = true;
             }
-        }
-
-        private void cbxLanguage_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void btnOpen_Click(object sender, EventArgs e)
@@ -54,6 +60,24 @@ namespace GNet
         private void btnDelete_Click(object sender, EventArgs e)
         {
 
+        }
+
+        ListViewItem lviDoubleClicked;
+        private void lvProfiles_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var info = lvProfiles.HitTest(e.X, e.Y);
+
+            var lvi = info.Item;
+            if (lvi != null && e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                lvi.Checked = !lvi.Checked;
+                var profile = lvi.Tag as Profile;
+                if (profile != null && profile.Header != null)
+                {
+                    ProfilePropertiesDialog ppd = new ProfilePropertiesDialog(profile.Header);
+                    ppd.ShowDialog();
+                }
+            }
         }
     }
 }
