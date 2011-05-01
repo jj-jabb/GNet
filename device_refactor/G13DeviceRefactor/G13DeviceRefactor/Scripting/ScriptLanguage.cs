@@ -4,8 +4,10 @@ using System.Text;
 
 namespace GNet.Scripting
 {
-    public interface IG13DeviceScript : IDeviceScript
+    public enum ScriptLanguage
     {
-        G13Device Device { get; }
+        Undefined,
+        Boo,
+        Lua
     }
 }

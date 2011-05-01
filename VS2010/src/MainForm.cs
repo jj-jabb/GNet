@@ -29,8 +29,6 @@ namespace GNet
 
         void MainForm_Load(object sender, EventArgs e)
         {
-            G13Device.Init();
-
             originalout = Console.Out;
             tbsw = new WinFormsTextBoxStreamWriter(output);
             Console.SetOut(tbsw);
@@ -61,8 +59,6 @@ namespace GNet
             //    }
 
             ProfileManager.DisposeCurrent();
-
-            G13Device.Deinit();
         }
 
         private string MakeSafeFilename(string filename)

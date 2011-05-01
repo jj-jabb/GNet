@@ -18,118 +18,85 @@ namespace GNet.Hid
             Complete
         }
 
+        const string readExitName = @"Local\ReadExit";
+        const string writeEventName = @"Local\WriteEvent";
+        const string writeExitName = @"Local\WriteExit";
+
         protected int vendorId;
         protected int[] productIds;
 
-        protected SafeFileHandle readHandle;
-
-        protected readonly BackgroundWorker<DeviceReport> readWorker;
-        protected readonly ThreadStart writeThreadDelegate;
-
-        protected EventWaitHandle writeEvent;
-
-        protected Thread writeThread;
-        protected bool isWriting;
-
-        LinkedList<WriteDelegate> writeDelegates;
+        //int cancelReadHEvent = -1;
+        SafeFileHandle readHandle;
 
         // timeout on read after to refresh the read event 
         // (seemed like it would "sleep" after a little while)
         protected int readDataTimeout = 10000;
         protected int delayBetweenWrites = 10;
         protected int connectionCheckRate = 300;
-        protected int openWait = 300;
 
-        int cancelReadHEvent = -1;
+        bool runReadThread;
+        bool runWriteThread;
+
+        LinkedList<WriteDelegate> writeDelegates;
+
+        readonly ThreadStart readThreadDelegate;
+        readonly ThreadStart writeThreadDelegate;
+
+        Thread readThread;
+        Thread writeThread;
+
+        EventWaitHandle writeEvent;
+        EventWaitHandle readExit;
+        EventWaitHandle writeExit;
+
+        NativeMethods.SECURITY_ATTRIBUTES cancelEventSecurity;
+        NativeMethods.OVERLAPPED cancelEventOverlapped;
+
+        NativeMethods.SECURITY_ATTRIBUTES readEventSecurity;
+        NativeMethods.OVERLAPPED readEventOverlapped;
 
         public Device(int vendorId, params int[] productIds)
         {
             this.vendorId = vendorId;
             this.productIds = productIds;
 
-            readWorker = new BackgroundWorker<DeviceReport>();
-            readWorker.Updated += new EventHandler<EventArgs<DeviceReport>>(readWorker_Updated);
-            readWorker.DoWork += new DoWorkEventHandler(readWorker_DoWork);
-
+            readThreadDelegate = new ThreadStart(ReadThread);
+            
             writeDelegates = new LinkedList<WriteDelegate>();
             writeThreadDelegate = new ThreadStart(WriteThread);
+
+            CreateOverlappedEvent(out cancelEventSecurity, out cancelEventOverlapped);
+            CreateOverlappedEvent(out readEventSecurity, out readEventOverlapped);
         }
 
         public DeviceInfo DeviceInfo { get; private set; }
+        protected virtual DeviceMode DeviceReadMode { get { return DeviceMode.Overlapped; } }
+
         public bool IsOpen { get; private set; }
         public bool IsConnected { get; private set; }
         public int DelayBetweenWrites { get { return delayBetweenWrites; } set { delayBetweenWrites = value; } }
         public int ConnectionCheckRate { get { return connectionCheckRate; } set { connectionCheckRate = value; } }
-        public int OpenWait { get { return openWait; } set { openWait = value; } }
 
-        protected virtual DeviceMode DeviceReadMode { get { return DeviceMode.Overlapped; } }
-
-        protected virtual void OnConnected() { }
-        protected virtual void OnOpened() { }
-        protected virtual void OnDataRead(DeviceData data) { }
-        protected virtual void OnReadError(DeviceData data) { }
-        protected virtual void OnException(Exception ex) { }
-        protected virtual void OnClosed() { }
-        protected virtual void OnDisconnected() { }
-
-        public virtual void Start()
+        public virtual bool Start()
         {
-            if (false == readWorker.IsBusy)
-                readWorker.RunWorkerAsync();
+            //if (!Connect())
+            //    return false;
 
-            if (false == isWriting)
-            {
-                writeThread = new Thread(writeThreadDelegate);
-                writeEvent = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeviceWriteEvent");
-                isWriting = true;
-                writeThread.Start();
-            }
+            //if (!Open())
+            //    return false;
+
+            StartRead();
+            StartWrite();
+
+            return true;
         }
 
         public virtual void Stop()
         {
-            if (true == readWorker.IsBusy)
-            {
-                var readExit = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeviceReadExit");
-                readWorker.CancelAsync();
-                if (IsOpen)
-                    // CancelIoEx is only available on Vista +, so use an overlapped event
-                    // to cancel a ReadFile wait
-                    //NativeMethods.CancelIoEx(readHandle, IntPtr.Zero);
-                    if (cancelReadHEvent >= 0)
-                        NativeMethods.SetEvent(cancelReadHEvent);
-                if (!readExit.WaitOne(1000))
-                    System.Diagnostics.Debug.WriteLine("Device.Stop: readExit timed out");
-                readExit.Close();
-            }
+            StopWrite();
+            StopRead();
 
-            if (true == isWriting)
-            {
-                lock (writeDelegates)
-                {
-                    writeDelegates.Clear();
-                }
-
-                isWriting = false;
-
-                var writeExit = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeviceWriteExit");
-                writeEvent.Set();
-                if (!writeExit.WaitOne(1000))
-                    System.Diagnostics.Debug.WriteLine("Device.Stop: writeExit timed out");
-                writeExit.Close();
-                writeEvent.Close();
-            }
-        }
-
-        public void AddWriteDelegate(WriteDelegate writeDelegate)
-        {
-            lock (writeDelegates)
-            {
-                writeDelegates.AddLast(writeDelegate);
-            }
-
-            if (isWriting)
-                writeEvent.Set();
+            Close();
         }
 
         public void SetFeature(byte[] data, int length)
@@ -153,10 +120,10 @@ namespace GNet.Hid
 
         protected bool Connect()
         {
-            IsConnected = null != (DeviceInfo = GetDeviceInfo(vendorId, productIds));
+            IsConnected = (DeviceInfo = GetDeviceInfo(vendorId, productIds)) != null;
 
-            if (IsConnected && isWriting)
-                writeEvent.Set();
+            //if (IsConnected && runWriteThread)
+            //    writeEvent.Set();
 
             return IsConnected;
         }
@@ -180,261 +147,155 @@ namespace GNet.Hid
             return IsOpen;
         }
 
-        protected bool Close()
+        protected void Close()
         {
-            if (!IsOpen) return false;
+            if (!IsOpen) return;
 
             readHandle.Close();
             IsOpen = false;
-            return true;
         }
 
-        protected virtual void WriteThread()
-        {
-            var writeEvent = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeviceWriteEvent");
+        #region Read
 
-            while (isWriting)
+        protected void StartRead()
+        {
+            if (runReadThread)
+                return;
+
+            runReadThread = true;
+            readExit = new EventWaitHandle(false, EventResetMode.AutoReset, readExitName);
+            readThread = new Thread(readThreadDelegate);
+            readThread.Start();
+        }
+
+        protected void StopRead()
+        {
+            if (!runReadThread)
+                return;
+
+            runReadThread = false;
+            CancelRead();
+
+            if (Thread.CurrentThread != readThread)
             {
-                if (IsConnected)
+                if (!readExit.WaitOne(1000))
                 {
-                    lock (writeDelegates)
-                    {
-                        using (var safe = new SafeFileHandle(OpenDeviceIO(DeviceInfo.Path, DeviceMode.NonOverlapped, NativeMethods.GENERIC_WRITE), true))
-                        {
-                            var writeDelegateLink = writeDelegates.First;
-                            var next = writeDelegateLink;
-
-                            while (writeDelegateLink != null)
-                            {
-                                next = writeDelegateLink.Next;
-
-                                if (WriteType.Complete == writeDelegateLink.Value(this, safe))
-                                    writeDelegates.Remove(writeDelegateLink);
-
-                                writeDelegateLink = next;
-                            }
-                        }
-                    }
-
-                    if (0 == writeDelegates.Count)
-                        writeEvent.WaitOne();
-                    else
-                        Thread.Sleep(DelayBetweenWrites);
+                    System.Diagnostics.Debug.WriteLine("StopRead: readExit.WaitOne timed out");
+                    readThread.Abort();
                 }
-                else
-                    writeEvent.WaitOne();
             }
 
-            writeEvent.Close();
-
-            var writeExit = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeviceWriteExit");
-            writeExit.Set();
-            writeExit.Close();
+            readThread = null;
         }
 
-        void readWorker_Updated(object sender, EventArgs<DeviceReport> e)
+        protected void CancelRead()
         {
-            var report = e.Data;
-            switch (report.Status)
+            NativeMethods.SetEvent(cancelEventOverlapped.hEvent);
+        }
+
+        protected virtual void ReadThread_Cancelled()
+        {
+        }
+
+        protected virtual void ReadThread_WaitTimedOut()
+        {
+        }
+
+        protected virtual void ReadThread_DataRead(DeviceData data)
+        {
+        }
+
+        protected virtual void ReadThread_ReadError(Exception error)
+        {
+            Debug.WriteLine("ReadThread_ReadError: " + error);
+        }
+
+        protected virtual void ReadThread_NoDataRead()
+        {
+            PollForConnect();
+        }
+
+        void PollForConnect()
+        {
+            if (Connect() && Open())
+                return;
+
+            IsConnected = false;
+            Close();
+
+            while (runReadThread)
             {
-                case DeviceStatus.Connected:
-                    OnConnected();
+                if (Connect() && Open())
                     break;
-
-                case DeviceStatus.Open:
-                    OnOpened();
-                    break;
-
-                case DeviceStatus.DataRead:
-                    OnDataRead(report.Data);
-                    break;
-
-                case DeviceStatus.ReadError:
-                    OnReadError(report.Data);
-                    break;
-
-                case DeviceStatus.Exception:
-                    OnException(report.Error);
-                    break;
-
-                case DeviceStatus.Closed:
-                    OnClosed();
-                    break;
-
-                case DeviceStatus.Disconnected:
-                    OnDisconnected();
-                    break;
+                else
+                    Thread.Sleep(ConnectionCheckRate);
             }
         }
 
-        protected virtual void ReadWorker_Started()
-        {
-        }
-
-        protected virtual void ReadWorker_Connected()
-        {
-            readWorker.Update(new DeviceReport(DeviceStatus.Connected));
-        }
-
-        protected virtual void ReadWorker_Opened()
-        {
-            readWorker.Update(new DeviceReport(DeviceStatus.Open));
-        }
-
-        protected virtual void ReadWorker_DataRead(DeviceData data)
-        {
-            readWorker.Update(new DeviceReport(data));
-        }
-
-        protected virtual void ReadWorker_Cancelled()
-        {
-        }
-
-        protected virtual void ReadWorker_WaitTimedOut()
-        {
-        }
-
-        protected virtual void ReadWorker_ReadError()
-        {
-            readWorker.Update(new DeviceReport(DeviceStatus.ReadError));
-        }
-
-        protected virtual void ReadWorker_Exception(Exception ex)
-        {
-            readWorker.Update(new DeviceReport(ex));
-        }
-
-        protected virtual void ReadWorker_Closed()
-        {
-            readWorker.Update(new DeviceReport(DeviceStatus.Closed));
-        }
-
-        protected virtual void ReadWorker_Disconnected()
-        {
-            readWorker.Update(new DeviceReport(DeviceStatus.Disconnected));
-        }
-
-        protected virtual void ReadWorker_Finished()
-        {
-        }
-
-        void readWorker_DoWork(object sender, DoWorkEventArgs e)
+        void ReadThread()
         {
             DeviceData data;
-            bool wasOpen = IsOpen;
 
-            ReadWorker_Started();
-
-            while (!readWorker.CancellationPending)
+            while (runReadThread)
             {
-                if (!IsConnected)
-                {
-                    if (!Connect())
-                        Thread.Sleep(ConnectionCheckRate);
-                    else
-                        ReadWorker_Connected();
-                }
-                else
+                try
                 {
                     if (!IsOpen)
+                        PollForConnect();
+
+                    if (!runReadThread)
+                        break;
+
+                    data = ReadData(readDataTimeout);
+
+                    switch (data.Status)
                     {
-                        if (wasOpen)
-                        {
-                            wasOpen = false;
-                            ReadWorker_Closed();
-                        }
+                        case DeviceData.ReadStatus.Cancelled:
+                            ReadThread_Cancelled();
+                            break;
 
-                        try
-                        {
-                            if (!Open())
-                                Thread.Sleep(OpenWait);
-                            else
+                        case DeviceData.ReadStatus.WaitTimedOut:
+                            ReadThread_WaitTimedOut();
+                            break;
+
+                        case DeviceData.ReadStatus.Success:
+                            bool dataRead = false;
+                            for (int i = 0; i < data.Bytes.Length; i++)
                             {
-                                wasOpen = true;
-                                ReadWorker_Opened();
+                                if (data.Bytes[i] != 0)
+                                {
+                                    dataRead = true;
+                                    break;
+                                }
                             }
-                        }
-                        catch(Exception ex)
-                        {
-                            ReadWorker_Exception(ex);
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            data = ReadData(readDataTimeout);
-                            switch (data.Status)
-                            {
-                                case DeviceData.ReadStatus.Cancelled:
-                                    ReadWorker_Cancelled();
-                                    break;
 
-                                case DeviceData.ReadStatus.WaitTimedOut:
-                                    ReadWorker_WaitTimedOut();
-                                    break;
-
-                                case DeviceData.ReadStatus.Success:
-                                        bool trueSuccess = false;
-                                        for (int i = 0; i < data.Bytes.Length; i++)
-                                        {
-                                            if (data.Bytes[i] != 0)
-                                            {
-                                                trueSuccess = true;
-                                                break;
-                                            }
-                                        }
-
-                                        if (trueSuccess)
-                                        {
-                                            ReadWorker_DataRead(data);
-                                        }
-                                        else if (!IsPathInDeviceList(DeviceInfo.Path))
-                                        {
-                                            IsConnected = false;
-                                            Close();
-                                            wasOpen = false;
-                                            ReadWorker_Closed();
-                                            ReadWorker_Disconnected();
-                                        }
-                                    break;
-
-                                case DeviceData.ReadStatus.ReadError:
-                                    ReadWorker_ReadError();
-                                    break;
-
-                                case DeviceData.ReadStatus.NoDataRead:
-                                    if (!readWorker.CancellationPending && !IsPathInDeviceList(DeviceInfo.Path))
-                                    {
-                                        IsConnected = false;
-                                        Close();
-                                        wasOpen = false;
-                                        ReadWorker_Closed();
-                                        ReadWorker_Disconnected();
-                                    }
-                                    break;
-                            }
-                        }
-                        catch
-                        {
-                            if (IsPathInDeviceList(DeviceInfo.Path))
-                                ReadWorker_ReadError();
+                            if (dataRead)
+                                ReadThread_DataRead(data);
                             else
-                                ReadWorker_Disconnected();
-                        }
+                                ReadThread_NoDataRead();
+                            break;
+
+                        case DeviceData.ReadStatus.ReadError:
+                            ReadThread_ReadError(data.Error);
+                            break;
+
+                        case DeviceData.ReadStatus.NoDataRead:
+                            ReadThread_NoDataRead();
+                            break;
                     }
+                }
+                catch (Exception ex)
+                {
+                    ReadThread_ReadError(ex);
                 }
             }
 
-            ReadWorker_Finished();
-            if (Close()) ReadWorker_Closed();
-
-            var readExit = new EventWaitHandle(false, EventResetMode.AutoReset, @"Local\DeviceReadExit");
+            var readExit = new EventWaitHandle(false, EventResetMode.AutoReset, readExitName);
             readExit.Set();
             readExit.Close();
         }
 
-        protected DeviceData ReadData(int timeout)
+        DeviceData ReadData(int timeout)
         {
             var buffer = new byte[DeviceInfo.Capabilities.InputReportByteLength];
             var status = DeviceData.ReadStatus.NoDataRead;
@@ -447,69 +308,54 @@ namespace GNet.Hid
                 {
                     #region Read Overlapped
 
-                    var readEventSecurity = new NativeMethods.SECURITY_ATTRIBUTES();
-                    var readEventOverlapped = new NativeMethods.OVERLAPPED();
+
                     var readEventOverlapTimeout = timeout <= 0 ? NativeMethods.WAIT_INFINITE : timeout;
-
-                    readEventSecurity.lpSecurityDescriptor = IntPtr.Zero;
-                    readEventSecurity.bInheritHandle = true;
-                    readEventSecurity.nLength = Marshal.SizeOf(readEventSecurity);
-
-                    readEventOverlapped.Offset = 0;
-                    readEventOverlapped.OffsetHigh = 0;
-                    readEventOverlapped.hEvent = NativeMethods.CreateEvent(ref readEventSecurity, Convert.ToInt32(false), Convert.ToInt32(true), string.Empty);
-
-
-                    var cancelEventSecurity = new NativeMethods.SECURITY_ATTRIBUTES();
-                    var cancelEventOverlapped = new NativeMethods.OVERLAPPED();
-
-                    cancelEventSecurity.lpSecurityDescriptor = IntPtr.Zero;
-                    cancelEventSecurity.bInheritHandle = true;
-                    cancelEventSecurity.nLength = Marshal.SizeOf(readEventSecurity);
-
-                    cancelEventOverlapped.Offset = 0;
-                    cancelEventOverlapped.OffsetHigh = 0;
-                    cancelEventOverlapped.hEvent = NativeMethods.CreateEvent(ref readEventSecurity, Convert.ToInt32(true), Convert.ToInt32(false), string.Empty);
-
                     int[] hEvents = new int[] { readEventOverlapped.hEvent, cancelEventOverlapped.hEvent };
 
-                    cancelReadHEvent = cancelEventOverlapped.hEvent;
+                    NativeMethods.ResetEvent(cancelEventOverlapped.hEvent);
 
                     try
                     {
                         NativeMethods.ReadFileOverlapped(readHandle, ref buffer[0], buffer.Length, ref bytesRead, ref readEventOverlapped);
 
-                        //var result = NativeMethods.WaitForSingleObject(overlapped.hEvent, overlapTimeout);
                         var result = NativeMethods.WaitForMultipleObjects(2, ref hEvents[0], false, readEventOverlapTimeout);
-
-                        cancelReadHEvent = -1;
-
+                        
                         switch (result)
                         {
-                            case 1: // overlapped2.hEvent was set, indicating a cancel of readHandle
+                            case NativeMethods.WAIT_OBJECT_0:
+                                status = DeviceData.ReadStatus.Success;
+                                break;
+
+                            case NativeMethods.WAIT_OBJECT_1:
+                                // cancelEventOverlapped.hEvent was set, indicating a cancel of readHandle
                                 NativeMethods.CancelIo(readHandle);
                                 NativeMethods.WaitForSingleObject(readEventOverlapped.hEvent, NativeMethods.WAIT_INFINITE);
                                 buffer = new byte[] { };
                                 status = DeviceData.ReadStatus.Cancelled;
                                 break;
-                            case NativeMethods.WAIT_OBJECT_0: status = DeviceData.ReadStatus.Success; break;
+
                             case NativeMethods.WAIT_TIMEOUT:
                                 status = DeviceData.ReadStatus.WaitTimedOut;
                                 NativeMethods.CancelIo(readHandle);
                                 NativeMethods.WaitForSingleObject(readEventOverlapped.hEvent, NativeMethods.WAIT_INFINITE);
                                 buffer = new byte[] { };
                                 break;
+
                             case NativeMethods.WAIT_FAILED:
                                 status = DeviceData.ReadStatus.WaitFail;
                                 buffer = new byte[] { };
                                 break;
+
                             default:
                                 status = DeviceData.ReadStatus.NoDataRead;
                                 buffer = new byte[] { };
                                 break;
                         }
                     }
-                    catch { status = DeviceData.ReadStatus.ReadError; }
+                    catch (Exception ex)
+                    {
+                        return new DeviceData(buffer, DeviceData.ReadStatus.ReadError, ex);
+                    }
 
                     #endregion
                 }
@@ -521,10 +367,127 @@ namespace GNet.Hid
                         if (bytesRead > 0)
                             status = DeviceData.ReadStatus.Success;
                     }
-                    catch { status = DeviceData.ReadStatus.ReadError; }
+                    catch (Exception ex)
+                    {
+                        return new DeviceData(buffer, DeviceData.ReadStatus.ReadError, ex);
+                    }
                 }
             }
+
             return new DeviceData(buffer, status);
+        }
+
+        #endregion
+
+        #region Write
+
+        protected void StartWrite()
+        {
+            if (runWriteThread)
+                return;
+
+            runWriteThread = true;
+            writeEvent = new EventWaitHandle(false, EventResetMode.AutoReset, writeEventName);
+            writeExit = new EventWaitHandle(false, EventResetMode.AutoReset, writeExitName);
+            writeThread = new Thread(writeThreadDelegate);
+            writeThread.Start();
+        }
+
+        protected void StopWrite()
+        {
+            if (!runWriteThread)
+                return;
+
+            runWriteThread = false;
+
+            lock (writeDelegates)
+            {
+                writeDelegates.Clear();
+            }
+
+            writeEvent.Set();
+            writeEvent.Close();
+
+            if (Thread.CurrentThread != writeThread)
+            {
+                if (!writeExit.WaitOne(1000))
+                {
+                    System.Diagnostics.Debug.WriteLine("StopWrite: writeExit.WaitOne timed out");
+                    writeThread.Abort();
+                }
+            }
+
+            writeExit.Close();
+
+            writeThread = null;
+        }
+
+        protected virtual void WriteThread()
+        {
+            var localWriteEvent = new EventWaitHandle(false, EventResetMode.AutoReset, writeEventName);
+
+            while (runWriteThread)
+            {
+                if (IsConnected)
+                {
+                    lock (writeDelegates)
+                    {
+                        using (var safe = new SafeFileHandle(OpenDeviceIO(DeviceInfo.Path, DeviceMode.NonOverlapped, NativeMethods.GENERIC_WRITE), true))
+                        {
+                            var writeDelegateLink = writeDelegates.First;
+                            var next = writeDelegateLink;
+
+                            while (writeDelegateLink != null)
+                            {
+                                if (!IsConnected || !runWriteThread)
+                                    break;
+
+                                next = writeDelegateLink.Next;
+
+                                if (WriteType.Complete == writeDelegateLink.Value(this, safe))
+                                    writeDelegates.Remove(writeDelegateLink);
+
+                                writeDelegateLink = next;
+                            }
+                        }
+                    }
+
+                    if (runWriteThread)
+                    {
+                        if (writeDelegates.Count == 0)
+                            localWriteEvent.WaitOne();
+                        else
+                            Thread.Sleep(DelayBetweenWrites);
+                    }
+                }
+                else
+                    localWriteEvent.WaitOne();
+            }
+
+            localWriteEvent.Close();
+
+            var writeExit = new EventWaitHandle(false, EventResetMode.AutoReset, writeExitName);
+            writeExit.Set();
+            writeExit.Close();
+        }
+
+        #endregion
+
+        void CreateOverlappedEvent(out NativeMethods.SECURITY_ATTRIBUTES security, out NativeMethods.OVERLAPPED overlappedEvent)
+        {
+            security = new NativeMethods.SECURITY_ATTRIBUTES
+            {
+                lpSecurityDescriptor = IntPtr.Zero,
+                bInheritHandle = true,
+                nLength = Marshal.SizeOf(cancelEventSecurity)
+            };
+
+            overlappedEvent = new NativeMethods.OVERLAPPED
+            {
+                Offset = 0,
+                OffsetHigh = 0,
+                hEvent = NativeMethods.CreateEvent(ref cancelEventSecurity, Convert.ToInt32(true), Convert.ToInt32(false), string.Empty)
+            };
         }
 
         public virtual void Dispose()

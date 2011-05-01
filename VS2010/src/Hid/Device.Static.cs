@@ -33,7 +33,7 @@ namespace GNet.Hid
             NativeMethods.CloseHandle(handle);
         }
 
-        static bool IsPathInDeviceList(string devicePath)
+        public static bool IsPathInDeviceList(string devicePath)
         {
             foreach (var d in EnumerateHidDevices())
                 if (d == devicePath) return true;
@@ -41,7 +41,7 @@ namespace GNet.Hid
             return false;
         }
 
-        static DeviceInfo GetDeviceInfo(int vendorId, params int[] productIds)
+        public static DeviceInfo GetDeviceInfo(int vendorId, params int[] productIds)
         {
             List<int> pids = new List<int>(productIds);
             DeviceInfo info;

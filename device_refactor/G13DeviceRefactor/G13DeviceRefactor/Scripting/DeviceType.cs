@@ -4,8 +4,8 @@ using System.Text;
 
 namespace GNet.Scripting
 {
-    public interface IG13DeviceScript : IDeviceScript
+    public enum DeviceType
     {
-        G13Device Device { get; }
+        G13
     }
 }

@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>G13DeviceRefactor</RootNamespace>
     <AssemblyName>G13DeviceRefactor</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -37,10 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -64,12 +62,50 @@
     <Compile Include="Hid\DeviceReport.cs" />
     <Compile Include="Hid\DeviceStatus.cs" />
     <Compile Include="Hid\NativeMethods.cs" />
+    <Compile Include="IO\GlobalHook.cs" />
+    <Compile Include="IO\InputSimulator.cs" />
+    <Compile Include="IO\JoystickAngle.cs" />
+    <Compile Include="IO\JoystickPosition.cs" />
+    <Compile Include="IO\KeyboardHook.cs" />
+    <Compile Include="IO\KeyRepeater.cs" />
+    <Compile Include="IO\MouseHook.cs" />
     <Compile Include="LgLcd\G13Lcd.cs" />
     <Compile Include="LgLcd\Connection.cs" />
     <Compile Include="LgLcd\Lcd.cs" />
     <Compile Include="LgLcd\Sdk.cs" />
+    <Compile Include="PInvoke\HardwareInputData.cs" />
+    <Compile Include="PInvoke\InputWrapper.cs" />
+    <Compile Include="PInvoke\Interop.cs" />
+    <Compile Include="PInvoke\KeyboardFlags.cs" />
+    <Compile Include="PInvoke\KeyboardInputData.cs" />
+    <Compile Include="PInvoke\MouseFlags.cs" />
+    <Compile Include="PInvoke\MouseInputData.cs" />
+    <Compile Include="PInvoke\MouseKeyboardHardwareUnion.cs" />
+    <Compile Include="PInvoke\ScanCode.cs" />
+    <Compile Include="PInvoke\ScanCodeInfo.cs" />
+    <Compile Include="PInvoke\SendInputType.cs" />
+    <Compile Include="PInvoke\SetWinEventHookFlags.cs" />
+    <Compile Include="PInvoke\SystemMetric.cs" />
+    <Compile Include="PInvoke\VirtualKeyStates.cs" />
+    <Compile Include="PInvoke\Win32Point.cs" />
+    <Compile Include="PInvoke\WinEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripting\DeviceType.cs" />
+    <Compile Include="Scripting\G13Device.cs" />
+    <Compile Include="Scripting\G13Keys.cs" />
+    <Compile Include="Scripting\G13KeyState.cs" />
+    <Compile Include="Scripting\G13Script.cs" />
+    <Compile Include="Scripting\G13Script.IO.cs" />
+    <Compile Include="Scripting\HookOptions.cs" />
+    <Compile Include="Scripting\IDeviceScript.cs" />
+    <Compile Include="Scripting\IG13DeviceScript.cs" />
+    <Compile Include="Scripting\LuaScript.cs" />
+    <Compile Include="Scripting\Profile.cs" />
+    <Compile Include="Scripting\ProfileHeader.cs" />
+    <Compile Include="Scripting\ProfileManager.cs" />
+    <Compile Include="Scripting\ScriptLanguage.cs" />
+    <Compile Include="WMI.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -81,7 +117,9 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -93,6 +131,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="IO\Hook Readme.txt" />
     <Content Include="LgLcd.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

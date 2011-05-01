@@ -16,6 +16,7 @@ namespace GNet.Hid
         public const short OPEN_EXISTING = 3;
         public const int WAIT_TIMEOUT = 0x102;
         public const uint WAIT_OBJECT_0 = 0;
+        public const uint WAIT_OBJECT_1 = 1;
         public const uint WAIT_FAILED = 0xffffffff;
 
         public const int WAIT_INFINITE = 0xffff;

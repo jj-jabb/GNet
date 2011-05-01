@@ -20,7 +20,7 @@ namespace GNet.Hid
 
         const string readExitName = @"Local\ReadExit";
         const string writeEventName = @"Local\WriteEvent";
-        const string writeExitName = @"WriteExit";
+        const string writeExitName = @"Local\WriteExit";
 
         protected int vendorId;
         protected int[] productIds;
@@ -77,7 +77,7 @@ namespace GNet.Hid
         public int DelayBetweenWrites { get { return delayBetweenWrites; } set { delayBetweenWrites = value; } }
         public int ConnectionCheckRate { get { return connectionCheckRate; } set { connectionCheckRate = value; } }
 
-        public bool Start()
+        public virtual bool Start()
         {
             //if (!Connect())
             //    return false;
@@ -91,12 +91,31 @@ namespace GNet.Hid
             return true;
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
             StopWrite();
             StopRead();
 
             Close();
+        }
+
+        public void SetFeature(byte[] data, int length)
+        {
+            if (DeviceInfo == null || IsOpen == false)
+                return;
+
+            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            var safe = new SafeFileHandle(OpenDeviceIO(DeviceInfo.Path, DeviceMode.NonOverlapped, NativeMethods.GENERIC_WRITE), true);
+            try
+            {
+                IntPtr buffer = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
+                NativeMethods.HidD_SetFeature(safe, buffer, length);
+            }
+            finally
+            {
+                handle.Free();
+                safe.Dispose();
+            }
         }
 
         protected bool Connect()
@@ -184,13 +203,6 @@ namespace GNet.Hid
 
         protected virtual void ReadThread_DataRead(DeviceData data)
         {
-            Debug.Write("ReadThread_DataRead: ");
-            for (int i = 0; i < data.Bytes.Length; i++)
-            {
-                Debug.Write(data.Bytes[i].ToString("x"));
-                Debug.Write(" ");
-            }
-            Debug.WriteLine(" ");
         }
 
         protected virtual void ReadThread_ReadError(Exception error)
@@ -478,7 +490,7 @@ namespace GNet.Hid
             };
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Close();
         }

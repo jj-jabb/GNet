@@ -169,6 +169,7 @@ namespace GNet.Scripting
                 mouseHook.Start();
             }
 
+            Device.Lcd.BringToFront();
             Device.Script = this;
 
             IsRunning = true;

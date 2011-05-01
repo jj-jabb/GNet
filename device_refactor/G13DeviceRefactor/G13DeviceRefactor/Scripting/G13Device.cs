@@ -31,6 +31,7 @@ namespace GNet.Scripting
 
         object scriptLock;
 
+        G13Lcd lcd;
         string lcdAppName;
 
         JoystickPosition joystick;
@@ -42,10 +43,13 @@ namespace GNet.Scripting
         G13Device()
             : base(Logitech, G13)
         {
+            lcd = new G13Lcd("G13 GNet Profiler");
+
             scriptLock = new object();
             keyRepeater = new KeyRepeater();
         }
 
+        public Lcd Lcd { get { return lcd; } }
         public ulong KeyState { get { return currentState.UL; } }
         public int MKeyState { get { return mKeyState; } }
         public JoystickPosition Joystick { get { return joystick; } }

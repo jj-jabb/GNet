@@ -16,13 +16,13 @@ namespace GNet.Hid
             Cancelled = 6
         }
 
-        public DeviceData(ReadStatus status)
-        {
-            Bytes = new byte[] { };
-            Status = status;
-        }
+        //public DeviceData(ReadStatus status)
+        //{
+        //    Bytes = new byte[] { };
+        //    Status = status;
+        //}
 
-        public DeviceData(byte[] data, ReadStatus status)
+        public DeviceData(byte[] data, ReadStatus status, Exception error = null)
         {
             Bytes = data;
             Status = status;
@@ -30,6 +30,7 @@ namespace GNet.Hid
 
         public byte[] Bytes { get; private set; }
         public ReadStatus Status { get; private set; }
+        public Exception Error { get; private set; }
 
         public override string ToString()
         {

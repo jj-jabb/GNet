@@ -10,9 +10,9 @@ using PVOID = System.IntPtr;
 using LPCWSTR = System.String;
 using BOOL = System.Boolean;
 
-namespace GNet.IO
+namespace GNet.LgLcd
 {
-    public partial class LgLcd
+    public class Sdk
     {
         public const int MAX_PATH = 260;
 
@@ -185,17 +185,17 @@ namespace GNet.IO
 
 
         // Capabilities of applets connecting to LCD Manager.
-        public const uint LGLCD_APPLET_CAP_BASIC = 0x00000000;
-        public const uint LGLCD_APPLET_CAP_BW = 0x00000001;
-        public const uint LGLCD_APPLET_CAP_QVGA = 0x00000002;
+        public const int LGLCD_APPLET_CAP_BASIC = 0x00000000;
+        public const int LGLCD_APPLET_CAP_BW = 0x00000001;
+        public const int LGLCD_APPLET_CAP_QVGA = 0x00000002;
 
         // Notifications sent by LCD Manager to applets connected to it.
-        public const uint LGLCD_NOTIFICATION_DEVICE_ARRIVAL = 0x00000001;
-        public const uint LGLCD_NOTIFICATION_DEVICE_REMOVAL = 0x00000002;
-        public const uint LGLCD_NOTIFICATION_CLOSE_CONNECTION = 0x00000003;
-        public const uint LGLCD_NOTIFICATION_APPLET_DISABLED = 0x00000004;
-        public const uint LGLCD_NOTIFICATION_APPLET_ENABLED = 0x00000005;
-        public const uint LGLCD_NOTIFICATION_TERMINATE_APPLET = 0x00000006;
+        public const int LGLCD_NOTIFICATION_DEVICE_ARRIVAL = 0x00000001;
+        public const int LGLCD_NOTIFICATION_DEVICE_REMOVAL = 0x00000002;
+        public const int LGLCD_NOTIFICATION_CLOSE_CONNECTION = 0x00000003;
+        public const int LGLCD_NOTIFICATION_APPLET_DISABLED = 0x00000004;
+        public const int LGLCD_NOTIFICATION_APPLET_ENABLED = 0x00000005;
+        public const int LGLCD_NOTIFICATION_TERMINATE_APPLET = 0x00000006;
 
         // Device types used in notifications
         public const int LGLCD_DEVICE_BW = 0x00000001;

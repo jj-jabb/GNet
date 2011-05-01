@@ -9,6 +9,7 @@ using GNet;
 using GNet.IO;
 using System.Reflection;
 using System.Drawing;
+using GNet.LgLcd;
 
 namespace GNet.Scripting
 {
@@ -20,12 +21,23 @@ namespace GNet.Scripting
 
         DateTime startTime;
 
+        G13Lcd lcd;
+
         public LuaScript()
         {
+            lcd = new G13Lcd("GNet Profiler");
+            lcd.Connection.Notified += new Connection.NotificationEventHandler(Connection_Notified);
             SingleKeyEvents = true;
         }
 
-        protected LgLcd Lcd { get { return Device == null ? null : Device.Lcd; } }
+        void Connection_Notified(int code, int param1, int param2, int param3, int param4)
+        {
+            if (code == Sdk.LGLCD_NOTIFICATION_DEVICE_ARRIVAL)
+            {
+                ClearLcd();
+                lcd.BringToFront();
+            }
+        }
 
         protected override void OnStart()
         {
@@ -43,12 +55,12 @@ namespace GNet.Scripting
             Lua lua = null;
             bool inError = false;
 
-            var inputEvent = CreateInputEvent();
+            var inputEvent = new EventWaitHandle(false, EventResetMode.AutoReset, inputEventName);
 
             try
             {
                 DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, "#FFFFFF", 0, 0);
-                Lcd.BringToFront();
+                lcd.BringToFront();
 
                 lua = new Lua();
 
@@ -183,11 +195,11 @@ namespace GNet.Scripting
             ClearKeyEvents();
 
             SetBacklightColor(128, 255, 255);
-            Lcd.RemoveFromFront();
+            lcd.RemoveFromFront();
 
             inputEvent.Close();
 
-            var inputExit = CreateInputExit();
+            var inputExit = new EventWaitHandle(false, EventResetMode.AutoReset, inputExitName);
             inputExit.Set();
             inputExit.Close();
 
@@ -261,10 +273,10 @@ namespace GNet.Scripting
 
         public void DrawString(string text, string fontName, double fontSize, double fontStyle, string htmlColor, double x, double y)
         {
-            if (Lcd == null || !Lcd.IsOpen)
+            if (lcd == null || !lcd.IsOpen)
                 return;
 
-            Lcd.DrawString(text, fontName, fontSize, fontStyle, htmlColor, x, y);
+            lcd.DrawString(text, fontName, fontSize, fontStyle, htmlColor, x, y);
         }
 
         public void SetBacklightColorHtml(string htmlColor)
@@ -313,15 +325,15 @@ namespace GNet.Scripting
 
         public void ClearLcd()
         {
-            if (Lcd == null || !Lcd.IsOpen)
+            if (lcd == null || !lcd.IsOpen)
                 return;
 
-            Lcd.Clear();
+            lcd.Clear();
         }
 
         public void ClearGraphics()
         {
-            Lcd.Graphics.Clear(Color.Black);
+            lcd.Graphics.Clear(Color.Black);
         }
 
         #endregion

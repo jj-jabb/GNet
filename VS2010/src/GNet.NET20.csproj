@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Hid\BackgroundWorker.cs" />
     <Compile Include="Hid\Device.cs" />
     <Compile Include="Hid\Device.Static.cs" />
     <Compile Include="Hid\DeviceAttributes.cs" />
@@ -61,7 +60,6 @@
     <Compile Include="Hid\DeviceMode.cs" />
     <Compile Include="Hid\DeviceReport.cs" />
     <Compile Include="Hid\DeviceStatus.cs" />
-    <Compile Include="Hid\EventArgs.cs" />
     <Compile Include="Hid\NativeMethods.cs" />
     <Compile Include="ICSharpCode.TextEditor\Actions\BookmarkActions.cs" />
     <Compile Include="ICSharpCode.TextEditor\Actions\CaretActions.cs" />
@@ -198,6 +196,10 @@
     <Compile Include="ICSharpCode.TextEditor\Util\TipSplitter.cs" />
     <Compile Include="ICSharpCode.TextEditor\Util\TipText.cs" />
     <Compile Include="ICSharpCode.TextEditor\Util\WeakCollection.cs" />
+    <Compile Include="LgLcd\Connection.cs" />
+    <Compile Include="LgLcd\G13Lcd.cs" />
+    <Compile Include="LgLcd\Lcd.cs" />
+    <Compile Include="LgLcd\Sdk.cs" />
     <Compile Include="ProfilePropertiesDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -217,9 +219,6 @@
     <Compile Include="IO\JoystickPosition.cs" />
     <Compile Include="IO\KeyboardHook.cs" />
     <Compile Include="IO\KeyRepeater.cs" />
-    <Compile Include="IO\LgLcd.cs" />
-    <Compile Include="IO\LgLcd.Definitions.cs" />
-    <Compile Include="IO\LgLcdDeviceType.cs" />
     <Compile Include="IO\MouseHook.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
