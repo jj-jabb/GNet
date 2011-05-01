@@ -13,7 +13,7 @@ using GNet.LgLcd;
 
 namespace GNet.Scripting
 {
-    public class LuaScript : G13Script
+    public class LuaScript : G13Script, IDisposable
     {
         LuaFunction onEvent;
         LuaFunction onKEvent;
@@ -26,15 +26,21 @@ namespace GNet.Scripting
         public LuaScript()
         {
             lcd = new G13Lcd("GNet Profiler");
-            lcd.Connection.Notified += new Connection.NotificationEventHandler(Connection_Notified);
+            lcd.Notified += new NotificationEventHandler(Connection_Notified);
             SingleKeyEvents = true;
+        }
+
+        public void Dispose()
+        {
+            lcd.Notified -= new NotificationEventHandler(Connection_Notified);
         }
 
         void Connection_Notified(int code, int param1, int param2, int param3, int param4)
         {
-            if (code == Sdk.LGLCD_NOTIFICATION_DEVICE_ARRIVAL)
+            if (code == Sdk.LGLCD_NOTIFICATION_DEVICE_ARRIVAL && IsRunning)
             {
-                ClearLcd();
+                ClearGraphics();
+                DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, 0, 0, 255, 255, 255);
                 lcd.BringToFront();
             }
         }
@@ -59,7 +65,7 @@ namespace GNet.Scripting
 
             try
             {
-                DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, "#FFFFFF", 0, 0);
+                DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, 0, 0, 255, 255, 255);
                 lcd.BringToFront();
 
                 lua = new Lua();
@@ -68,7 +74,7 @@ namespace GNet.Scripting
                 Register(lua, "ClearLog", this);
                 Register(lua, "Sleep", this, typeof(int));
                 Register(lua, "GetRunningTime", this);
-                Register(lua, "DrawString", this, typeof(string), typeof(string), typeof(double), typeof(double), typeof(string), typeof(double), typeof(double));
+                Register(lua, "DrawString", this, typeof(string), typeof(string), typeof(double), typeof(double), typeof(double), typeof(double), typeof(double), typeof(double), typeof(double));
                 Register(lua, "ClearLcd", this);
                 Register(lua, "ClearGraphics", this);
                 Register(lua, "SetBacklightColor", this, typeof(double), typeof(double), typeof(double));
@@ -127,6 +133,7 @@ namespace GNet.Scripting
                     for (e = GetKeyEvent(); e.IsEmpty == false; e = GetKeyEvent())
                     {
                         System.Diagnostics.Debug.WriteLine(e.Key);
+
                         #region check input
 
                         if (e.Key != G13Keys.None)
@@ -271,12 +278,12 @@ namespace GNet.Scripting
             return (int)ts.TotalMilliseconds;
         }
 
-        public void DrawString(string text, string fontName, double fontSize, double fontStyle, string htmlColor, double x, double y)
+        public void DrawString(string text, string fontName, double fontSize, double fontStyle, double x, double y, double red, double green, double blue)
         {
             if (lcd == null || !lcd.IsOpen)
                 return;
 
-            lcd.DrawString(text, fontName, fontSize, fontStyle, htmlColor, x, y);
+            lcd.DrawString(text, fontName, fontSize, fontStyle, x, y, Color.FromArgb(255, (int)red, (int)green, (int)blue));
         }
 
         public void SetBacklightColorHtml(string htmlColor)

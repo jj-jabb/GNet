@@ -29,6 +29,25 @@ namespace GNet.LgLcd
         public Bitmap Bitmap { get { return bitmap; } }
         public Graphics Graphics { get { return graphics; } }
 
+        protected override void OnNotified(int code, int param1, int param2, int param3, int param4)
+        {
+            base.OnNotified(code, param1, param2, param3, param4);
+
+            switch (code)
+            {
+                case Sdk.LGLCD_NOTIFICATION_DEVICE_ARRIVAL:
+                    Clear();
+                    BringToFront();
+                    break;
+
+                case Sdk.LGLCD_NOTIFICATION_DEVICE_REMOVAL:
+                    break;
+
+                case Sdk.LGLCD_NOTIFICATION_CLOSE_CONNECTION:
+                    break;
+            }
+        }
+
         void UpdateBitmap(int priority)
         {
             if (!IsOpen)

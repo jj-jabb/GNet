@@ -19,8 +19,6 @@ namespace GNet.LgLcd
             graphics = Graphics.FromImage(bitmap);
             graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
             graphics.Clear(Color.Black);
-
-            OpenByType();
         }
 
         Bitmap bitmap;
@@ -62,12 +60,12 @@ namespace GNet.LgLcd
             bitmap.UnlockBits(bitdata);
         }
 
-        public void DrawString(string text, string fontName, double fontSize, double fontStyle, string htmlColor, double x, double y, int priority = LGLCD_PRIORITY_NORMAL)
+        public void DrawString(string text, string fontName, double fontSize, double fontStyle, double x, double y, string htmlColor, int priority = LGLCD_PRIORITY_NORMAL)
         {
-            DrawString(text, fontName, fontSize, fontStyle, ColorTranslator.FromHtml(htmlColor), x, y, priority);
+            DrawString(text, fontName, fontSize, fontStyle, x, y, ColorTranslator.FromHtml(htmlColor), priority);
         }
 
-        public void DrawString(string text, string fontName, double fontSize, double fontStyle, Color color, double x, double y, int priority = LGLCD_PRIORITY_NORMAL)
+        public void DrawString(string text, string fontName, double fontSize, double fontStyle, double x, double y, Color color, int priority = LGLCD_PRIORITY_NORMAL)
         {
             FontStyle fstyle = (FontStyle)fontStyle;
             float fsize = (float)fontSize;

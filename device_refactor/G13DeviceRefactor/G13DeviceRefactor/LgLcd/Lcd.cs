@@ -45,7 +45,7 @@ namespace GNet.LgLcd
                     break;
 
                 case Sdk.LGLCD_NOTIFICATION_DEVICE_REMOVAL:
-                    //Close();
+                    Close();
                     isOpen = false;
                     break;
 
@@ -84,9 +84,10 @@ namespace GNet.LgLcd
                 return true;
 
             var val = lgLcdClose(openContext.device);
-            if (ERROR_SUCCESS == val)
+            //if (ERROR_SUCCESS == val)
             {
                 isOpen = false;
+                openContext = lgLcdOpenByTypeContext.Empty;
                 return true;
             }
 

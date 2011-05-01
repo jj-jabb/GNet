@@ -24,18 +24,19 @@ namespace GNet.LgLcd
             this.capabilities = capabilities;
 
             connection = new Connection();
-            connection.Notified += new Connection.NotificationEventHandler(OnNotified);
+            connection.Notified += new NotificationEventHandler(OnNotified);
             connection.Connect(appName, capabilities);
         }
 
         ~Lcd()
         {
-            connection.Notified -= new Connection.NotificationEventHandler(OnNotified);
+            connection.Notified -= new NotificationEventHandler(OnNotified);
             Close();
             connection.Disconnect();
         }
 
         public event SoftButtonsChangedHandler SoftButtonsChanged;
+        public event NotificationEventHandler Notified;
 
         public Connection Connection { get { return connection; } }
         public bool IsConnected { get { return connection.IsConnected; } }
@@ -47,12 +48,11 @@ namespace GNet.LgLcd
             switch (code)
             {
                 case Sdk.LGLCD_NOTIFICATION_DEVICE_ARRIVAL:
-                    //OpenByType();
+                    OpenByType();
                     break;
 
                 case Sdk.LGLCD_NOTIFICATION_DEVICE_REMOVAL:
-                    //Close();
-                    //isOpen = false;
+                    Close();
                     break;
 
                 case Sdk.LGLCD_NOTIFICATION_CLOSE_CONNECTION:
@@ -60,6 +60,9 @@ namespace GNet.LgLcd
                     connection.Disconnect();
                     break;
             }
+
+            if (Notified != null)
+                Notified(code, param1, param2, param3, param4);
         }
 
         protected bool OpenByType()
@@ -90,13 +93,14 @@ namespace GNet.LgLcd
                 return true;
 
             var val = lgLcdClose(openContext.device);
-            if (ERROR_SUCCESS == val)
+            //if (ERROR_SUCCESS == val)
             {
                 isOpen = false;
+                openContext = lgLcdOpenByTypeContext.Empty;
                 return true;
             }
 
-            return false;
+            //return false;
         }
 
         public bool BringToFront()

@@ -3,10 +3,10 @@ using System.Runtime.InteropServices;
 
 namespace GNet.LgLcd
 {
+    public delegate void NotificationEventHandler(int code, int param1, int param2, int param3, int param4);
+
     public class Connection : Sdk, IDisposable
     {
-        public delegate void NotificationEventHandler(int code, int param1, int param2, int param3, int param4);
-
         static InitManager initManager;
 
         static Connection()

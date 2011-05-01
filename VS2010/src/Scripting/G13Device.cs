@@ -31,8 +31,6 @@ namespace GNet.Scripting
 
         object scriptLock;
 
-        string lcdAppName;
-
         JoystickPosition joystick;
         KeyRepeater keyRepeater;
 

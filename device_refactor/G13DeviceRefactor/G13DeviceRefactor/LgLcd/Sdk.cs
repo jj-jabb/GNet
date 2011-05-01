@@ -329,6 +329,9 @@ namespace GNet.LgLcd
             public lgLcdSoftbuttonsChangedContext onSoftbuttonsChanged;
             // --> Device handle
             public int device;
+
+            static lgLcdOpenByTypeContext empty = new lgLcdOpenByTypeContext();
+            public static lgLcdOpenByTypeContext Empty { get { return empty; } }
         }
 
 

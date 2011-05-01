@@ -12,7 +12,7 @@ poll = false
 
 function WriteLcd(text)
     ClearGraphics()
-    DrawString(text, 'Microsoft Sans Serif', 10, 0, '#FFFFFF', 0, 0)
+    DrawString(text, 'Microsoft Sans Serif', 10, 0, 0, 0, 255, 255, 255)
 end
 
 -- NOTE: currently family is ALWAYS 'lhc' since the only currently supported
