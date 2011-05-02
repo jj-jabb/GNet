@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -7,9 +9,8 @@ using LuaInterface;
 
 using GNet;
 using GNet.IO;
-using System.Reflection;
-using System.Drawing;
 using GNet.LgLcd;
+using GNet.Properties;
 
 namespace GNet.Scripting
 {
@@ -41,6 +42,7 @@ namespace GNet.Scripting
             {
                 ClearGraphics();
                 DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, 0, 0, 255, 255, 255);
+
                 lcd.BringToFront();
             }
         }
@@ -66,6 +68,9 @@ namespace GNet.Scripting
             try
             {
                 DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, 0, 0, 255, 255, 255);
+
+                lcd.DrawImage(Resources.checkmark_icon_16, 92f, 25f);
+                lcd.DrawImage(Resources.cancel_icon_16, 132f, 25f);
                 lcd.BringToFront();
 
                 lua = new Lua();

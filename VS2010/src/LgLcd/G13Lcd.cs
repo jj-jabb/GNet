@@ -75,8 +75,22 @@ namespace GNet.LgLcd
 
             using (Font f = new Font(fontName, fsize, fstyle))
             {
-                graphics.DrawString(text, f, brush, 0f, 0f);
+                graphics.DrawString(text, f, brush, fx, fy);
             }
+
+            UpdateBitmap(priority);
+        }
+
+        public void DrawImage(Image image, float x, float y, int priority = LGLCD_PRIORITY_NORMAL)
+        {
+            graphics.DrawImage(image, x, y);
+
+            UpdateBitmap(priority);
+        }
+
+        public void DrawImage(Bitmap bitmap, float x, float y, int priority = LGLCD_PRIORITY_NORMAL)
+        {
+            graphics.DrawImage(bitmap, x, y);
 
             UpdateBitmap(priority);
         }

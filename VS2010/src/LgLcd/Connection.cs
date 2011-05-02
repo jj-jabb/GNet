@@ -73,14 +73,23 @@ namespace GNet.LgLcd
                 onNotify = notifyContext
             };
 
-            isConnected = lgLcdConnectEx(ref connectContext) == ERROR_SUCCESS;
+            var val = lgLcdConnectEx(ref connectContext);
+            isConnected = val == ERROR_SUCCESS;
 
             return isConnected;
         }
 
         public void Disconnect()
         {
-            lgLcdDisconnect(connectContext.connection);
+            try
+            {
+                var val = lgLcdDisconnect(connectContext.connection);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+            }
+
             isConnected = false;
         }
 

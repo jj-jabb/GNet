@@ -360,12 +360,15 @@
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\SyntaxModes.xml" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\TextEditorControl.bmp" />
     <Content Include="GentlefaceIcons.txt" />
+    <Content Include="Images\cancel_icon&amp;16.png" />
+    <Content Include="Images\checkmark_icon&amp;16.png" />
     <Content Include="IO\Hook Readme.txt" />
     <Content Include="LgLcd.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\TrayIcon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

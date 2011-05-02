@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 
 using GNet.Scripting;
+using GNet.LgLcd;
+using GNet.Properties;
 
 namespace GNet
 {
@@ -107,14 +109,60 @@ namespace GNet
                 tbxExecutable.Text = ofdBrowse.FileName;
         }
 
+        G13Lcd lcd;
         private void btnSelect_Click(object sender, EventArgs e)
         {
+            G13Lcd lcd = null;
+            //lcd = new G13Lcd("GNet Profiler - Program Select");
 
+            NotificationEventHandler notify = null;
+            Lcd.SoftButtonsChangedHandler softButtonsChanged = null;
+
+            notify = (code, p1, p2, p3, p4) =>
+            {
+                if (lcd.IsOpen)
+                {
+                    lcd.DrawImage(Resources.checkmark_icon_16, 92f, 25f);
+                    lcd.DrawImage(Resources.cancel_icon_16, 132f, 25f);
+                    lcd.BringToFront();
+                }
+            };
+
+            softButtonsChanged = buttons =>
+            {
+                lcd.Close();
+                lcd.Connection.Disconnect();
+                lcd.Notified -= notify;
+                lcd.SoftButtonsChanged -= softButtonsChanged;
+            };
+
+            lcd = new G13Lcd("GNet Profiler - Program Select");
+            lcd.Notified += notify;
+            lcd.SoftButtonsChanged += softButtonsChanged;
+
+            //if (lcd.OpenByType())
+            //{
+            //    //DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, 0, 0, 255, 255, 255);
+
+            //    Lcd.SoftButtonsChangedHandler softButtonsChanged = null;
+            //    softButtonsChanged = new Lcd.SoftButtonsChangedHandler(buttons =>
+            //    {
+            //        lcd.Close();
+            //        lcd.SoftButtonsChanged -= softButtonsChanged;
+            //        lcd = null;
+            //    });
+            //    lcd.SoftButtonsChanged += softButtonsChanged;
+
+            //    lcd.DrawImage(Resources.checkmark_icon_16, 92f, 25f);
+            //    lcd.DrawImage(Resources.cancel_icon_16, 132f, 25f);
+            //    lcd.BringToFront();
+            //}
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-
+            tbxExecutable.Text = "";
+            btnClear.Enabled = false;
         }
 
         void ReadHeader()
@@ -166,6 +214,14 @@ namespace GNet
         {
             cbxCopyExisting.DataSource = GetCopyableProfiles();
             cbxCopyExisting.DisplayMember = "Name";
+        }
+
+        private void tbxExecutable_TextChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(tbxExecutable.Text))
+                btnClear.Enabled = false;
+            else
+                btnClear.Enabled = true;
         }
     }
 }

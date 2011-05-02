@@ -65,7 +65,7 @@ namespace GNet.LgLcd
                 Notified(code, param1, param2, param3, param4);
         }
 
-        protected bool OpenByType()
+        public bool OpenByType()
         {
             if (isOpen)
                 return true;
