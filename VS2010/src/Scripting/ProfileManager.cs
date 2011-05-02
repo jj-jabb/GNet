@@ -129,7 +129,7 @@ namespace GNet.Scripting
             List<Profile> profileList;
             bool profileFound = false;
 
-            if (profilesByExePath.TryGetValue(filePath, out profileList) && profileList.Count > 0 && profileList[0].Header.IsEnabled)
+            if (profilesByExePath.TryGetValue(filePath.ToLower(), out profileList) && profileList.Count > 0 && profileList[0].Header.IsEnabled)
             {
                 profileFound = true;
 
@@ -168,13 +168,13 @@ namespace GNet.Scripting
 
                     if (profile.Header.Executable != null)
                     {
-                        if (profilesByExePath.TryGetValue(profile.Header.Executable, out profileList))
+                        if (profilesByExePath.TryGetValue(profile.Header.Executable.ToLower(), out profileList))
                             profileList.Add(profile);
                         else
                         {
                             profileList = new List<Profile>();
                             profileList.Add(profile);
-                            profilesByExePath[profile.Header.Executable] = profileList;
+                            profilesByExePath[profile.Header.Executable.ToLower()] = profileList;
                         }
                     }
 
