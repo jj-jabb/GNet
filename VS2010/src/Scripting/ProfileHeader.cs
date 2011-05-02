@@ -23,24 +23,26 @@ namespace GNet.Scripting
 
         public static ProfileHeader Load(string headerPath)
         {
-            if (File.Exists(headerPath))
+            var path = Path.Combine(ProfileManager.Basepath, headerPath);
+            if (File.Exists(path))
             {
                 XmlSerializer xmlser = new XmlSerializer(typeof(ProfileHeader));
-                using (var fs = File.OpenRead(headerPath))
+                using (var fs = File.OpenRead(path))
                 {
                     var header = xmlser.Deserialize(fs) as ProfileHeader;
-                    header.Headerpath = headerPath;
+                    header.Headerpath = Path.GetFileName(path);
                     return header;
                 }
             }
 
-            throw new FileNotFoundException("Could not find header file " + headerPath, headerPath);
+            throw new FileNotFoundException("Could not find header file " + path, path);
         }
 
         public static void Save(ProfileHeader header)
         {
             XmlSerializer xmlser = new XmlSerializer(typeof(ProfileHeader));
-            using (var fs = File.CreateText(header.Headerpath))
+            var path = Path.Combine(ProfileManager.Basepath, header.Headerpath);
+            using (var fs = File.CreateText(path))
             {
                 xmlser.Serialize(fs, header);
             }

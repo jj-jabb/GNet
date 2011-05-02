@@ -128,7 +128,8 @@ namespace GNet.IO
         public void ClearKey()
         {
             lastKeyPressed = 0;
-            keyRepeatEvent.Set();
+            if (!keyRepeatEvent.SafeWaitHandle.IsClosed)
+                keyRepeatEvent.Set();
         }
 
         public void Dispose()

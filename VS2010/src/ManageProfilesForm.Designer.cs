@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManageProfilesForm));
             this.btnOpen = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.lblEnabledItemsDesc = new System.Windows.Forms.Label();
@@ -116,6 +117,7 @@
             this.Controls.Add(this.lblEnabledItemsDesc);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnOpen);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ManageProfilesForm";
             this.Text = "Manage Profiles";
             this.Load += new System.EventHandler(this.ManageProfilesForm_Load);

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ProfileHeader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Headerpath>Default Configuration.lua.header</Headerpath>
-  <Filepath>Default Configuration.lua</Filepath>
-  <Name>Default Configuration</Name>
-  <Description>The Default Configuration (really a showcase of available Lua functionality)</Description>
+  <Headerpath>Showcase.lua.header</Headerpath>
+  <Filepath>Showcase.lua</Filepath>
+  <Name>Showcase</Name>
+  <Description>Showcase of available Lua functionality</Description>
   <Device>G13</Device>
   <Lock>false</Lock>
   <Executable />

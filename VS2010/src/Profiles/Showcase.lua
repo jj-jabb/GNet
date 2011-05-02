@@ -152,5 +152,8 @@ function OnEvent(event, arg, family, e1, e2, e3)
         extra = ' - X: '..e1..', Y: '..e2
     end
     
-    OutputLogMessage(event..' : '..arg..' : '..family..extra)
+	-- Logging can suck up CPU time (3%-10%) on lower-end systems.
+	-- Performanc issues will be revisited in the future; for now, only 
+	-- use it when debugging
+    -- OutputLogMessage(event..' : '..arg..' : '..family..extra)
 end

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProfilePropertiesDialog));
             this.lblName = new System.Windows.Forms.Label();
             this.lblDescription = new System.Windows.Forms.Label();
             this.tbxName = new System.Windows.Forms.TextBox();
@@ -373,6 +374,7 @@
             this.Controls.Add(this.tbxName);
             this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.lblName);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(546, 417);

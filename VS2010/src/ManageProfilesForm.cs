@@ -100,7 +100,13 @@ namespace GNet
                 if (profile != null && profile.Header != null)
                 {
                     ProfilePropertiesDialog ppd = new ProfilePropertiesDialog(profile.Header);
-                    ppd.ShowDialog();
+                    ppd.Text = "Profile properties for " + profile.Header.Name;
+
+                    if (ppd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        profile.Header.Save();
+                        ProfileManager.Current.LoadProfiles();
+                    }
                 }
             }
         }

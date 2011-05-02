@@ -1,0 +1,26 @@
+Copyright (c) 2011 jj.jabbaloo (public key follows)
+
+---- BEGIN SSH2 PUBLIC KEY ----
+Comment: "rsa-key-20110124"
+AAAAB3NzaC1yc2EAAAABJQAAAIEAxj+40eRtkW1+Pp35ijUNG53MrN7O0gLciOAe
+YMmFy9mLrSHZQPR/qQfrg5fYw3ZAqQ9T3S2nbNWK7WzJvrjSVHKvbJawJ3HjcRiJ
+/2/reskcmwkAnybpl6Wh3uBU61xz8rsVIl0b84qzrj4dPzhHuD7KBPn9iy77SBno
+wClPDPk=
+---- END SSH2 PUBLIC KEY ----
+
+Permission is hereby granted, free of charge, to any person obtaining a copy 
+of this software and associated documentation files (the "Software"), to deal 
+in the Software without restriction, including without limitation the rights 
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+copies of the Software, and to permit persons to whom the Software is furnished 
+to do so, subject to the following conditions:
+
+The above copyright notice, public key, and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

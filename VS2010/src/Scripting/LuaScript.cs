@@ -110,20 +110,20 @@ namespace GNet.Scripting
                 if (lua != null)
                     lua.Close();
 
+                lua = null;
+
                 inError = true;
                 OnScriptError(ex);
             }
 
-            if (onEvent != null)
+            try
             {
-                try
-                {
+                if (onEvent != null && !inError)
                     onEvent.Call("PROFILE_ACTIVATED", 0, "lhc");
-                }
-                catch (Exception ex)
-                {
-                    OutputLogMessage(ex.ToString());
-                }
+            }
+            catch (Exception ex)
+            {
+                OutputLogMessage(ex.ToString());
             }
 
             while (IsRunning)
@@ -143,7 +143,8 @@ namespace GNet.Scripting
                                 var keyName = e.Key.ToString();
                                 var evnt = keyName.Substring(0, 1) + (e.IsPressed ? "_PRESSED" : "_RELEASED");
                                 var arg = int.Parse(keyName.Substring(1));
-                                onEvent.Call(evnt, arg, "lhc");
+                                if (onEvent != null)
+                                    onEvent.Call(evnt, arg, "lhc");
                             }
                             catch (Exception ex)
                             {
@@ -154,14 +155,15 @@ namespace GNet.Scripting
                         {
                             try
                             {
-                                onEvent.Call(
-                                    "KBD_" + (e.IsPressed ? "_PRESSED" : "_RELEASED"),
-                                    e.KeyboardEvent.KeyCode.ToString(),
-                                    "lhc",
-                                    e.KeyboardEvent.Shift.ToString(),
-                                    e.KeyboardEvent.Alt.ToString(),
-                                    e.KeyboardEvent.Control.ToString()
-                                    );
+                                if (onEvent != null)
+                                    onEvent.Call(
+                                        "KBD_" + (e.IsPressed ? "_PRESSED" : "_RELEASED"),
+                                        e.KeyboardEvent.KeyCode.ToString(),
+                                        "lhc",
+                                        e.KeyboardEvent.Shift.ToString(),
+                                        e.KeyboardEvent.Alt.ToString(),
+                                        e.KeyboardEvent.Control.ToString()
+                                        );
                             }
                             catch (Exception ex)
                             {
@@ -172,13 +174,14 @@ namespace GNet.Scripting
                         {
                             try
                             {
-                                onEvent.Call(
-                                    "MOU_" + (e.IsPressed ? "_PRESSED" : "_RELEASED"),
-                                    e.MouseEvent.Button.ToString(),
-                                    "lhc",
-                                    e.MouseEvent.X.ToString(),
-                                    e.MouseEvent.Y.ToString()
-                                    );
+                                if (onEvent != null)
+                                    onEvent.Call(
+                                        "MOU_" + (e.IsPressed ? "_PRESSED" : "_RELEASED"),
+                                        e.MouseEvent.Button.ToString(),
+                                        "lhc",
+                                        e.MouseEvent.X.ToString(),
+                                        e.MouseEvent.Y.ToString()
+                                        );
                             }
                             catch (Exception ex)
                             {
@@ -212,7 +215,8 @@ namespace GNet.Scripting
 
             try
             {
-                onEvent.Call("PROFILE_DEACTIVATED", 0, "lhc");
+                if(onEvent != null && !inError)
+                    onEvent.Call("PROFILE_DEACTIVATED", 0, "lhc");
             }
             catch (Exception ex)
             {

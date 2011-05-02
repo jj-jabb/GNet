@@ -33,11 +33,11 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.profileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageProfilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.manageProfilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,6 +105,13 @@
             this.newToolStripMenuItem.Text = "New...";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
+            // manageProfilesToolStripMenuItem
+            // 
+            this.manageProfilesToolStripMenuItem.Name = "manageProfilesToolStripMenuItem";
+            this.manageProfilesToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.manageProfilesToolStripMenuItem.Text = "Manage Profiles...";
+            this.manageProfilesToolStripMenuItem.Click += new System.EventHandler(this.manageProfilesToolStripMenuItem_Click);
+            // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Enabled = false;
@@ -132,13 +139,6 @@
             this.quitToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
-            // 
-            // manageProfilesToolStripMenuItem
-            // 
-            this.manageProfilesToolStripMenuItem.Name = "manageProfilesToolStripMenuItem";
-            this.manageProfilesToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.manageProfilesToolStripMenuItem.Text = "Manage Profiles...";
-            this.manageProfilesToolStripMenuItem.Click += new System.EventHandler(this.manageProfilesToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -402,8 +402,8 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimizeBox = false;
             this.Name = "MainForm";
             this.Text = "GNet - Logitech G-series Key Profiler for .NET 2.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);

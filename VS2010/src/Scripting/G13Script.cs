@@ -143,6 +143,8 @@ namespace GNet.Scripting
 
         protected virtual void OnScriptError(Exception ex)
         {
+            Console.WriteLine(ex.ToString());
+
             if (ScriptError != null)
                 ScriptError(ex);
         }
@@ -189,6 +191,8 @@ namespace GNet.Scripting
         {
             if (!IsRunning)
                 return;
+
+            var id = Thread.CurrentThread.ManagedThreadId;
 
             keyboardHook.Stop();
             mouseHook.Stop();

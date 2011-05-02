@@ -310,6 +310,7 @@
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\Tex-Mode.xshd" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\VBNET-Mode.xshd" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\XML-Mode.xshd" />
+    <None Include="LICENSE" />
     <None Include="Profiles\Boo\Default Configuration.boo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -325,13 +326,13 @@
     <None Include="Profiles\Sample.boo.header">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Profiles\Default Configuration.lua">
+    <None Include="Profiles\Showcase.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Lua\Default Configuration.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Profiles\Default Configuration.lua.header">
+    <None Include="Profiles\Showcase.lua.header">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Lua\_default.lua">
@@ -343,6 +344,7 @@
     <None Include="Profiles\_default.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Profiles\_template.lua" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -357,6 +359,7 @@
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\RightArrow.cur" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\SyntaxModes.xml" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\TextEditorControl.bmp" />
+    <Content Include="GentlefaceIcons.txt" />
     <Content Include="IO\Hook Readme.txt" />
     <Content Include="LgLcd.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

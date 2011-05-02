@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 
 using GNet;
 
@@ -22,7 +23,7 @@ namespace GNet.Scripting
 
         public static string Basepath
         {
-            get { return Environment.CurrentDirectory + ".\\Profiles\\"; }
+            get { return Path.GetDirectoryName(Application.ExecutablePath) + ".\\Profiles\\"; }
         }
 
         public static void DisposeCurrent()
@@ -47,8 +48,18 @@ namespace GNet.Scripting
             luaScript = new LuaScript();
             luaScript.Started += new EventHandler(luaScript_Started);
             luaScript.Stopped += new EventHandler(luaScript_Stopped);
+            luaScript.ScriptError += new G13Script.ScriptErrorHandler(luaScript_ScriptError);
 
+            IsRunForExeEnabled = true;
             WMI.Current.EventSystemForeground += new EventSystemForegroundHandler(Current_EventSystemForeground);
+        }
+
+        public bool AutoRunning { get; private set; }
+        public Profile AutoProfile { get; private set; }
+
+        void luaScript_ScriptError(Exception ex)
+        {
+            Stop();
         }
 
         void luaScript_Started(object sender, EventArgs e)
@@ -99,7 +110,11 @@ namespace GNet.Scripting
         public void Stop()
         {
             if (script != null && script.IsRunning)
+            {
                 script.Stop();
+                AutoRunning = false;
+                AutoProfile = null;
+            }
         }
 
         public event EventHandler ScriptStarted;
@@ -107,16 +122,29 @@ namespace GNet.Scripting
 
         void Current_EventSystemForeground(int processId, string processName, string filePath)
         {
+            System.Diagnostics.Debug.WriteLine("Current_EventSystemForeground: " + filePath);
             if (!IsRunForExeEnabled)
                 return;
 
             List<Profile> profileList;
+            bool profileFound = false;
+
             if (profilesByExePath.TryGetValue(filePath, out profileList) && profileList.Count > 0 && profileList[0].Header.IsEnabled)
             {
-                profileList[0].Load();
-                SetProfile(profileList[0]);
-                Start();
+                profileFound = true;
+
+                if (profileList[0] != AutoProfile)
+                {
+                    profileList[0].Load();
+                    SetProfile(profileList[0]);
+                    AutoRunning = true;
+                    AutoProfile = profileList[0];
+                    Start();
+                }
             }
+
+            if (!profileFound)
+                Stop();
         }
 
         public bool IsRunForExeEnabled { get; set; }

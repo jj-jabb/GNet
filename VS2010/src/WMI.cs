@@ -37,7 +37,7 @@ namespace GNet
         WMI()
         {
             winEventDelegate = new WinEventDelegate(WinEventProcCallback);
-            hEvent = Interop.SetWinEventHook(WinEvent.EVENT_SYSTEM_FOREGROUND, WinEvent.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, winEventDelegate, 0, 0, SetWinEventHookFlags.WINEVENT_OUTOFCONTEXT | SetWinEventHookFlags.WINEVENT_SKIPOWNPROCESS);
+            hEvent = Interop.SetWinEventHook(WinEvent.EVENT_SYSTEM_FOREGROUND, WinEvent.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, winEventDelegate, 0, 0, SetWinEventHookFlags.WINEVENT_OUTOFCONTEXT);
         }
 
         ~WMI()

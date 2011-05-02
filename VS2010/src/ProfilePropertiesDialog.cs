@@ -132,7 +132,9 @@ namespace GNet
             header.Lock = chkLock.Checked;
 
             if (chkCopyExisting.Checked)
-                CopyFrom = cbxCopyExisting.SelectedItem.ToString();
+            {
+                CopyFrom = ((ProfileHeader)cbxCopyExisting.SelectedItem).Filepath;
+            }
 
             header.Executable = tbxExecutable.Text;
 

@@ -13,6 +13,8 @@ namespace GNet
 {
     public partial class MainForm : Form
     {
+        delegate void InvokeAction();
+
         TextWriter originalout;
         WinFormsTextBoxStreamWriter tbsw;
         bool quit;
@@ -38,7 +40,27 @@ namespace GNet
             tbsw = new WinFormsTextBoxStreamWriter(output);
             Console.SetOut(tbsw);
 
-            var c = ProfileManager.Current;
+            ProfileManager.Current.ScriptStarted += new EventHandler(Current_ScriptStarted);
+            ProfileManager.Current.ScriptStopped += new EventHandler(Current_ScriptStopped);
+        }
+
+        void Current_ScriptStarted(object sender, EventArgs e)
+        {
+        }
+
+        void Current_ScriptStopped(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+                Invoke(new InvokeAction(ScriptStopped));
+            else
+                ScriptStopped();
+        }
+
+        void ScriptStopped()
+        {
+            stopToolStripButton.Enabled = false;
+            runToolStripButton.Enabled = true;
+            documentTabs.Enabled = true;
         }
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -105,7 +127,7 @@ namespace GNet
 
                 var fileName = MakeSafeFilename(header.Name);
                 string ext;
-                var basePath = "Profiles\\" + header.Language + "\\";
+                var basePath = ProfileManager.Basepath;
 
                 switch (header.Language)
                 {
@@ -124,10 +146,11 @@ namespace GNet
 
                 if (File.Exists(basePath + fileName + ext))
                 {
-                    int fileCount = 1;
+                    int fileCount = 2;
                     while (File.Exists(basePath + fileName + fileCount + ext))
                         fileCount++;
                     fileName += fileCount;
+                    header.Name += fileCount;
                 }
 
                 fileName = fileName + ext;
@@ -135,7 +158,7 @@ namespace GNet
                 bool copied = false;
                 if (d.CopyFrom != null)
                 {
-                    var copyFrom = basePath + d.CopyFrom + ext;
+                    var copyFrom = basePath + d.CopyFrom;
                     if (File.Exists(copyFrom))
                     {
                         File.Copy(copyFrom, basePath + fileName);
@@ -155,6 +178,8 @@ namespace GNet
                 header.Headerpath = fileName + ".header";
                 header.Filepath = fileName;
                 header.Save();
+
+                ProfileManager.Current.LoadProfiles();
 
                 newProfile.Load();
 
@@ -330,24 +355,25 @@ namespace GNet
             if (result == DialogResult.OK)
             {
                 editor.Profile.Header.Save();
+                ProfileManager.Current.LoadProfiles();
             }
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            notifyIcon1.BalloonTipTitle = "GNet Profiler";
-            notifyIcon1.BalloonTipText = "GNet Profiler has been minimized.";
+            //notifyIcon1.BalloonTipTitle = "GNet Profiler";
+            //notifyIcon1.BalloonTipText = "GNet Profiler has been minimized.";
 
-            if (FormWindowState.Minimized == this.WindowState)
-            {
-                notifyIcon1.Visible = true;
-                notifyIcon1.ShowBalloonTip(500);
-                this.Hide();
-            }
-            else if (FormWindowState.Normal == this.WindowState)
-            {
-                //notifyIcon1.Visible = false;
-            }
+            //if (FormWindowState.Minimized == this.WindowState)
+            //{
+            //    notifyIcon1.Visible = true;
+            //    notifyIcon1.ShowBalloonTip(500);
+            //    this.Hide();
+            //}
+            //else if (FormWindowState.Normal == this.WindowState)
+            //{
+            //    //notifyIcon1.Visible = false;
+            //}
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -402,16 +428,16 @@ namespace GNet
                 stopToolStripButton.Enabled = true;
                 runToolStripButton.Enabled = false;
                 documentTabs.Enabled = false;
-                ProfileManager.Current.SetProfile(editor.Profile).Start();
+                ProfileManager.Current.IsRunForExeEnabled = false;
+                ProfileManager.Current.SetProfile(editor.Profile);
+                ProfileManager.Current.Start();
             }
         }
 
         private void stopToolStripButton_Click(object sender, EventArgs e)
         {
+            ProfileManager.Current.IsRunForExeEnabled = true;
             ProfileManager.Current.Stop();
-            stopToolStripButton.Enabled = false;
-            runToolStripButton.Enabled = true;
-            documentTabs.Enabled = true;
         }
 
         private void manageProfilesToolStripMenuItem_Click(object sender, EventArgs e)
