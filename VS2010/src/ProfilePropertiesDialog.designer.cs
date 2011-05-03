@@ -384,6 +384,7 @@
             this.Name = "ProfilePropertiesDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "New Profile";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ProfilePropertiesDialog_FormClosed);
             this.Load += new System.EventHandler(this.NewProfileDialog_Load);
             this.gbxExecutables.ResumeLayout(false);
             this.gbxExecutables.PerformLayout();

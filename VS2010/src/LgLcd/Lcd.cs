@@ -103,13 +103,16 @@ namespace GNet.LgLcd
             //return false;
         }
 
+        public bool IsInFront { get; private set; }
+
         public bool BringToFront()
         {
             if (!isOpen)
                 return false;
 
             var result = lgLcdSetAsLCDForegroundApp(openContext.device, 1);
-            return ERROR_SUCCESS == result;
+            IsInFront = result == ERROR_SUCCESS;
+            return IsInFront;
         }
 
         public bool RemoveFromFront()
@@ -117,7 +120,10 @@ namespace GNet.LgLcd
             if (!isOpen)
                 return false;
 
-            return ERROR_SUCCESS == lgLcdSetAsLCDForegroundApp(openContext.device, 0);
+            var result = lgLcdSetAsLCDForegroundApp(openContext.device, 0);
+            var success = result == ERROR_SUCCESS;
+            IsInFront = !success;
+            return success;
         }
 
         int LcdOnSoftButtonsCB(int device, int dwButtons, IntPtr pContext)

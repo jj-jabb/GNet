@@ -21,23 +21,23 @@ namespace GNet.LgLcd
 
 
         // Common Soft-Buttons available through the SDK
-        public const uint LGLCDBUTTON_LEFT = 0x00000100;
-        public const uint LGLCDBUTTON_RIGHT = 0x00000200;
-        public const uint LGLCDBUTTON_OK = 0x00000400;
-        public const uint LGLCDBUTTON_CANCEL = 0x00000800;
-        public const uint LGLCDBUTTON_UP = 0x00001000;
-        public const uint LGLCDBUTTON_DOWN = 0x00002000;
-        public const uint LGLCDBUTTON_MENU = 0x00004000;
+        public const int LGLCDBUTTON_LEFT = 0x00000100;
+        public const int LGLCDBUTTON_RIGHT = 0x00000200;
+        public const int LGLCDBUTTON_OK = 0x00000400;
+        public const int LGLCDBUTTON_CANCEL = 0x00000800;
+        public const int LGLCDBUTTON_UP = 0x00001000;
+        public const int LGLCDBUTTON_DOWN = 0x00002000;
+        public const int LGLCDBUTTON_MENU = 0x00004000;
 
         // Soft-Button masks. Kept for backwards compatibility
-        public const uint LGLCDBUTTON_BUTTON0 = 0x00000001;
-        public const uint LGLCDBUTTON_BUTTON1 = 0x00000002;
-        public const uint LGLCDBUTTON_BUTTON2 = 0x00000004;
-        public const uint LGLCDBUTTON_BUTTON3 = 0x00000008;
-        public const uint LGLCDBUTTON_BUTTON4 = 0x00000010;
-        public const uint LGLCDBUTTON_BUTTON5 = 0x00000020;
-        public const uint LGLCDBUTTON_BUTTON6 = 0x00000040;
-        public const uint LGLCDBUTTON_BUTTON7 = 0x00000080;
+        public const int LGLCDBUTTON_BUTTON0 = 0x00000001;
+        public const int LGLCDBUTTON_BUTTON1 = 0x00000002;
+        public const int LGLCDBUTTON_BUTTON2 = 0x00000004;
+        public const int LGLCDBUTTON_BUTTON3 = 0x00000008;
+        public const int LGLCDBUTTON_BUTTON4 = 0x00000010;
+        public const int LGLCDBUTTON_BUTTON5 = 0x00000020;
+        public const int LGLCDBUTTON_BUTTON6 = 0x00000040;
+        public const int LGLCDBUTTON_BUTTON7 = 0x00000080;
 
         //************************************************************************
         // lgLcdDeviceDesc

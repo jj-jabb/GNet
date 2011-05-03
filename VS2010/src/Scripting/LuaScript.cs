@@ -22,11 +22,11 @@ namespace GNet.Scripting
 
         DateTime startTime;
 
-        G13Lcd lcd;
+        GNetLcd lcd;
 
         public LuaScript()
         {
-            lcd = new G13Lcd("GNet Profiler");
+            lcd = GNetLcd.Current;
             lcd.Notified += new NotificationEventHandler(Connection_Notified);
             SingleKeyEvents = true;
         }
@@ -67,6 +67,7 @@ namespace GNet.Scripting
 
             try
             {
+                lcd.Graphics.Clear(Color.Black);
                 DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, 0, 0, 255, 255, 255);
 
                 lcd.DrawImage(Resources.checkmark_icon_16, 92f, 25f);
@@ -137,8 +138,6 @@ namespace GNet.Scripting
                 {
                     for (e = GetKeyEvent(); e.IsEmpty == false; e = GetKeyEvent())
                     {
-                        System.Diagnostics.Debug.WriteLine(e.Key);
-
                         #region check input
 
                         if (e.Key != G13Keys.None)
@@ -198,7 +197,6 @@ namespace GNet.Scripting
 
                         if (!IsRunning)
                         {
-                            System.Diagnostics.Debug.WriteLine("Not Running - break");
                             break;
                         }
                     }

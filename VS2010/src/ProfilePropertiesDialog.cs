@@ -14,6 +14,8 @@ namespace GNet
 {
     public partial class ProfilePropertiesDialog : Form
     {
+        delegate void NotifyHandler(int buttons);
+
         bool isNew;
         ProfileHeader header;
 
@@ -30,6 +32,8 @@ namespace GNet
         public ProfilePropertiesDialog(ProfileHeader header)
         {
             InitializeComponent();
+
+            GNetLcd.Current.SoftButtonsChanged += new Lcd.SoftButtonsChangedHandler(lcd_SoftButtonsChanged);
 
             DialogResult = DialogResult.Cancel;
 
@@ -109,54 +113,39 @@ namespace GNet
                 tbxExecutable.Text = ofdBrowse.FileName;
         }
 
-        G13Lcd lcd;
         private void btnSelect_Click(object sender, EventArgs e)
         {
-            G13Lcd lcd = null;
-            //lcd = new G13Lcd("GNet Profiler - Program Select");
+            var lcd = GNetLcd.Current;
+            lcd.Graphics.Clear(Color.Black);
+            lcd.DrawString("Select OK when the program\nis in the foreground", "Arial", 8, 0, 0, 0, Color.White);
+            lcd.DrawImage(Resources.checkmark_icon_16, 92f, 25f);
+            lcd.DrawImage(Resources.cancel_icon_16, 132f, 25f);
+            lcd.BringToFront();
+        }
 
-            NotificationEventHandler notify = null;
-            Lcd.SoftButtonsChangedHandler softButtonsChanged = null;
+        void lcd_SoftButtonsChanged(int buttons)
+        {
+            if (InvokeRequired)
+                Invoke(new NotifyHandler(Notified), buttons);
+            else
+                Notified(buttons);
+        }
 
-            notify = (code, p1, p2, p3, p4) =>
+        void Notified(int buttons)
+        {
+            switch (buttons)
             {
-                if (lcd.IsOpen)
-                {
-                    lcd.DrawImage(Resources.checkmark_icon_16, 92f, 25f);
-                    lcd.DrawImage(Resources.cancel_icon_16, 132f, 25f);
-                    lcd.BringToFront();
-                }
-            };
+                case 0:
+                    GNetLcd.Current.RemoveFromFront();
+                    break;
+                case GNetLcd.LGLCDBUTTON_BUTTON2:
+                    if (ProfileManager.Current.ForegroundProcessPath.ToLower() != Application.ExecutablePath.ToLower())
+                        tbxExecutable.Text = ProfileManager.Current.ForegroundProcessPath;
+                    break;
 
-            softButtonsChanged = buttons =>
-            {
-                lcd.Close();
-                lcd.Connection.Disconnect();
-                lcd.Notified -= notify;
-                lcd.SoftButtonsChanged -= softButtonsChanged;
-            };
-
-            lcd = new G13Lcd("GNet Profiler - Program Select");
-            lcd.Notified += notify;
-            lcd.SoftButtonsChanged += softButtonsChanged;
-
-            //if (lcd.OpenByType())
-            //{
-            //    //DrawString("GNet Profiler\nLua Runner\nAlpha Release", "Tahoma", 9, 0, 0, 0, 255, 255, 255);
-
-            //    Lcd.SoftButtonsChangedHandler softButtonsChanged = null;
-            //    softButtonsChanged = new Lcd.SoftButtonsChangedHandler(buttons =>
-            //    {
-            //        lcd.Close();
-            //        lcd.SoftButtonsChanged -= softButtonsChanged;
-            //        lcd = null;
-            //    });
-            //    lcd.SoftButtonsChanged += softButtonsChanged;
-
-            //    lcd.DrawImage(Resources.checkmark_icon_16, 92f, 25f);
-            //    lcd.DrawImage(Resources.cancel_icon_16, 132f, 25f);
-            //    lcd.BringToFront();
-            //}
+                case GNetLcd.LGLCDBUTTON_BUTTON3:
+                    break;
+            }
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -222,6 +211,13 @@ namespace GNet
                 btnClear.Enabled = false;
             else
                 btnClear.Enabled = true;
+        }
+
+        private void ProfilePropertiesDialog_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (GNetLcd.Current.IsInFront)
+                GNetLcd.Current.RemoveFromFront();
+            GNetLcd.Current.SoftButtonsChanged -= new Lcd.SoftButtonsChangedHandler(lcd_SoftButtonsChanged);
         }
     }
 }

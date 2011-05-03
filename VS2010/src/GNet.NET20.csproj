@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GNetLcd.cs" />
     <Compile Include="Hid\Device.cs" />
     <Compile Include="Hid\Device.Static.cs" />
     <Compile Include="Hid\DeviceAttributes.cs" />

@@ -122,7 +122,9 @@ namespace GNet.Scripting
 
         void Current_EventSystemForeground(int processId, string processName, string filePath)
         {
-            System.Diagnostics.Debug.WriteLine("Current_EventSystemForeground: " + filePath);
+            System.Diagnostics.Debug.WriteLine("Foreground App Switched: " + processId + " -- " + filePath);
+            ForegroundProcessPath = filePath;
+
             if (!IsRunForExeEnabled)
                 return;
 
@@ -148,6 +150,7 @@ namespace GNet.Scripting
         }
 
         public bool IsRunForExeEnabled { get; set; }
+        public string ForegroundProcessPath { get; private set; }
 
         public List<Profile> LoadProfiles()
         {
