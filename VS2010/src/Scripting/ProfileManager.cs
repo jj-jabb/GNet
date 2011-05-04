@@ -120,8 +120,24 @@ namespace GNet.Scripting
         public event EventHandler ScriptStarted;
         public event EventHandler ScriptStopped;
 
+        delegate void InvokeEventSystemForeground(int processId, string processName, string filePath);
+
         void Current_EventSystemForeground(int processId, string processName, string filePath)
         {
+            if (MainForm.Current != null)
+            {
+                if (MainForm.Current.InvokeRequired)
+                    MainForm.Current.Invoke(new InvokeEventSystemForeground(OnEventSystemForeground), processId, processName, filePath);
+                else
+                    OnEventSystemForeground(processId, processName, filePath);
+            }
+
+        }
+
+        void OnEventSystemForeground(int processId, string processName, string filePath)
+        {
+            filePath = filePath.ToLower();
+
             System.Diagnostics.Debug.WriteLine("Foreground App Switched: " + processId + " -- " + filePath);
             ForegroundProcessPath = filePath;
 
@@ -131,7 +147,17 @@ namespace GNet.Scripting
             List<Profile> profileList;
             bool profileFound = false;
 
-            if (profilesByExePath.TryGetValue(filePath.ToLower(), out profileList) && profileList.Count > 0 && profileList[0].Header.IsEnabled)
+            if (AutoProfile != null)
+            {
+                if (filePath == @"c:\windows\system32\dwm.exe")
+                {
+                    // ignore Desktop Window Manager
+                    System.Diagnostics.Debug.WriteLine("Ignoring Desktop Window Manager");
+                    return;
+                }
+            }
+
+            if (profilesByExePath.TryGetValue(filePath, out profileList) && profileList.Count > 0 && profileList[0].Header.IsEnabled)
             {
                 profileFound = true;
 

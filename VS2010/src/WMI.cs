@@ -50,6 +50,12 @@ namespace GNet
 
         static void WinEventProcCallback(IntPtr hWinEventHook, WinEvent eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
+            //var orgHwnd = hwnd;
+            //System.Threading.Thread.Sleep(300);
+            //hwnd = Interop.GetForegroundWindow();
+
+            //Debug.WriteLine("Foreground changed: orgHwnd = " + orgHwnd + ", hwnd = " + hwnd);
+
             Process process = null;
             string name = "";
             string fileName = "";

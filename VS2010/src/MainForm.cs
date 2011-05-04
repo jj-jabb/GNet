@@ -13,6 +13,8 @@ namespace GNet
 {
     public partial class MainForm : Form
     {
+        public static MainForm Current { get; private set; }
+
         delegate void InvokeAction();
 
         TextWriter originalout;
@@ -32,6 +34,8 @@ namespace GNet
             openProfiles = new List<Profile>();
 
             Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
+
+            Current = this;
         }
 
         void MainForm_Load(object sender, EventArgs e)
