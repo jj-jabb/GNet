@@ -137,6 +137,7 @@ namespace GNet
             {
                 case 0:
                     GNetLcd.Current.RemoveFromFront();
+                    PInvoke.Interop.SetForegroundWindow(this.Handle);
                     break;
                 case GNetLcd.LGLCDBUTTON_BUTTON2:
                     if (ProfileManager.Current.ForegroundProcessPath.ToLower() != Application.ExecutablePath.ToLower())
