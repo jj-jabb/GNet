@@ -9,7 +9,7 @@ using GNet.PInvoke;
 
 namespace GNet.MacroSystem
 {
-    public class Macro
+    public class Macro : Step
     {
         public static readonly Dictionary<string, Win32Point> SavedPoints = new Dictionary<string, Win32Point>();
         public static ISynchronizeInvoke SynchronizeInvoke { get; set; }

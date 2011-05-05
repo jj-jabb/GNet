@@ -13,6 +13,10 @@ namespace GNet.MacroSystem
         public InputWrapper[] Inputs { get { return inputs; } }
         public virtual Step Cleanup { get { return null; } }
 
+        public bool IsEnabled { get; set; }
+        public int RunTimestamp { get; set; }
+        public int Cooldown { get; set; }
+
         public virtual bool Equals(Step other)
         {
             if (inputs == null || other.inputs == null)
