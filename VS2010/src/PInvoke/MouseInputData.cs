@@ -19,10 +19,22 @@ namespace GNet.PInvoke
                 other.X == X &&
                 other.Y == Y &&
                 other.MouseData == MouseData &&
-                other.Flags == Flags &&
-                other.Time == Time &&
-                other.ExtraInfo == ExtraInfo
+                other.Flags == Flags //&&
+                //other.Time == Time &&
+                //other.ExtraInfo == ExtraInfo
                 ;
+        }
+
+        public override int GetHashCode()
+        {
+            return new OatHash()
+                .Hash(X)
+                .Hash(Y)
+                .Hash(MouseData)
+                .Hash((uint)Flags)
+                //.Hash(Time)
+                //.Hash(ExtraInfo)
+                .HashCode;
         }
     }
 }

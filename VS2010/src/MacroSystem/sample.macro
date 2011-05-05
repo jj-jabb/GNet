@@ -1,0 +1,15 @@
+macro [
+    name 'MyMacro' 
+    cool 100ms
+    steps 
+        down a
+        delay 100ms
+        down b, cool 1s
+        macro [
+            name 'MySubMacro'
+            steps
+                down lshift
+                down c
+                alert()
+        ]
+]

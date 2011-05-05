@@ -207,6 +207,9 @@
     <Compile Include="MacroSystem\KeyUp.cs" />
     <Compile Include="MacroSystem\Macro.cs" />
     <Compile Include="MacroSystem\MacroManager.cs" />
+    <Compile Include="MacroSystem\MacroParser.Constants.cs" />
+    <Compile Include="MacroSystem\MacroParser.Main.cs" />
+    <Compile Include="MacroSystem\MacroParser.Methods.cs" />
     <Compile Include="MacroSystem\MacroStopBehavior.cs" />
     <Compile Include="MacroSystem\MouseDown.cs" />
     <Compile Include="MacroSystem\MouseMoveTo.cs" />
@@ -216,6 +219,29 @@
     <Compile Include="MacroSystem\MouseTap.cs" />
     <Compile Include="MacroSystem\MouseUp.cs" />
     <Compile Include="MacroSystem\MouseWheel.cs" />
+    <Compile Include="MacroSystem\ParserEngine\ActionType.cs" />
+    <Compile Include="MacroSystem\ParserEngine\DFAEdge.cs" />
+    <Compile Include="MacroSystem\ParserEngine\DFAState.cs" />
+    <Compile Include="MacroSystem\ParserEngine\EntryType.cs" />
+    <Compile Include="MacroSystem\ParserEngine\Grammar.cs" />
+    <Compile Include="MacroSystem\ParserEngine\GrammarReader.cs" />
+    <Compile Include="MacroSystem\ParserEngine\InitialState.cs" />
+    <Compile Include="MacroSystem\ParserEngine\LALRParser.cs" />
+    <Compile Include="MacroSystem\ParserEngine\Location.cs" />
+    <Compile Include="MacroSystem\ParserEngine\LookAheadReader.cs" />
+    <Compile Include="MacroSystem\ParserEngine\LRAction.cs" />
+    <Compile Include="MacroSystem\ParserEngine\LRActionTable.cs" />
+    <Compile Include="MacroSystem\ParserEngine\Parameters.cs" />
+    <Compile Include="MacroSystem\ParserEngine\ParseEventArgs.cs" />
+    <Compile Include="MacroSystem\ParserEngine\ParseMessage.cs" />
+    <Compile Include="MacroSystem\ParserEngine\ParseResult.cs" />
+    <Compile Include="MacroSystem\ParserEngine\RecordType.cs" />
+    <Compile Include="MacroSystem\ParserEngine\Reduction.cs" />
+    <Compile Include="MacroSystem\ParserEngine\Rule.cs" />
+    <Compile Include="MacroSystem\ParserEngine\Symbol.cs" />
+    <Compile Include="MacroSystem\ParserEngine\SymbolType.cs" />
+    <Compile Include="MacroSystem\ParserEngine\TableCounts.cs" />
+    <Compile Include="MacroSystem\ParserEngine\Token.cs" />
     <Compile Include="MacroSystem\Step.cs" />
     <Compile Include="MacroSystem\WriteText.cs" />
     <Compile Include="ManageProfilesForm.cs">
@@ -224,6 +250,7 @@
     <Compile Include="ManageProfilesForm.Designer.cs">
       <DependentUpon>ManageProfilesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OatHash.cs" />
     <Compile Include="ProfileListView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -329,6 +356,12 @@
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\VBNET-Mode.xshd" />
     <EmbeddedResource Include="ICSharpCode.TextEditor\Resources\XML-Mode.xshd" />
     <None Include="LICENSE" />
+    <EmbeddedResource Include="MacroSystem\Macro.cgt" />
+    <None Include="MacroSystem\Macro.grm" />
+    <None Include="MacroSystem\ParserEngine\C-Sharp - Partial Constants.pgt" />
+    <None Include="MacroSystem\ParserEngine\C-Sharp - Partial Main.pgt" />
+    <None Include="MacroSystem\ParserEngine\C-Sharp - Partial Methods.pgt" />
+    <None Include="MacroSystem\sample.macro" />
     <None Include="Profiles\Boo\Default Configuration.boo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

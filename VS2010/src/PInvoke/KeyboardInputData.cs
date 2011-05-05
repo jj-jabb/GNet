@@ -17,10 +17,21 @@ namespace GNet.PInvoke
             return
                 other.Key == Key &&
                 other.Scan == Scan &&
-                other.Flags == Flags &&
-                other.Time == Time &&
-                other.ExtraInfo == ExtraInfo
+                other.Flags == Flags //&&
+                //other.Time == Time &&
+                //other.ExtraInfo == ExtraInfo
                 ;
+        }
+
+        public override int GetHashCode()
+        {
+            return new OatHash()
+                .Hash(Key)
+                .Hash((ushort)Scan)
+                .Hash((ushort)Flags)
+                //.Hash(Time)
+                //.Hash(ExtraInfo)
+                .HashCode;
         }
     }
 }

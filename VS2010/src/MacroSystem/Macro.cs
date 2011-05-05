@@ -9,13 +9,15 @@ using GNet.PInvoke;
 
 namespace GNet.MacroSystem
 {
-    public class Macro : Step
+    public class Macro
     {
         public static readonly Dictionary<string, Win32Point> SavedPoints = new Dictionary<string, Win32Point>();
         public static ISynchronizeInvoke SynchronizeInvoke { get; set; }
 
         List<Step> steps;
-        List<Step> processed;
+        Stack<Step> cleanupSteps;
+        Dictionary<Step, Step> cleanupLookup;
+        //List<Step> processed;
 
         Timer timer;
         int currentStep;
@@ -31,21 +33,17 @@ namespace GNet.MacroSystem
             timer.AutoReset = false;
         }
 
-        public bool IsRunning { get { return isRunning; } }
-
-        void timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            if (cleanup)
-                return;
-
-            RunImpl();
-        }
-
         public Macro(params Step[] steps)
             : this()
         {
-            this.steps = new List<Step>(steps);
+            foreach (var step in steps)
+                this.steps.Add(step);
         }
+
+        public List<Step> Steps { get { return steps; } }
+
+        public bool IsRunning { get { return isRunning; } }
+        public bool IsInterruptable { get; set; }
 
         public void Run()
         {
@@ -55,19 +53,38 @@ namespace GNet.MacroSystem
             isRunning = true;
             cleanup = false;
             currentStep = 0;
-            processed = new List<Step>();
+
+            cleanupSteps = new Stack<Step>();
+            cleanupLookup = new Dictionary<Step, Step>();
+            //processed = new List<Step>();
+
             RunImpl();
         }
 
         void RunImpl()
         {
             Step step;
+            Step rstep;
             Delay delay;
 
             while (currentStep < steps.Count)
             {
                 step = steps[currentStep];
-                processed.Add(step);
+                rstep = step.Reverse;
+                if (rstep != null)
+                {
+                    if (cleanupLookup.ContainsKey(rstep))
+                    {
+                        // disable the last rstep that's on the stack
+                        cleanupLookup[rstep].IsEnabled = false;
+                    }
+
+                    cleanupLookup[rstep] = rstep;
+                    cleanupSteps.Push(rstep);
+                }
+
+                //processed.Add(step);
+
                 currentStep++;
 
                 System.Diagnostics.Debug.WriteLine(step.ToString());
@@ -88,40 +105,60 @@ namespace GNet.MacroSystem
             System.Diagnostics.Debug.WriteLine("");
         }
 
+        void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (cleanup)
+                return;
+
+            RunImpl();
+        }
+
         public void Cleanup()
         {
             cleanup = true;
+
             Stack<Step> reverseSteps = new Stack<Step>();
             Step rstep;
-            bool reversed;
 
-            // check to see if reversable steps aren't already reversed in the macro
-            for (int i = 0; i < processed.Count; i++)
+            while (cleanupSteps.Count > 0)
             {
-                rstep = processed[i].Cleanup;
-                if (rstep != null)
-                {
-                    reversed = false;
-                    for (int j = i + 1; j < processed.Count; j++)
-                        if (rstep.Equals(processed[j]))
-                        {
-                            reversed = true;
-                            break;
-                        }
-
-                    if (!reversed)
-                        reverseSteps.Push(rstep);
-                }
-            }
-
-            while (reverseSteps.Count > 0)
-            {
-                rstep = reverseSteps.Pop();
+                rstep = cleanupSteps.Pop();
 
                 System.Diagnostics.Debug.WriteLine(rstep.ToString());
-                
+
                 rstep.Run();
             }
+
+
+            //bool reversed;
+
+            //// check to see if reversable steps aren't already reversed in the macro
+            //for (int i = 0; i < processed.Count; i++)
+            //{
+            //    rstep = processed[i].Cleanup;
+            //    if (rstep != null)
+            //    {
+            //        reversed = false;
+            //        for (int j = i + 1; j < processed.Count; j++)
+            //            if (rstep.Equals(processed[j]))
+            //            {
+            //                reversed = true;
+            //                break;
+            //            }
+
+            //        if (!reversed)
+            //            reverseSteps.Push(rstep);
+            //    }
+            //}
+
+            //while (reverseSteps.Count > 0)
+            //{
+            //    rstep = reverseSteps.Pop();
+
+            //    System.Diagnostics.Debug.WriteLine(rstep.ToString());
+                
+            //    rstep.Run();
+            //}
 
             isRunning = false;
 

@@ -1,0 +1,78 @@
+##TEMPLATE-NAME 'C# - Partial Constants'
+##LANGUAGE 'C#'
+##ENGINE-NAME 'Simple GOLD Parser Engine'
+##AUTHOR 'Robin Sam (based on the C# Engine by Vladimir Morozov)' 
+##FILE-EXTENSION 'cs'
+##NOTES
+This template generates the constants used for parsing GOLD CGT files
+using the Simple GOLD Parser Engine.
+##END-NOTES
+##ID-CASE UPPERCASE
+##ID-SEPARATOR '_'
+##ID-SYMBOL-PREFIX 'Symbol'
+##ID-RULE-PREFIX 'Rule'
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
+using GOLDSimpleParserEngine;
+
+namespace GOLDSimpleParserEngine
+{
+##PARAMETERS
+    public partial class %Name%Parser
+##END-PARAMETERS
+    {
+        private object CreateObjectFromTerminal(Token token)
+        {
+            switch(token.Symbol.Id)
+            {
+##SYMBOLS
+                case (int)SymbolConstants.%ID% :
+                    //%Description%
+                    return %ID%(token);
+
+##END-SYMBOLS
+            }
+            
+            throw new SymbolException("Unknown symbol " + token.Symbol.Id);
+        }
+        
+        private object CreateObjectFromNonterminal(Token token)
+        {
+            switch (token.Rule.Id)
+            {
+##RULES
+                case (int)RuleConstants.%ID% :
+                    //%Description%
+                    return %ID%(token);
+
+##END-RULES
+            }
+            
+            throw new RuleException("Unknown rule " + token.Rule.Id);
+        }
+
+        #region Support Classes
+
+        enum SymbolConstants : int
+        {
+##SYMBOLS
+##DELIMITER ','
+            %ID.Padded% = %Value.Padded%%Delimiter% // %Description%
+##END-SYMBOLS
+        };
+
+        enum RuleConstants : int
+        {
+##RULES
+##DELIMITER ','
+            %ID.Padded% = %Value.Padded%%Delimiter% // %Description%
+##END-RULES
+        };
+
+        #endregion
+    
+    }
+}

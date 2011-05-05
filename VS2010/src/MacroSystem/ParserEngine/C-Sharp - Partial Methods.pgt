@@ -1,0 +1,57 @@
+##TEMPLATE-NAME 'C# - Partial Methods'
+##LANGUAGE 'C#'
+##ENGINE-NAME 'Simple GOLD Parser Engine'
+##AUTHOR 'Robin Sam (based on the C# Engine by Vladimir Morozov)' 
+##FILE-EXTENSION 'cs'
+##NOTES
+This template generates the methods used by the GOLD Parser Engine Partial Constants.
+You should only generate this file once and then add new methods as your
+grammar grows.
+##END-NOTES
+##ID-CASE UPPERCASE
+##ID-SEPARATOR '_'
+##ID-SYMBOL-PREFIX 'Symbol'
+##ID-RULE-PREFIX 'Rule'
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
+using GOLDSimpleParserEngine;
+
+namespace GOLDSimpleParserEngine
+{
+    // This partial implements the methods used by the Constants partial
+##PARAMETERS
+    public partial class %Name%Parser
+##END-PARAMETERS
+    {
+        private const string CGTResourceName = "";
+        
+        #region Symbols
+
+##SYMBOLS
+        // %ID% : %Description%
+        private object %ID%(Token token)
+        {
+            return null;
+        }
+        
+##END-SYMBOLS
+
+        #endregion
+
+        #region Rules
+
+##RULES
+        // %ID% : %Description%
+        private %ID%(Token token)
+        {
+            return null;
+        }
+        
+##END-RULES
+
+        #endregion
+    }
+}
