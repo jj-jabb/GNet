@@ -263,12 +263,17 @@ namespace GNet.Scripting
 
 #if TESTMACRO
             Macro macro = new Macro(
-                new KeyDown(scanCode: PInvoke.ScanCode.a)
-                //new KeyTap(scanCode: PInvoke.ScanCode.a)
+                new KeyTap(scanCode: PInvoke.ScanCode.a),
+                new Delay(500),
+                new Macro(
+                    new KeyDown(scanCode: PInvoke.ScanCode.lshift),
+                    new KeyTap(scanCode: PInvoke.ScanCode.b)
                 )
-                {
-                    LoopCount = 3
-                };
+                //new KeyTap(scanCode: PInvoke.ScanCode.a)
+            )
+            {
+                LoopCount = 3
+            };
 
             macroManager.Enqueue(macro);
 

@@ -67,8 +67,8 @@ namespace GNet.PInvoke
         {
             if (inputs != null && inputs.Length == 1)
             {
-                InputWrapper release = new InputWrapper();
                 InputWrapper input = inputs[0];
+                InputWrapper release = new InputWrapper { Type = input.Type };
 
                 switch (input.Type)
                 {
