@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
 using GNet;
 using GNet.IO;
-using System.Diagnostics;
+using GNet.MacroSystem2;
 
 namespace GNet.Scripting
 {
@@ -84,6 +85,8 @@ namespace GNet.Scripting
 
         bool onStoppedCalled;
 
+        MacroManager macroManager;
+
         public G13Script()
         {
             keyEvents = new Queue<KeyEvent>();
@@ -98,6 +101,8 @@ namespace GNet.Scripting
             keyboardHook.KeyUp += new KeyEventHandler(keyboardHook_KeyUp);
 
             threadDelegate = new ThreadStart(RunThread);
+
+            macroManager = new MacroManager();
         }
 
         public event ScriptErrorHandler ScriptError;
@@ -159,6 +164,8 @@ namespace GNet.Scripting
 
             G13Device.Current.Start();
 
+            macroManager.Start();
+
             if (Profile.Header.KeyboardHook != HookOptions.None)
             {
                 keyboardHook.IgnoreInjectedValues = Profile.Header.KeyboardHook == HookOptions.IgnoreInjected;
@@ -193,6 +200,8 @@ namespace GNet.Scripting
                 return;
 
             var id = Thread.CurrentThread.ManagedThreadId;
+
+            macroManager.Stop();
 
             keyboardHook.Stop();
             mouseHook.Stop();
@@ -251,6 +260,20 @@ namespace GNet.Scripting
         {
             if (!IsRunning)
                 return;
+
+#if TESTMACRO
+            Macro macro = new Macro(
+                new KeyDown(scanCode: PInvoke.ScanCode.a)
+                //new KeyTap(scanCode: PInvoke.ScanCode.a)
+                )
+                {
+                    LoopCount = 3
+                };
+
+            macroManager.Enqueue(macro);
+
+            return;
+#endif
 
             lock (keyEvents)
             {

@@ -10,6 +10,7 @@ namespace GNet.MacroSystem2
     {
         List<IStep> steps;
         bool notEnabled;
+        bool noRelease;
         int hashCode;
         string queue = "";
 
@@ -42,28 +43,51 @@ namespace GNet.MacroSystem2
 
         public StepType Type { get { return StepType.Macro; } }
         public bool IsEnabled { get { return !notEnabled; } set { notEnabled = !value; } }
-        public bool NoRelease { get; set; }
+        public bool Release { get { return !noRelease; } set { noRelease = value; } }
         public int Priority { get; set; }
-        public bool TerminateCurrent { get; set; }
+        public bool Interrupt { get; set; }
         public long Timestamp { get; set; }
         public int Cooldown { get; set; }
+        public int LoopCount { get; set; }
         public int Count { get { return steps.Count; } }
         public string Name { get; set; }
-        public string Queue { get { return queue; } set { queue = value; } }
         public IStep this[int index] { get { return steps[index]; } }
 
         private int currentIndex;
+        private int currentLoop;
 
-        internal void ResetStepIndex() { currentIndex = 0; }
+        internal void ResetSteps() { currentIndex = 0; }
+        internal void ResetLoop() { currentLoop = 0; }
+        internal void Reset() { currentIndex = 0; currentLoop = 0; }
+
         internal IStep CurrentStep
         {
             get
             {
-                if (currentIndex < steps.Count)
-                    return steps[currentIndex++];
+                IStep step = null;
 
-                return null;
+                if (currentIndex < steps.Count)
+                {
+                    step = steps[currentIndex];
+                }
+
+                return step;
             }
+        }
+
+        internal void IncStep()
+        {
+            currentIndex++;
+        }
+
+        internal void IncLoop()
+        {
+            currentLoop++;
+        }
+
+        internal int CurrentLoop
+        {
+            get { return currentLoop; }
         }
 
         public InputWrapper[] Run()

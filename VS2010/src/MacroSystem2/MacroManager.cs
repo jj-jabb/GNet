@@ -14,6 +14,8 @@ namespace GNet.MacroSystem2
 {
     public class MacroManager
     {
+        public static readonly Dictionary<string, Win32Point> SavedPoints = new Dictionary<string, Win32Point>();
+
         const string runEventName = @"Local\RunEvent";
         const string runExitName = @"Local\RunExit";
 
@@ -95,13 +97,16 @@ namespace GNet.MacroSystem2
 
         void Run()
         {
-            IStep step;
+            IStep istep;
+            Step step;
             Delay delay;
             bool stepEnabled;
             long elapsedMs;
             InputWrapper[] release;
             int releaseIndex;
             Macro macro;
+            int loopCount;
+            int currentLoop;
 
             while (running)
             {
@@ -116,7 +121,7 @@ namespace GNet.MacroSystem2
                             currentMacro = macroQueue.Dequeue();
                         }
 
-                        currentMacro.ResetStepIndex();
+                        currentMacro.Reset();
                     }
                 }
                 else
@@ -128,9 +133,9 @@ namespace GNet.MacroSystem2
                             macro = macroQueue.Peek();
                         }
 
-                        if (macro.TerminateCurrent && macro.Priority >= currentMacro.Priority)
+                        if (macro.Interrupt && macro.Priority >= currentMacro.Priority)
                         {
-                            if (!currentMacro.NoRelease)
+                            if (currentMacro.Release)
                                 Release();
 
                             lock (macroQueue)
@@ -145,34 +150,44 @@ namespace GNet.MacroSystem2
                     runEvent.WaitOne();
                 else
                 {
-                    step = currentMacro.CurrentStep;
+                    istep = currentMacro.CurrentStep;
+                    currentMacro.IncStep();
 
-                    if (step == null)
+                    if (istep == null)
                     {
-                        if (!currentMacro.NoRelease)
+                        if (currentMacro.Release)
                             Release();
 
-                        currentMacro = null;
+                        loopCount = currentMacro.LoopCount;
+                        currentLoop = currentMacro.CurrentLoop;
+                        currentMacro.IncLoop();
+                        if (loopCount < 0 || currentLoop < loopCount - 1)
+                        {
+                            System.Diagnostics.Debug.WriteLine("loopCount: " + loopCount + ", currentLoop = " + currentLoop);
+                            currentMacro.ResetSteps();
+                        }
+                        else
+                            currentMacro = null;
                     }
                     else
                     {
                         elapsedMs = stopwatch.ElapsedMilliseconds;
 
-                        stepEnabled = step.IsEnabled;
+                        stepEnabled = istep.IsEnabled;
                         if (stepEnabled)
                         {
-                            if (step.Timestamp > 0 && step.Timestamp + step.Cooldown < elapsedMs)
+                            if (istep.Timestamp > 0 && istep.Timestamp + istep.Cooldown > elapsedMs)
                                 stepEnabled = false;
                         }
 
                         if (stepEnabled)
                         {
-                            step.Timestamp = elapsedMs;
+                            istep.Timestamp = elapsedMs;
 
-                            switch (currentMacro.Type)
+                            switch (istep.Type)
                             {
                                 case StepType.Delay:
-                                    delay = step as Delay;
+                                    delay = istep as Delay;
                                     timer.Interval = delay.Milliseconds;
                                     timer.Start();
                                     runEvent.WaitOne();
@@ -180,16 +195,26 @@ namespace GNet.MacroSystem2
 
                                 case StepType.Macro:
                                     macroStack.Push(currentMacro);
-                                    currentMacro = step as Macro;
-                                    currentMacro.ResetStepIndex();
+                                    currentMacro = istep as Macro;
+                                    currentMacro.Reset();
                                     break;
 
                                 default:
-                                    release = step.Run();
-                                    if (release != null && releaseLookup.TryGetValue(release[0], out releaseIndex))
-                                        releaseList[releaseIndex] = null;
-                                    releaseLookup[release[0]] = releaseList.Count;
-                                    releaseList.Add(release);
+                                    step = istep as Step;
+                                    release = istep.Run();
+                                    if (release != null)
+                                    {
+                                        if (releaseLookup.TryGetValue(release[0], out releaseIndex))
+                                            releaseList[releaseIndex] = null;
+                                        releaseLookup[release[0]] = releaseList.Count;
+                                        releaseList.Add(release);
+                                    }
+                                    else if (step != null && step.Inputs != null)
+                                    {
+                                        foreach (var input in step.Inputs)
+                                            if (releaseLookup.TryGetValue(input, out releaseIndex))
+                                                releaseList[releaseIndex] = null;
+                                    }
                                     break;
                             }
                         }
@@ -226,53 +251,5 @@ namespace GNet.MacroSystem2
         {
             runEvent.Set();
         }
-
-        //public void Run_NOTHREAD(Macro macro)
-        //{
-        //    if (currentMacro == null)
-        //    {
-        //        macroStack = new Stack<Macro>();
-        //        currentMacro = macro;
-        //        RunImpl_NOTHREAD();
-        //    }
-        //    else
-        //    {
-        //        macroQueue.Enqueue(macro);
-        //    }
-        //}
-
-        //void RunImpl_NOTHREAD()
-        //{
-        //    IStep step;
-        //    Delay delay;
-        //    Macro macro;
-
-        //    while (currentMacro != null)
-        //    {
-        //        step = currentMacro.CurrentStep;
-
-        //        if (step == null)
-        //        {
-        //            if (macroStack.Count > 0)
-        //                currentMacro = macroStack.Pop();
-        //            else if (macroQueue.Count > 0)
-        //                currentMacro = macroQueue.Dequeue();
-        //        }
-        //        else
-        //        {
-        //            switch (currentMacro.Type)
-        //            {
-        //                case StepType.Delay:
-        //                    break;
-
-        //                case StepType.Macro:
-        //                    break;
-
-        //                default:
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //}
     }
 }

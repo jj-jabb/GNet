@@ -21,10 +21,10 @@ namespace GNet.MacroSystem2
         public long Timestamp { get; set; }
         public int Cooldown { get; set; }
 
-        public InputWrapper[] Inputs
+        protected internal InputWrapper[] Inputs
         {
             get { return inputs; }
-            protected set
+            set
             {
                 inputs = value;
                 
@@ -35,7 +35,7 @@ namespace GNet.MacroSystem2
             }
         }
 
-        public InputWrapper[] Run()
+        public virtual InputWrapper[] Run()
         {
             if (inputs != null)
                 Interop.SendInput((uint)inputs.Length, inputs);

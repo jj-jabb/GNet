@@ -64,7 +64,7 @@ namespace GNet.MacroSystem2
             cleanup = false;
 
             macroStack = new Stack<Macro>();
-            currentMacro.ResetStepIndex();
+            currentMacro.ResetSteps();
             macroStack.Push(currentMacro);
 
             releaseList = new List<InputWrapper[]>();
@@ -120,7 +120,7 @@ namespace GNet.MacroSystem2
                         macroStep = step as Macro;
                         if (macroStep != null)
                         {
-                            macroStep.ResetStepIndex();
+                            macroStep.ResetSteps();
                             macroStack.Push(macroStep);
                             macro = macroStep;
                         }
