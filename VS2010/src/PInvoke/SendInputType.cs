@@ -6,6 +6,7 @@ namespace GNet.PInvoke
 {
     public enum SendInputType : int
     {
+        //Empty = -1,
         Mouse = 0,
         Keyboard,
         Hardware

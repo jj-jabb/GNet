@@ -70,7 +70,7 @@ namespace GNet.MacroSystem
             while (currentStep < steps.Count)
             {
                 step = steps[currentStep];
-                rstep = step.Reverse;
+                rstep = step.Release;
                 if (rstep != null)
                 {
                     if (cleanupLookup.ContainsKey(rstep))

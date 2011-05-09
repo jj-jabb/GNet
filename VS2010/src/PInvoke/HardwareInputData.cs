@@ -9,5 +9,14 @@ namespace GNet.PInvoke
         public int Msg;
         public short ParamL;
         public short ParamH;
+
+        public override int GetHashCode()
+        {
+            return new OatHash()
+                .Hash(Msg)
+                .Hash(ParamL)
+                .Hash(ParamH)
+                .HashCode;
+        }
     }
 }

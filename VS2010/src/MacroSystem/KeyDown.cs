@@ -23,7 +23,7 @@ namespace GNet.MacroSystem
             toString = "KeyDown(" + key + ")";
         }
 
-        public override Step Reverse
+        public override Step Release
         {
             get
             {

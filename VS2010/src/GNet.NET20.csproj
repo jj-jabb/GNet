@@ -201,7 +201,15 @@
     <Compile Include="LgLcd\G13Lcd.cs" />
     <Compile Include="LgLcd\Lcd.cs" />
     <Compile Include="LgLcd\Sdk.cs" />
+    <Compile Include="MacroSystem2\Delay.cs" />
+    <Compile Include="MacroSystem2\Macro.cs" />
+    <Compile Include="MacroSystem2\MacroManager.cs" />
+    <Compile Include="MacroSystem2\MacroRunner.cs" />
+    <Compile Include="MacroSystem2\Step.cs" />
+    <Compile Include="MacroSystem2\StepType.cs" />
     <Compile Include="MacroSystem\Delay.cs" />
+    <Compile Include="MacroSystem\Group.cs" />
+    <Compile Include="MacroSystem2\IStep.cs" />
     <Compile Include="MacroSystem\KeyDown.cs" />
     <Compile Include="MacroSystem\KeyTap.cs" />
     <Compile Include="MacroSystem\KeyUp.cs" />

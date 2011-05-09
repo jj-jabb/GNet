@@ -14,7 +14,7 @@ namespace GNet.MacroSystem
         protected string toString;
 
         public InputWrapper[] Inputs { get { return inputs; } }
-        public virtual Step Reverse { get { return null; } }
+        public virtual Step Release { get { return null; } }
 
         public bool IsEnabled { get { return !notEnabled; } set { notEnabled = !value; } }
         public long RunTimestamp { get; set; }

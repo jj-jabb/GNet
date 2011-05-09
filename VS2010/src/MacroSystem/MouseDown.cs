@@ -40,7 +40,7 @@ namespace GNet.MacroSystem
             reverse = new MouseUp(button);
         }
 
-        public override Step Reverse
+        public override Step Release
         {
             get
             {

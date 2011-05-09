@@ -94,7 +94,7 @@ namespace GNet.PInvoke
 
         public static readonly int InputWrapperSize = Marshal.SizeOf(typeof(InputWrapper));
 
-        internal static uint SendInput(uint p, InputWrapper[] inputs)
+        internal static uint SendInput(uint p, params InputWrapper[] inputs)
         {
             return SendInput(p, inputs, InputWrapperSize);
         }
