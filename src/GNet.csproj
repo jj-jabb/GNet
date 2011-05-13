@@ -87,6 +87,7 @@
     <Compile Include="Profiler\DeviceType.cs" />
     <Compile Include="Profiler\G13Keys.cs" />
     <Compile Include="Profiler\HookOptions.cs" />
+    <Compile Include="Profiler\MacroSystem\CallFunction.cs" />
     <Compile Include="Profiler\MacroSystem\Delay.cs" />
     <Compile Include="Profiler\MacroSystem\KeyChar.cs" />
     <Compile Include="Profiler\MacroSystem\KeyScanCode.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Profiler\MacroSystem\Step.cs" />
     <Compile Include="Profiler\MacroSystem\StepAction.cs" />
     <Compile Include="Profiler\MacroSystem\StepActionType.cs" />
+    <Compile Include="Profiler\MacroSystem\WaitFunction.cs" />
     <Compile Include="Profiler\MacroSystem\WriteText.cs" />
     <Compile Include="Profiler\MacroSystem_ORIG\Delay.cs" />
     <Compile Include="Profiler\MacroSystem_ORIG\IStep.cs" />

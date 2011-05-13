@@ -8,6 +8,8 @@ namespace GNet.Profiler.MacroSystem
     {
         Action,
         Delay,
+        CallFunction,
+        WaitFunction,
         Macro
     }
 }
