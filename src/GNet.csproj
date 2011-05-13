@@ -1,0 +1,753 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FA05C191-AA0E-4488-9B0E-D141E3553045}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GNet</RootNamespace>
+    <AssemblyName>GNet</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_2_1</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET_2_1</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="lua51">
+      <HintPath>..\LuaInterface_2.0.3\NET20\lua51.dll</HintPath>
+    </Reference>
+    <Reference Include="LuaInterface">
+      <HintPath>..\LuaInterface_2.0.3\NET20\LuaInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HidLib\Device.cs" />
+    <Compile Include="HidLib\Device.Static.cs" />
+    <Compile Include="HidLib\DeviceAttributes.cs" />
+    <Compile Include="HidLib\DeviceCapabilities.cs" />
+    <Compile Include="HidLib\DeviceData.cs" />
+    <Compile Include="HidLib\DeviceInfo.cs" />
+    <Compile Include="HidLib\DeviceMode.cs" />
+    <Compile Include="HidLib\NativeMethods.cs" />
+    <Compile Include="IO\GlobalHook.cs" />
+    <Compile Include="IO\InputSimulator.cs" />
+    <Compile Include="IO\JoystickAngle.cs" />
+    <Compile Include="IO\JoystickPosition.cs" />
+    <Compile Include="IO\KeyboardHook.cs" />
+    <Compile Include="IO\KeyRepeater.cs" />
+    <Compile Include="IO\MouseHook.cs" />
+    <Compile Include="OatHash.cs" />
+    <Compile Include="PInvoke\HardwareInputData.cs" />
+    <Compile Include="PInvoke\InputWrapper.cs" />
+    <Compile Include="PInvoke\Interop.cs" />
+    <Compile Include="PInvoke\KeyboardFlags.cs" />
+    <Compile Include="PInvoke\KeyboardInputData.cs" />
+    <Compile Include="PInvoke\MouseFlags.cs" />
+    <Compile Include="PInvoke\MouseInputData.cs" />
+    <Compile Include="PInvoke\MouseKeyboardHardwareUnion.cs" />
+    <Compile Include="PInvoke\ScanCode.cs" />
+    <Compile Include="PInvoke\ScanCodeInfo.cs" />
+    <Compile Include="PInvoke\SendInputType.cs" />
+    <Compile Include="PInvoke\SetWinEventHookFlags.cs" />
+    <Compile Include="PInvoke\SystemMetric.cs" />
+    <Compile Include="PInvoke\VirtualKeyStates.cs" />
+    <Compile Include="PInvoke\Win32Point.cs" />
+    <Compile Include="PInvoke\WinEvent.cs" />
+    <Compile Include="Profiler\DeviceType.cs" />
+    <Compile Include="Profiler\G13Keys.cs" />
+    <Compile Include="Profiler\HookOptions.cs" />
+    <Compile Include="Profiler\MacroSystem\Delay.cs" />
+    <Compile Include="Profiler\MacroSystem\KeyChar.cs" />
+    <Compile Include="Profiler\MacroSystem\KeyScanCode.cs" />
+    <Compile Include="Profiler\MacroSystem\Macro.cs" />
+    <Compile Include="Profiler\MacroSystem\MouseButton.cs" />
+    <Compile Include="Profiler\MacroSystem\MouseMove.cs" />
+    <Compile Include="Profiler\MacroSystem\MousePosition.cs" />
+    <Compile Include="Profiler\MacroSystem\MouseWheel.cs" />
+    <Compile Include="Profiler\MacroSystem\Step.cs" />
+    <Compile Include="Profiler\MacroSystem\StepAction.cs" />
+    <Compile Include="Profiler\MacroSystem\StepActionType.cs" />
+    <Compile Include="Profiler\MacroSystem\WriteText.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\Delay.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\IStep.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\KeyDown.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\KeyTap.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\KeyUp.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\Macro.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\MacroManager.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\MacroRunner.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\MouseDown.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\MouseMoveTo.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\MouseNudge.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\MouseRecallPos.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\MouseSavePos.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\MouseTap.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\MouseUp.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\MouseWheel.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\Step.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\StepType.cs" />
+    <Compile Include="Profiler\MacroSystem_ORIG\WriteText.cs" />
+    <Compile Include="Profiler\Profile.cs" />
+    <Compile Include="Profiler\ScriptLanguage.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\AutoHideStripBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockAreasEditor.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockContent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockContentCollection.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockContentEventArgs.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockContentHandler.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockOutlineBase.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPane.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPane.SplitterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPaneCaptionBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPaneCollection.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPanel.AutoHideWindow.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPanel.DockDragHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPanel.DragHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPanel.FocusManager.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPanel.MdiClientController.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPanel.Persistor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPanel.SplitterDragHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPanelExtender.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPanelSkin.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockPaneStripBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockWindow.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockWindow.SplitterControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DockWindowCollection.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DragForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\DummyControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Enums.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\FloatWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\FloatWindowCollection.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Helpers\DockHelper.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Helpers\DrawHelper.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Helpers\ResourceHelper.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Helpers\Win32Helper.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\InertButtonBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Interfaces.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Localization.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Measures.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\NestedDockingStatus.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\NestedPaneCollection.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Resources.Designer.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\SplitterBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Strings.Designer.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\VisibleNestedPaneCollection.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\VS2005AutoHideStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\VS2005DockPaneCaption.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\VS2005DockPaneStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Win32\Enums.cs" />
+    <Compile Include="ThirdParty\DockPanelSuite\Docking\Win32\NativeMethods.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Actions\BookmarkActions.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Actions\CaretActions.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Actions\ClipBoardActions.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Actions\FoldActions.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Actions\FormatActions.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Actions\HomeEndActions.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Actions\IEditAction.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Actions\MiscActions.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Actions\SelectionActions.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\AbstractSegment.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\BookmarkManager\Bookmark.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\BookmarkManager\BookmarkEventHandler.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\BookmarkManager\BookmarkManager.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\BookmarkManager\BookmarkManagerMemento.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\DefaultDocument.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\DefaultTextEditorProperties.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\DocumentEventArgs.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\DocumentFactory.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\FoldingStrategy\FoldingManager.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\FoldingStrategy\FoldMarker.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\FoldingStrategy\IFoldingStrategy.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\FoldingStrategy\IndentFoldingStrategy.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\FormattingStrategy\DefaultFormattingStrategy.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\FormattingStrategy\IFormattingStrategy.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\DefaultHighlightingStrategy.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\FontContainer.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\HighlightBackground.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\HighlightColor.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\HighlightInfo.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\HighlightingColorNotFoundException.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\HighlightingDefinitionInvalidException.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\HighlightingDefinitionParser.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\HighlightingManager.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\HighlightingStrategyFactory.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\HighlightRuleSet.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\IHighlightingStrategy.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\NextMarker.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\PrevMarker.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\Span.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\SpanStack.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\SyntaxModes\FileSyntaxModeProvider.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\SyntaxModes\ISyntaxModeFileProvider.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\SyntaxModes\ResourceSyntaxModeProvider.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\SyntaxModes\SyntaxMode.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\HighlightingStrategy\TextWord.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\IDocument.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\ISegment.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\ITextEditorProperties.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\LineManager\DeferredEventList.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\LineManager\LineManager.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\LineManager\LineManagerEventArgs.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\LineManager\LineSegment.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\LineManager\LineSegmentTree.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\MarkerStrategy\MarkerStrategy.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\MarkerStrategy\TextMarker.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\Selection\ColumnRange.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\Selection\DefaultSelection.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\Selection\ISelection.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\Selection\SelectionManager.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\TextAnchor.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\TextBufferStrategy\GapTextBufferStrategy.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\TextBufferStrategy\ITextBufferStrategy.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\TextBufferStrategy\StringTextBufferStrategy.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\TextLocation.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Document\TextUtilities.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\AbstractMargin.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\BracketHighlighter.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\BrushRegistry.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\Caret.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\CompletionWindow\AbstractCompletionWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\CompletionWindow\CodeCompletionListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\CompletionWindow\CodeCompletionWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\CompletionWindow\DeclarationViewWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\CompletionWindow\ICompletionData.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\CompletionWindow\ICompletionDataProvider.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\DrawableLine.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\FoldMargin.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\GutterMargin.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\HRuler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\IconBarMargin.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\Ime.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\InsightWindow\IInsightDataProvider.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\InsightWindow\InsightWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\TextArea.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\TextAreaClipboardHandler.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\TextAreaControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\TextAreaDragDropHandler.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\TextAreaMouseHandler.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\TextAreaUpdate.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\TextEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\TextEditorControlBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\TextView.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Gui\ToolTipRequestEventArgs.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Undo\IUndoableOperation.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Undo\UndoableDelete.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Undo\UndoableInsert.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Undo\UndoableReplace.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Undo\UndoQueue.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Undo\UndoStack.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\AugmentableRedBlackTree.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\CheckedList.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\FileReader.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\LoggingService.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\LookupTable.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\MouseWheelHandler.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\RedBlackTreeIterator.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\RtfWriter.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\TextUtility.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\TipPainter.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\TipPainterTools.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\TipSection.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\TipSpacer.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\TipSplitter.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\TipText.cs" />
+    <Compile Include="ThirdParty\ICSharpCode\TextEditor\Util\WeakCollection.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Binders\Binder.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Binders\BinderMethod.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Binders\BinderUtilities.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Binders\ClrBinder.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Binders\FieldBinders.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Binders\JSBinder.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Binders\JSBinderMethod.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Binders\MethodBinder.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Debugging\COMHelpers.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Debugging\SourceCodePosition.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Debugging\SourceCodeSpan.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\EmitConversion.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\EmitHelpers.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\ILGenerator\DynamicILGenerator.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\ILGenerator\ILGenerator.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\ILGenerator\ILLabel.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\ILGenerator\ILLocalVariable.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\ILGenerator\LoggingILGenerator.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\ILGenerator\ReflectionEmitILGenerator.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\LongJumpException.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\MethodOptimizationHints.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\OptimizationInfo.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\PrimitiveType.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Emit\PrimitiveTypeUtilities.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\AssignmentExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\BinaryExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\Expression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\FunctionCallExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\FunctionExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\GroupingExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\IReferenceExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\ListExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\LiteralExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\MemberAccessExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\NameExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\NewExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\OperatorExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\TernaryExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\ThisExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Expressions\UnaryExpression.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Lexer\IdentifierToken.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Lexer\KeywordToken.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Lexer\Lexer.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Lexer\LiteralToken.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Lexer\PunctuatorToken.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Lexer\RegularExpressionLiteral.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Lexer\Token.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\MethodGenerator\CodeContext.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\MethodGenerator\CompilerOptions.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\MethodGenerator\EvalMethodGenerator.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\MethodGenerator\FunctionMethodGenerator.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\MethodGenerator\GeneratedMethod.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\MethodGenerator\GlobalMethodGenerator.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\MethodGenerator\MethodGenerator.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Parser\AstNode.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Parser\Operator.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Parser\Parser.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Scope\DeclarativeScope.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Scope\ObjectScope.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Scope\Scope.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\BlockStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\BreakStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\ContinueStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\DebuggerStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\DoWhileStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\EmptyStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\ExpressionStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\ForInStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\ForStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\IfStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\LoopStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\ReturnStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\Statement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\SwitchStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\ThrowStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\TryCatchFinallyStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\VarStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\WhileStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Compiler\Statements\WithStatement.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\BigInteger.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\CompatibilityMode.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\ConcatenatedString.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\JavaScriptException.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\Null.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\NumberFormatter.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\NumberParser.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\ReflectionHelpers.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\ScriptEngine.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\ScriptSource\FileScriptSource.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\ScriptSource\ScriptSource.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\ScriptSource\StringScriptSource.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\Serialization.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\StringHelpers.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\TypeComparer.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\TypeConverter.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\TypeUtilities.cs" />
+    <Compile Include="ThirdParty\Jurassic\Core\Undefined.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Array\ArrayConstructor.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Array\ArrayInstance.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Array\SparseArray.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Boolean\BooleanConstructor.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Boolean\BooleanInstance.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\ClrWrapper\ClrInstanceTypeWrapper.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\ClrWrapper\ClrInstanceWrapper.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\ClrWrapper\ClrStaticTypeWrapper.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Date\DateConstructor.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Date\DateInstance.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Date\DateParser.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Error\ErrorConstructor.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Error\ErrorInstance.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\FirebugConsole\FirebugConsole.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\FirebugConsole\IFirebugConsoleOutput.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\FirebugConsole\StandardConsoleOutput.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Function\ArgumentsInstance.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Function\BoundFunction.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Function\ClrFunction.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Function\Delegates.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Function\FunctionConstructor.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Function\FunctionInstance.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Function\ThrowTypeErrorFunction.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Function\UserDefinedFunction.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\GlobalObject.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\JSON\JSONLexer.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\JSON\JSONObject.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\JSON\JSONParser.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\JSON\JSONSerializer.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\MathObject.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Number\NumberConstructor.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Number\NumberInstance.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Object\Attributes.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Object\HiddenClassSchema.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Object\JSFunctionFlags.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Object\ObjectConstructor.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Object\ObjectInstance.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Object\PropertyAccessorValue.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Object\PropertyAttributes.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Object\PropertyDescriptor.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Object\PropertyNameAndValue.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\Object\SchemaProperty.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\RegExp\RegExpConstructor.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\RegExp\RegExpInstance.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\String\StringConstructor.cs" />
+    <Compile Include="ThirdParty\Jurassic\Library\String\StringInstance.cs" />
+    <Compile Include="ThirdParty\mono\CollectionDebuggerView.cs" />
+    <Compile Include="ThirdParty\mono\Consts.cs" />
+    <Compile Include="ThirdParty\mono\MonoTODOAttribute.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\Assembly\AssemblyInfo.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Collections.Generic\HashSet.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\BinaryExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\ConditionalExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\ConstantExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\ElementInit.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\EmitContext.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\Expression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\ExpressionPrinter.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\ExpressionTransformer.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\ExpressionType.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\ExpressionVisitor.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\Expression_T.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\Extensions.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\InvocationExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\LambdaExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\ListInitExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\MemberAssignment.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\MemberBinding.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\MemberBindingType.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\MemberExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\MemberInitExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\MemberListBinding.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\MemberMemberBinding.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\MethodCallExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\NewArrayExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\NewExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\ParameterExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\TypeBinaryExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq.Expressions\UnaryExpression.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\Check.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\Enumerable.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\EnumerableExecutor.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\EnumerableExecutor_T.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\EnumerableQuery.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\EnumerableQuery_T.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\Grouping.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\IGrouping.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\ILookup_T.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\IOrderedEnumerable_T.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\IOrderedQueryable.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\IOrderedQueryable_T.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\IQueryable.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\IQueryable_T.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\IQueryProvider.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\Lookup.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\OrderedEnumerable.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\OrderedParallelQuery.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\OrderedSequence.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\ParallelEnumerable.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\ParallelExecutionMode.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\ParallelMergeOptions.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\ParallelQuery.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\Queryable.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\QueryableEnumerable.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\QueryableTransformer.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\QuickSort.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\SortContext.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\SortDirection.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Linq\SortSequenceContext.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Runtime.CompilerServices\DynamicAttribute.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Runtime.CompilerServices\ExecutionScope.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Runtime.CompilerServices\ExtensionAttribute.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Runtime.CompilerServices\IStrongBox.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System.Runtime.CompilerServices\StrongBox_T.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System\Actions.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System\Funcs.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System\InvalidTimeZoneException.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System\TimeZoneInfo.AdjustmentRule.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System\TimeZoneInfo.Android.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System\TimeZoneInfo.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System\TimeZoneInfo.TransitionTime.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System\TimeZoneNotFoundException.cs" />
+    <Compile Include="ThirdParty\mono\System.Core\System\Util.cs" />
+    <Compile Include="ThirdParty\ObjectListView\Adornments.cs" />
+    <Compile Include="ThirdParty\ObjectListView\Attributes.cs" />
+    <Compile Include="ThirdParty\ObjectListView\CellEditors.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ObjectListView\Comparers.cs" />
+    <Compile Include="ThirdParty\ObjectListView\DataListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ObjectListView\Decorations.cs" />
+    <Compile Include="ThirdParty\ObjectListView\DragSource.cs" />
+    <Compile Include="ThirdParty\ObjectListView\DropSink.cs" />
+    <Compile Include="ThirdParty\ObjectListView\Events.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ObjectListView\FastObjectListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ObjectListView\Filters.cs" />
+    <Compile Include="ThirdParty\ObjectListView\Generator.cs" />
+    <Compile Include="ThirdParty\ObjectListView\GlassPanelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ObjectListView\Groups.cs" />
+    <Compile Include="ThirdParty\ObjectListView\HeaderControl.cs" />
+    <Compile Include="ThirdParty\ObjectListView\Munger.cs" />
+    <Compile Include="ThirdParty\ObjectListView\NativeMethods.cs" />
+    <Compile Include="ThirdParty\ObjectListView\ObjectListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ObjectListView\ObjectListView.DesignTime.cs" />
+    <Compile Include="ThirdParty\ObjectListView\Overlays.cs" />
+    <Compile Include="ThirdParty\ObjectListView\Renderers.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ObjectListView\Styles.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ObjectListView\ToolTipControl.cs" />
+    <Compile Include="ThirdParty\ObjectListView\TreeListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirdParty\ObjectListView\TypedObjectListView.cs" />
+    <Compile Include="ThirdParty\ObjectListView\VirtualGroups.cs" />
+    <Compile Include="ThirdParty\ObjectListView\VirtualListDataSource.cs" />
+    <Compile Include="ThirdParty\ObjectListView\VirtualObjectListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\ProfileListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ProfileListForm.Designer.cs">
+      <DependentUpon>ProfileListForm.cs</DependentUpon>
+    </Compile>
+    <Content Include="HidLib\Source.txt" />
+    <Content Include="Images\Lcd\cancel_icon_16.png" />
+    <Content Include="Images\Lcd\checkmark_icon_16.png" />
+    <Content Include="IO\Hook Readme.txt" />
+    <Content Include="LgLcd.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ThirdParty\DockPanelSuite\Source.txt" />
+    <Content Include="ThirdParty\ICSharpCode\copyright.txt" />
+    <Content Include="ThirdParty\ICSharpCode\license.txt" />
+    <Content Include="ThirdParty\ICSharpCode\Source.txt" />
+    <Content Include="ThirdParty\Jurassic\Source.txt" />
+    <Content Include="ThirdParty\mono\Source.txt" />
+    <Content Include="ThirdParty\ObjectListView\CustomDictionary.xml" />
+    <Content Include="ThirdParty\ObjectListView\Source.txt" />
+    <EmbeddedResource Include="ThirdParty\DockPanelSuite\Docking\Resources.resx" />
+    <EmbeddedResource Include="ThirdParty\DockPanelSuite\Docking\Strings.resx" />
+    <EmbeddedResource Include="UI\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Content Include="LICENSE" />
+    <EmbeddedResource Include="UI\ProfileListForm.resx">
+      <DependentUpon>ProfileListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="HidLib\Original HidLibrary LICENSE" />
+    <None Include="ThirdParty\DockPanelSuite\Docking\Resources\Thumbs.db" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\ASPX.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\BAT-Mode.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\Boo.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\Coco-Mode.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\CPP-Mode.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\CSharp-Mode.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\HTML-Mode.xshd" />
+    <None Include="ThirdParty\ICSharpCode\TextEditor\Resources\ICSharpCode.TextEditor.snk" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\Java-Mode.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\JavaScript-Mode.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\Lua.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\Mode.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\Patch-Mode.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\PHP-Mode.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\Python.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\Tex-Mode.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\VBNET-Mode.xshd" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\XML-Mode.xshd" />
+    <None Include="ThirdParty\mono\LICENSE" />
+    <None Include="ThirdParty\mono\System.Core\Assembly\ChangeLog" />
+    <None Include="ThirdParty\mono\System.Core\System.Collections.Generic\ChangeLog" />
+    <None Include="ThirdParty\mono\System.Core\System.Linq.Expressions\ChangeLog" />
+    <None Include="ThirdParty\mono\System.Core\System.Linq\ChangeLog" />
+    <None Include="ThirdParty\mono\System.Core\System.Runtime.CompilerServices\ChangeLog" />
+    <None Include="ThirdParty\mono\System.Core\System\ChangeLog" />
+    <None Include="ThirdParty\mono\System.Core\TODO" />
+    <None Include="ThirdParty\ObjectListView\COPYING" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="ThirdParty\DockPanelSuite\Docking\DockPanel.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PaneDiamond.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PaneDiamond_Bottom.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\Dockindicator_PaneDiamond_Fill.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PaneDiamond_Hotspot.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PaneDiamond_HotspotIndex.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PaneDiamond_Left.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PaneDiamond_Right.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PaneDiamond_Top.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PanelBottom.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PanelBottom_Active.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PanelFill.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PanelFill_Active.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PanelLeft.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PanelLeft_Active.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PanelRight.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PanelRight_Active.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PanelTop.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockIndicator_PanelTop_Active.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockPane_AutoHide.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockPane_Close.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockPane_Dock.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockPane_Option.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\Docking\Resources\DockPane_OptionOverflow.bmp" />
+    <Content Include="ThirdParty\DockPanelSuite\license.txt" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\RightArrow.cur" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\SyntaxModes.xml" />
+    <EmbeddedResource Include="ThirdParty\ICSharpCode\TextEditor\Resources\TextEditorControl.bmp" />
+    <Content Include="ThirdParty\Jurassic\Compiler\Emit\Optimizations.txt" />
+    <Content Include="ThirdParty\Jurassic\License.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

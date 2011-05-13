@@ -1,0 +1,2 @@
+﻿This Version: https://github.com/jj-jabb/HidLib
+Original: https://github.com/mikeobrien/HidLibrary

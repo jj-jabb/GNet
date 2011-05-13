@@ -1,0 +1,6 @@
+﻿http://sourceforge.net/projects/sharpdevelop/files/SharpDevelop%202.x/2.2.1/
+
+see also
+http://www.icsharpcode.net/
+http://www.icsharpcode.net/OpenSource/SD/Download/
+

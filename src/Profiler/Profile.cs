@@ -1,0 +1,58 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
+
+using GNet.Profiler.MacroSystem;
+
+namespace GNet.Profiler
+{
+    public class Profile
+    {
+        [XmlIgnore]
+        public string Description { get; set; }
+        [XmlIgnore]
+        public string Script { get; set; }
+
+        public string Name { get; set; }
+
+        public DeviceType Device { get; set; }
+        public bool Lock { get; set; }
+        public string Executable { get; set; }
+        public HookOptions KeyboardHook { get; set; }
+        public HookOptions MouseHook { get; set; }
+        public ScriptLanguage Language { get; set; }
+        public bool IsEnabled { get; set; }
+        public List<Macro> Macros { get; set; }
+        public string KeyAssignments { get; set; }
+
+        [XmlElement("DescriptionCData")]
+        public XmlCDataSection DescriptionCData
+        {
+            get
+            {
+                XmlDocument doc = new XmlDocument();
+                return doc.CreateCDataSection(Description);
+            }
+            set
+            {
+                Description = value.Value;
+            }
+        }
+
+        [XmlElement("ScriptCData")]
+        public XmlCDataSection ScriptCData
+        {
+            get
+            {
+                XmlDocument doc = new XmlDocument();
+                return doc.CreateCDataSection(Script);
+            }
+            set
+            {
+                Script = value.Value;
+            }
+        }
+    }
+}
