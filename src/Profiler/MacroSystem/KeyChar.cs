@@ -17,8 +17,6 @@ namespace GNet.Profiler.MacroSystem
             Character = character;
         }
 
-        public override StepActionType Type { get { return StepActionType.Action; } }
-
         public char Character { get; set; }
 
         protected abstract string KeyType { get; }

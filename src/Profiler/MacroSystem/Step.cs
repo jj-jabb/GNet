@@ -18,6 +18,9 @@ namespace GNet.Profiler.MacroSystem
         public int Cooldown { get; set; }
         public string FunctionName { get; set; }
 
+        [XmlIgnore]
+        public long Timestamp { get; set; }
+
         public abstract StepActionType Type { get; }
     }
 }

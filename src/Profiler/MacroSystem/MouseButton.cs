@@ -17,8 +17,6 @@ namespace GNet.Profiler.MacroSystem
             Button = button;
         }
 
-        public override StepActionType Type { get { return StepActionType.Action; } }
-
         public int Button { get; set; }
 
         protected abstract string ButtonType { get; }

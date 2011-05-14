@@ -92,6 +92,7 @@
     <Compile Include="Profiler\MacroSystem\KeyChar.cs" />
     <Compile Include="Profiler\MacroSystem\KeyScanCode.cs" />
     <Compile Include="Profiler\MacroSystem\Macro.cs" />
+    <Compile Include="Profiler\MacroSystem\MacroRunner.cs" />
     <Compile Include="Profiler\MacroSystem\MouseButton.cs" />
     <Compile Include="Profiler\MacroSystem\MouseMove.cs" />
     <Compile Include="Profiler\MacroSystem\MousePosition.cs" />

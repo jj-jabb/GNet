@@ -18,8 +18,6 @@ namespace GNet.Profiler.MacroSystem
             Text = text;
         }
 
-        public override StepActionType Type { get { return StepActionType.Action; } }
-
         public string Text 
         {
             get { return Text; }

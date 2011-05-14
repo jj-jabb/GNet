@@ -20,6 +20,8 @@ namespace GNet.Profiler.MacroSystem
         InputWrapper[] inputs;
         InputWrapper[] release;
 
+        public override StepActionType Type { get { return StepActionType.ActionInput; } }
+
         public InputWrapper[] Inputs
         {
             get { return inputs; }
@@ -33,6 +35,8 @@ namespace GNet.Profiler.MacroSystem
                 hashCode = InputWrapper.CalcHashCode(inputs);
             }
         }
+
+        public InputWrapper[] Release { get { return release; } }
 
         public override void Run()
         {

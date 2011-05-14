@@ -17,8 +17,6 @@ namespace GNet.Profiler.MacroSystem
             Y = y;
         }
 
-        public override StepActionType Type { get { return StepActionType.Action; } }
-
         public int X { get; set; }
         public int Y { get; set; }
 

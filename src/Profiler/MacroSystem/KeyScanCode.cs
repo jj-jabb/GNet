@@ -19,8 +19,6 @@ namespace GNet.Profiler.MacroSystem
             ScanCode = scanCode;
         }
 
-        public override StepActionType Type { get { return StepActionType.Action; } }
-
         public ScanCode ScanCode { get; set; }
 
         protected abstract string KeyType { get; }

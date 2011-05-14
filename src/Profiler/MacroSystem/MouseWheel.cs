@@ -18,8 +18,6 @@ namespace GNet.Profiler.MacroSystem
             Delta = delta;
         }
 
-        public override StepActionType Type { get { return StepActionType.Action; } }
-
         public int Delta 
         {
             get { return _delta; }

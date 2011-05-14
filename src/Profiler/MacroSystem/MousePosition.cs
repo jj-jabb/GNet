@@ -23,8 +23,6 @@ namespace GNet.Profiler.MacroSystem
             PositionName = name;
         }
 
-        public override StepActionType Type { get { return StepActionType.Action; } }
-
         public string PositionName { get; set; }
 
         protected abstract string PositionType { get; }
