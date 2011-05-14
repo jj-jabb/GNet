@@ -8,7 +8,7 @@ namespace GNet.Profiler.MacroSystem
     [XmlInclude(typeof(KeyCharDown))]
     [XmlInclude(typeof(KeyCharUp))]
     [XmlInclude(typeof(KeyCharTap))]
-    public abstract class KeyChar : StepAction
+    public abstract class KeyChar : StepActionInput
     {
         public KeyChar() { }
 

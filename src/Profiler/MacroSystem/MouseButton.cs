@@ -8,7 +8,7 @@ namespace GNet.Profiler.MacroSystem
     [XmlInclude(typeof(MouseButtonDown))]
     [XmlInclude(typeof(MouseButtonUp))]
     [XmlInclude(typeof(MouseButtonTap))]
-    public abstract class MouseButton : StepAction
+    public abstract class MouseButton : StepActionInput
     {
         public MouseButton() { }
 

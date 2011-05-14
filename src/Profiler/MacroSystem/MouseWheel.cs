@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
+using GNet.IO;
+using GNet.PInvoke;
+
 namespace GNet.Profiler.MacroSystem
 {
-    public class MouseWheel : StepAction
+    public class MouseWheel : StepActionInput
     {
+        int _delta;
+
         public MouseWheel() { }
 
         public MouseWheel(int delta)
@@ -15,7 +20,15 @@ namespace GNet.Profiler.MacroSystem
 
         public override StepActionType Type { get { return StepActionType.Action; } }
 
-        public int Delta { get; set; }
+        public int Delta 
+        {
+            get { return _delta; }
+            set
+            {
+                _delta = value;
+                Inputs = new InputWrapper[] { InputSimulator.MouseWrapper(MouseEventFlags.Wheel, _delta) };
+            }
+        }
 
         public override string ToString()
         {

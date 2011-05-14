@@ -98,6 +98,7 @@
     <Compile Include="Profiler\MacroSystem\MouseWheel.cs" />
     <Compile Include="Profiler\MacroSystem\Step.cs" />
     <Compile Include="Profiler\MacroSystem\StepAction.cs" />
+    <Compile Include="Profiler\MacroSystem\StepActionInput.cs" />
     <Compile Include="Profiler\MacroSystem\StepActionType.cs" />
     <Compile Include="Profiler\MacroSystem\WaitFunction.cs" />
     <Compile Include="Profiler\MacroSystem\WriteText.cs" />

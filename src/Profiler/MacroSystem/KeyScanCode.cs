@@ -10,7 +10,7 @@ namespace GNet.Profiler.MacroSystem
     [XmlInclude(typeof(KeyScanCodeDown))]
     [XmlInclude(typeof(KeyScanCodeUp))]
     [XmlInclude(typeof(KeyScanCodeTap))]
-    public abstract class KeyScanCode : StepAction
+    public abstract class KeyScanCode : StepActionInput
     {
         public KeyScanCode() { }
 

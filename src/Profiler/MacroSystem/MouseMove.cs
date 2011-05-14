@@ -7,7 +7,7 @@ namespace GNet.Profiler.MacroSystem
 {
     [XmlInclude(typeof(MouseMoveAbsolute))]
     [XmlInclude(typeof(MouseMoveRelative))]
-    public abstract class MouseMove : StepAction
+    public abstract class MouseMove : StepActionInput
     {
         public MouseMove() { }
 
