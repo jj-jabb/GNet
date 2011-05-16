@@ -16,14 +16,14 @@ namespace GNet.Profiler.MacroSystem
         public Macro() { }
 
         public string Name { get; set; }
-        public bool Release { get { return release; } set { release = value; } }
+        //public bool Release { get { return release; } set { release = value; } }
         public bool EndOnKeyup { get { return endOnKeyup; } set { endOnKeyup = value; } }
         public int Priority { get; set; }
         public bool IsInterrupting { get; set; }
         public int LoopCount { get; set; }
         public List<Step> Steps { get { return steps; } set { steps = value; } }
 
-        public bool ShouldSerializeRelease() { return !Release; }
+        //public bool ShouldSerializeRelease() { return !Release; }
         public bool ShouldSerializeEndOnKeyup() { return !EndOnKeyup; }
         public bool ShouldSerializePriority() { return Priority > 0; }
         public bool ShouldSerializeIsInterrupting() { return IsInterrupting; }

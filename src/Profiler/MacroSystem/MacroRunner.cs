@@ -162,8 +162,9 @@ namespace GNet.Profiler.MacroSystem
                             if (cancel.Macro == currentMacroTop)
                             {
                                 timer.Stop();
-                                if (currentMacro.Release)
-                                    Release();
+                                Release();
+
+                                currentMacro = currentMacroTop = null;
 
                                 lock (macroQueue)
                                 {
@@ -174,13 +175,14 @@ namespace GNet.Profiler.MacroSystem
                         else if (macro.IsInterrupting && macro.Priority >= currentMacro.Priority)
                         {
                             timer.Stop();
-                            if (currentMacro.Release)
-                                Release();
+                            Release();
 
                             lock (macroQueue)
                             {
                                 currentMacro = currentMacroTop = macroQueue.Dequeue().Value;
                             }
+
+                            currentMacro.Reset();
                         }
                     }
                 }
@@ -196,8 +198,7 @@ namespace GNet.Profiler.MacroSystem
 
                     if (step == null)
                     {
-                        if (currentMacro.Release)
-                            Release();
+                        Release();
 
                         loopCount = currentMacro.LoopCount;
                         currentLoop = currentMacro.CurrentLoop;
@@ -300,13 +301,22 @@ namespace GNet.Profiler.MacroSystem
                 if (cancel != null)
                 {
                     if (cancel.Macro == currentMacroTop)
+                    {
+                        timer.Stop();
                         macroQueue.Enqueue(macro.Priority, macro);
+                    }
                 }
                 else
+                {
                     macroQueue.Enqueue(macro.Priority, macro);
+
+                    if (currentMacro != null && macro.IsInterrupting && macro.Priority >= currentMacro.Priority)
+                        timer.Stop();
+                }
             }
 
-            runEvent.Set();
+            if(!timer.Enabled)
+                runEvent.Set();
         }
 
         //public void Cancel(Macro macro)

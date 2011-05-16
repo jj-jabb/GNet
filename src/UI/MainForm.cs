@@ -87,7 +87,32 @@ function blah<T>(T t) {
                     Name = "TestMacro",
                     Steps = new List<Step>
                     {
-                        new KeyCharTap('a')
+                        new KeyCharTap('a'),
+                        new Delay(400),
+                        new KeyCharTap('b'),
+                        new Delay(400),
+                        new KeyCharTap('c'),
+                        new Delay(400),
+                        new KeyCharTap('d'),
+                        new Delay(400),
+                        new KeyCharTap('e')
+                    }
+                },
+                new Macro
+                {
+                    Name = "TestMacro2",
+                    IsInterrupting = true,
+                    Steps = new List<Step>
+                    {
+                        new KeyCharTap('1'),
+                        new Delay(400),
+                        new KeyCharTap('2'),
+                        new Delay(400),
+                        new KeyCharTap('3'),
+                        new Delay(400),
+                        new KeyCharTap('4'),
+                        new Delay(400),
+                        new KeyCharTap('5')
                     }
                 }
             },
@@ -97,6 +122,11 @@ function blah<T>(T t) {
                 {
                     MacroName = "TestMacro",
                     Key = G13Keys.G1
+                },
+                new InputAssignment
+                {
+                    MacroName = "TestMacro2",
+                    Key = G13Keys.G2
                 }
             }
         };
