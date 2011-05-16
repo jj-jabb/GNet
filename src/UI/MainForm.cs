@@ -43,12 +43,23 @@ function blah<T>(T t) {
                 {
                     new Macro
                     {
+                        Name = "TestMacro",
                         Steps = new List<Step>
                         {
                             new Delay(12345),
                             new KeyCharDown('a'),
                             new KeyScanCodeTap(PInvoke.ScanCode.semicolon)
                         }
+                    }
+                },
+
+                InputAssignments = new List<InputAssignment>
+                {
+                    new InputAssignment
+                    {
+                        Character = 'A',
+                        MinJoystickAngle = 0,
+                        MaxJoystickAngle = 90
                     }
                 }
             };

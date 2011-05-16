@@ -19,7 +19,9 @@ namespace GNet.Profiler.MacroSystem
 
         EventWaitHandle runEvent;
         EventWaitHandle runExit;
+
         bool running;
+        bool releasing;
 
         ThreadStart runDelegate;
         Thread runThread;
@@ -62,6 +64,7 @@ namespace GNet.Profiler.MacroSystem
             releaseLookup = new Dictionary<InputWrapper, int>();
 
             running = true;
+            releasing = false;
 
             runEvent = new EventWaitHandle(false, EventResetMode.AutoReset, runEventName);
             runExit = new EventWaitHandle(false, EventResetMode.AutoReset, runExitName);
@@ -134,6 +137,7 @@ namespace GNet.Profiler.MacroSystem
 
                         if (macro.Interrupt && macro.Priority >= currentMacro.Priority)
                         {
+                            timer.Stop();
                             if (currentMacro.Release)
                                 Release();
 
@@ -232,6 +236,8 @@ namespace GNet.Profiler.MacroSystem
 
         public void Release()
         {
+            releasing = true;
+
             InputWrapper[] release;
             for (int i = releaseList.Count - 1; i >= 0; i--)
             {

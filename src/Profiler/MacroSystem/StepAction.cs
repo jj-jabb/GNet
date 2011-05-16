@@ -7,6 +7,7 @@ using GNet.PInvoke;
 
 namespace GNet.Profiler.MacroSystem
 {
+    [XmlInclude(typeof(StepActionInput))]
     [XmlInclude(typeof(MousePosition))]
     public abstract class StepAction : Step
     {

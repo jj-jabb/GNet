@@ -25,7 +25,15 @@ namespace GNet.Profiler
         public ScriptLanguage Language { get; set; }
         public bool IsEnabled { get; set; }
         public List<Macro> Macros { get; set; }
-        public string KeyAssignments { get; set; }
+        public List<InputAssignment> InputAssignments { get; set; }
+
+        public bool ShouldSerializeLock() { return Lock; }
+        public bool ShouldSerializeExecutable() { return Executable != null; }
+        public bool ShouldSerializeKeyboardHook() { return KeyboardHook != HookOptions.None; }
+        public bool ShouldSerializeMouseHook() { return MouseHook != HookOptions.None; }
+        public bool ShouldSerializeIsEnabled() { return !IsEnabled; }
+        public bool ShouldSerializeMacros() { return Macros != null && Macros.Count > 0; }
+        public bool ShouldSerializeInputAssignments() { return InputAssignments != null && InputAssignments.Count > 0; }
 
         [XmlElement("DescriptionCData")]
         public XmlCDataSection DescriptionCData
