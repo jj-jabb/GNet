@@ -73,6 +73,43 @@ function blah<T>(T t) {
         private void MainForm_Load(object sender, EventArgs e)
         {
             profileListForm.Show(mainDockPanel, DockState.DockLeft);
+
+            runner = new G13ProfileRunner(testProfile);
+        }
+
+
+        Profile testProfile = new Profile
+        {
+            Macros = new List<Macro>
+            {
+                new Macro
+                {
+                    Name = "TestMacro",
+                    Steps = new List<Step>
+                    {
+                        new KeyCharTap('a')
+                    }
+                }
+            },
+            InputAssignments = new List<InputAssignment>
+            {
+                new InputAssignment
+                {
+                    MacroName = "TestMacro",
+                    Key = G13Keys.G1
+                }
+            }
+        };
+
+        G13ProfileRunner runner;
+        private void btnStartTest_Click(object sender, EventArgs e)
+        {
+            runner.Start();
+        }
+
+        private void btnStopTest_Click(object sender, EventArgs e)
+        {
+            runner.Stop();
         }
     }
 }

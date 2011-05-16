@@ -18,7 +18,7 @@ namespace GNet.Profiler
         void SingleKeyPressed(G13Keys key);
         void SingleKeyReleased(G13Keys key);
 
-        void Start();
+        bool Start();
         void Stop();
 
         event EventHandler Started;

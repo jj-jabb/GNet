@@ -14,6 +14,18 @@ namespace GNet.Profiler.MacroSystem
 {
     public class MacroRunner
     {
+        // for using PriorityQueue as a max-priority queue
+        // (i.e. priority queue which extracts elements with maximum priorities first)
+        class MacroPriorityComparer : IComparer<int>
+        {
+            public int Compare(int x, int y)
+            {
+                // "inverted" comparison
+                // direct comparison of integers should return x - y
+                return y - x;
+            }
+        }
+
         public const string runEventName = @"Local\RunEvent";
         public const string runExitName = @"Local\RunExit";
 
@@ -26,15 +38,18 @@ namespace GNet.Profiler.MacroSystem
         ThreadStart runDelegate;
         Thread runThread;
 
-        Queue<Macro> macroQueue;
+        //Queue<Macro> macroQueue;
+
+        PriorityQueue<int, Macro> macroQueue;
         Stack<Macro> macroStack;
 
         List<InputWrapper[]> releaseList;
         Dictionary<InputWrapper, int> releaseLookup;
 
         Macro currentMacro;
-        Macro canceledMacro;
-        object cancelLock = new object();
+        Macro currentMacroTop;
+        //Macro canceledMacro;
+        //object cancelLock = new object();
 
         Timer timer;
         bool timerAborted;
@@ -43,7 +58,8 @@ namespace GNet.Profiler.MacroSystem
 
         public MacroRunner()
         {
-            macroQueue = new Queue<Macro>();
+            //macroQueue = new Queue<Macro>();
+            macroQueue = new PriorityQueue<int, Macro>(new MacroPriorityComparer());
 
             runDelegate = new ThreadStart(Run);
 
@@ -109,9 +125,11 @@ namespace GNet.Profiler.MacroSystem
             InputWrapper[] release;
             int releaseIndex;
             Macro macro;
-            Macro cancel;
+            CancelMacro cancel;
             int loopCount;
             int currentLoop;
+
+            var threadRunExit = new EventWaitHandle(false, EventResetMode.AutoReset, runExitName);
 
             while (running)
             {
@@ -123,7 +141,7 @@ namespace GNet.Profiler.MacroSystem
                     {
                         lock (macroQueue)
                         {
-                            currentMacro = macroQueue.Dequeue();
+                            currentMacro = currentMacroTop = macroQueue.Dequeue().Value;
                         }
 
                         currentMacro.Reset();
@@ -135,10 +153,25 @@ namespace GNet.Profiler.MacroSystem
                     {
                         lock (macroQueue)
                         {
-                            macro = macroQueue.Peek();
+                            macro = macroQueue.Peek().Value;
                         }
 
-                        if (macro.Interrupt && macro.Priority >= currentMacro.Priority)
+                        cancel = macro as CancelMacro;
+                        if (cancel != null)
+                        {
+                            if (cancel.Macro == currentMacroTop)
+                            {
+                                timer.Stop();
+                                if (currentMacro.Release)
+                                    Release();
+
+                                lock (macroQueue)
+                                {
+                                    macroQueue.Dequeue();
+                                }
+                            }
+                        }
+                        else if (macro.IsInterrupting && macro.Priority >= currentMacro.Priority)
                         {
                             timer.Stop();
                             if (currentMacro.Release)
@@ -146,7 +179,7 @@ namespace GNet.Profiler.MacroSystem
 
                             lock (macroQueue)
                             {
-                                currentMacro = macroQueue.Dequeue();
+                                currentMacro = currentMacroTop = macroQueue.Dequeue().Value;
                             }
                         }
                     }
@@ -154,51 +187,29 @@ namespace GNet.Profiler.MacroSystem
 
                 if (currentMacro == null)
                 {
-                    lock (cancelLock)
-                    {
-                        canceledMacro = null;
-                    }
                     runEvent.WaitOne();
                 }
                 else
                 {
-                    lock (cancelLock)
-                    {
-                        cancel = canceledMacro;
-                    }
-
-                    if (cancel == canceledMacro)
-                        step = null;
-                    else
-                    {
-                        step = currentMacro.CurrentStep;
-                        currentMacro.IncStep();
-                    }
+                    step = currentMacro.CurrentStep;
+                    currentMacro.IncStep();
 
                     if (step == null)
                     {
                         if (currentMacro.Release)
                             Release();
 
-                        if (cancel == currentMacro)
+                        loopCount = currentMacro.LoopCount;
+                        currentLoop = currentMacro.CurrentLoop;
+                        currentMacro.IncLoop();
+
+                        if (loopCount < 0 || currentLoop < loopCount - 1)
                         {
-                            cancel = null;
-                            currentMacro = null;
+                            System.Diagnostics.Debug.WriteLine("loopCount: " + loopCount + ", currentLoop = " + currentLoop);
+                            currentMacro.ResetSteps();
                         }
                         else
-                        {
-                            loopCount = currentMacro.LoopCount;
-                            currentLoop = currentMacro.CurrentLoop;
-                            currentMacro.IncLoop();
-
-                            if (loopCount < 0 || currentLoop < loopCount - 1)
-                            {
-                                System.Diagnostics.Debug.WriteLine("loopCount: " + loopCount + ", currentLoop = " + currentLoop);
-                                currentMacro.ResetSteps();
-                            }
-                            else
-                                currentMacro = null;
-                        }
+                            currentMacro = null;
                     }
                     else
                     {
@@ -260,6 +271,9 @@ namespace GNet.Profiler.MacroSystem
                     }
                 }
             }
+
+            threadRunExit.Set();
+            threadRunExit.Close();
         }
 
         public void Release()
@@ -282,30 +296,37 @@ namespace GNet.Profiler.MacroSystem
         {
             lock (macroQueue)
             {
-                macroQueue.Enqueue(macro);
+                var cancel = macro as CancelMacro;
+                if (cancel != null)
+                {
+                    if (cancel.Macro == currentMacroTop)
+                        macroQueue.Enqueue(macro.Priority, macro);
+                }
+                else
+                    macroQueue.Enqueue(macro.Priority, macro);
             }
 
             runEvent.Set();
         }
 
-        public void Cancel(Macro macro)
-        {
-            if (macro == null)
-                return;
+        //public void Cancel(Macro macro)
+        //{
+        //    if (macro == null)
+        //        return;
 
-            lock (cancelLock)
-            {
-                if (macro == currentMacro)
-                {
-                    canceledMacro = macro;
-                    if (timer.Enabled)
-                    {
-                        timer.Stop();
-                        runEvent.Set();
-                    }
-                }
-            }
-        }
+        //    lock (cancelLock)
+        //    {
+        //        if (macro == currentMacro)
+        //        {
+        //            canceledMacro = macro;
+        //            if (timer.Enabled)
+        //            {
+        //                timer.Stop();
+        //                runEvent.Set();
+        //            }
+        //        }
+        //    }
+        //}
 
         void timer_Elapsed(object sender, ElapsedEventArgs e)
         {

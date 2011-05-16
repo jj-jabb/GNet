@@ -13,7 +13,7 @@ using System.Drawing;
 
 namespace GNet.Profiler
 {
-    public abstract partial class G13ProfileRunner : IProfileRunner, IDisposable
+    public partial class G13ProfileRunner : IProfileRunner, IDisposable
     {
         public delegate void ScriptErrorHandler(Exception ex);
 
@@ -115,6 +115,8 @@ namespace GNet.Profiler
                 throw new ArgumentNullException("profile", "Profile cannot be null");
 
             this.profile = profile;
+
+            SingleKeyEvents = true;
 
             keyEvents = new Queue<KeyEvent>();
 
@@ -225,8 +227,8 @@ namespace GNet.Profiler
         {
             Macro macro;
 
-            if (keyMacros.TryGetValue(key, out macro))
-                macroRunner.Enqueue(macro);
+            if (keyMacros.TryGetValue(key, out macro) && macro.EndOnKeyup)
+                macroRunner.Enqueue(new CancelMacro(macro));
             else
                 AddKeyEvent(key, false);
         }
@@ -239,13 +241,13 @@ namespace GNet.Profiler
                 ScriptError(ex);
         }
 
-        public void Start()
+        public bool Start()
         {
             if (IsRunning)
-                return;
+                return true;
 
-            if (profile == null || profile.Script == null)
-                return;
+            if (profile == null)
+                return false;
 
             G13Device.Current.Start();
 
@@ -278,6 +280,8 @@ namespace GNet.Profiler
 
             onStoppedCalled = false;
             OnStarted();
+
+            return true;
         }
 
         public void Stop()
@@ -294,6 +298,7 @@ namespace GNet.Profiler
 
             Device.KeyRepeater.ClearKey();
 
+            ClearKeyEvents();
             IsRunning = false;
             inputEvent.Set();
             inputEvent.Close();
@@ -340,10 +345,10 @@ namespace GNet.Profiler
         public event EventHandler Started;
         public event EventHandler Stopped;
 
-        protected abstract string LcdActivationText { get; set; }
-        protected abstract bool BeforeRunThread();
-        protected abstract void AfterRunThread();
-        protected abstract void OnKeyEvent(KeyEvent keyEvent);
+        protected virtual string LcdActivationText { get; set; }
+        protected virtual bool BeforeRunThread() { return true; }
+        protected virtual void AfterRunThread() { }
+        protected virtual void OnKeyEvent(KeyEvent keyEvent) { }
 
         void RunThread()
         {
@@ -381,7 +386,7 @@ namespace GNet.Profiler
                 inputEvent.WaitOne();
             }
 
-            ClearKeyEvents();
+            //ClearKeyEvents();
 
             SetBacklightColor(128, 255, 255);
             lcd.RemoveFromFront();
