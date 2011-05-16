@@ -14,8 +14,8 @@ namespace GNet.Profiler.MacroSystem
 {
     public class MacroRunner
     {
-        const string runEventName = @"Local\RunEvent";
-        const string runExitName = @"Local\RunExit";
+        public const string runEventName = @"Local\RunEvent";
+        public const string runExitName = @"Local\RunExit";
 
         EventWaitHandle runEvent;
         EventWaitHandle runExit;
@@ -33,6 +33,8 @@ namespace GNet.Profiler.MacroSystem
         Dictionary<InputWrapper, int> releaseLookup;
 
         Macro currentMacro;
+        Macro canceledMacro;
+        object cancelLock = new object();
 
         Timer timer;
         bool timerAborted;
@@ -107,6 +109,7 @@ namespace GNet.Profiler.MacroSystem
             InputWrapper[] release;
             int releaseIndex;
             Macro macro;
+            Macro cancel;
             int loopCount;
             int currentLoop;
 
@@ -150,27 +153,52 @@ namespace GNet.Profiler.MacroSystem
                 }
 
                 if (currentMacro == null)
+                {
+                    lock (cancelLock)
+                    {
+                        canceledMacro = null;
+                    }
                     runEvent.WaitOne();
+                }
                 else
                 {
-                    step = currentMacro.CurrentStep;
-                    currentMacro.IncStep();
+                    lock (cancelLock)
+                    {
+                        cancel = canceledMacro;
+                    }
+
+                    if (cancel == canceledMacro)
+                        step = null;
+                    else
+                    {
+                        step = currentMacro.CurrentStep;
+                        currentMacro.IncStep();
+                    }
 
                     if (step == null)
                     {
                         if (currentMacro.Release)
                             Release();
 
-                        loopCount = currentMacro.LoopCount;
-                        currentLoop = currentMacro.CurrentLoop;
-                        currentMacro.IncLoop();
-                        if (loopCount < 0 || currentLoop < loopCount - 1)
+                        if (cancel == currentMacro)
                         {
-                            System.Diagnostics.Debug.WriteLine("loopCount: " + loopCount + ", currentLoop = " + currentLoop);
-                            currentMacro.ResetSteps();
+                            cancel = null;
+                            currentMacro = null;
                         }
                         else
-                            currentMacro = null;
+                        {
+                            loopCount = currentMacro.LoopCount;
+                            currentLoop = currentMacro.CurrentLoop;
+                            currentMacro.IncLoop();
+
+                            if (loopCount < 0 || currentLoop < loopCount - 1)
+                            {
+                                System.Diagnostics.Debug.WriteLine("loopCount: " + loopCount + ", currentLoop = " + currentLoop);
+                                currentMacro.ResetSteps();
+                            }
+                            else
+                                currentMacro = null;
+                        }
                     }
                     else
                     {
@@ -219,7 +247,7 @@ namespace GNet.Profiler.MacroSystem
                                         releaseLookup[release[0]] = releaseList.Count;
                                         releaseList.Add(release);
                                     }
-                                    
+
                                     if (actionInput.Inputs != null)
                                     {
                                         foreach (var input in actionInput.Inputs)
@@ -258,6 +286,25 @@ namespace GNet.Profiler.MacroSystem
             }
 
             runEvent.Set();
+        }
+
+        public void Cancel(Macro macro)
+        {
+            if (macro == null)
+                return;
+
+            lock (cancelLock)
+            {
+                if (macro == currentMacro)
+                {
+                    canceledMacro = macro;
+                    if (timer.Enabled)
+                    {
+                        timer.Stop();
+                        runEvent.Set();
+                    }
+                }
+            }
         }
 
         void timer_Elapsed(object sender, ElapsedEventArgs e)

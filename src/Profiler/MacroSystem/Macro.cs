@@ -6,7 +6,8 @@ namespace GNet.Profiler.MacroSystem
 {
     public class Macro : Step
     {
-        bool noRelease;
+        bool release = true;
+        bool endOnKeyup = true;
         List<Step> steps;
 
         private int currentIndex;
@@ -15,13 +16,15 @@ namespace GNet.Profiler.MacroSystem
         public Macro() { }
 
         public string Name { get; set; }
-        public bool Release { get { return !noRelease; } set { noRelease = value; } }
+        public bool Release { get { return release; } set { release = value; } }
+        public bool EndOnKeyup { get { return endOnKeyup; } set { endOnKeyup = value; } }
         public int Priority { get; set; }
         public bool Interrupt { get; set; }
         public int LoopCount { get; set; }
         public List<Step> Steps { get { return steps; } set { steps = value; } }
 
         public bool ShouldSerializeRelease() { return !Release; }
+        public bool ShouldSerializeEndOnKeyup() { return !EndOnKeyup; }
         public bool ShouldSerializePriority() { return Priority > 0; }
         public bool ShouldSerializeInterrupt() { return Interrupt; }
         public bool ShouldSerializeLoopCount() { return LoopCount > 0; }
@@ -30,10 +33,11 @@ namespace GNet.Profiler.MacroSystem
 
         public int Count { get { return steps.Count; } }
         public Step this[int index] { get { return steps[index]; } }
+        //public bool Cancel { get; set; }
 
         internal void ResetSteps() { currentIndex = 0; }
         internal void ResetLoop() { currentLoop = 0; }
-        internal void Reset() { currentIndex = 0; currentLoop = 0; }
+        internal void Reset() { currentIndex = 0; currentLoop = 0; } //Cancel = false; }
 
         internal Step CurrentStep
         {

@@ -57,7 +57,6 @@ function blah<T>(T t) {
                 {
                     new InputAssignment
                     {
-                        Character = 'A',
                         MinJoystickAngle = 0,
                         MaxJoystickAngle = 90
                     }

@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Devices\G13Device.cs" />
     <Compile Include="HidLib\Device.cs" />
     <Compile Include="HidLib\Device.Static.cs" />
     <Compile Include="HidLib\DeviceAttributes.cs" />
@@ -67,6 +68,10 @@
     <Compile Include="IO\KeyboardHook.cs" />
     <Compile Include="IO\KeyRepeater.cs" />
     <Compile Include="IO\MouseHook.cs" />
+    <Compile Include="LgLcd\Connection.cs" />
+    <Compile Include="LgLcd\G13Lcd.cs" />
+    <Compile Include="LgLcd\Lcd.cs" />
+    <Compile Include="LgLcd\Sdk.cs" />
     <Compile Include="OatHash.cs" />
     <Compile Include="PInvoke\HardwareInputData.cs" />
     <Compile Include="PInvoke\InputWrapper.cs" />
@@ -86,7 +91,11 @@
     <Compile Include="PInvoke\WinEvent.cs" />
     <Compile Include="Profiler\DeviceType.cs" />
     <Compile Include="Profiler\G13Keys.cs" />
+    <Compile Include="Profiler\G13KeyState.cs" />
+    <Compile Include="Profiler\G13ProfileRunner.cs" />
+    <Compile Include="Profiler\G13ProfileRunner.IO.cs" />
     <Compile Include="Profiler\HookOptions.cs" />
+    <Compile Include="Profiler\IProfileRunner.cs" />
     <Compile Include="Profiler\JoystickDirection.cs" />
     <Compile Include="Profiler\InputAssignment.cs" />
     <Compile Include="Profiler\MacroSystem\CallFunction.cs" />
@@ -497,6 +506,7 @@
     <Compile Include="UI\ProfileListForm.Designer.cs">
       <DependentUpon>ProfileListForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinFormsTextBoxStreamWriter.cs" />
     <Content Include="HidLib\Source.txt" />
     <Content Include="Images\Lcd\cancel_icon_16.png" />
     <Content Include="Images\Lcd\checkmark_icon_16.png" />
