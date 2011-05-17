@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Timers;
@@ -33,7 +34,7 @@ namespace GNet.Profiler.MacroSystem
         EventWaitHandle runExit;
 
         bool running;
-        bool releasing;
+        //bool releasing;
 
         ThreadStart runDelegate;
         Thread runThread;
@@ -52,12 +53,16 @@ namespace GNet.Profiler.MacroSystem
         //object cancelLock = new object();
 
         Timer timer;
-        bool timerAborted;
+        //bool timerAborted;
 
         Stopwatch stopwatch;
 
-        public MacroRunner()
+        Dictionary<string, Macro> macroLookup;
+
+        public MacroRunner(Profile profile)
         {
+            ResetProfile(profile);
+
             //macroQueue = new Queue<Macro>();
             macroQueue = new PriorityQueue<int, Macro>(new MacroPriorityComparer());
 
@@ -71,6 +76,11 @@ namespace GNet.Profiler.MacroSystem
             stopwatch.Start();
         }
 
+        public void ResetProfile(Profile profile)
+        {
+            macroLookup = profile.Macros.ToDictionary(x => x.Name);
+        }
+
         public void Start()
         {
             if (running)
@@ -82,7 +92,7 @@ namespace GNet.Profiler.MacroSystem
             releaseLookup = new Dictionary<InputWrapper, int>();
 
             running = true;
-            releasing = false;
+            //releasing = false;
 
             runEvent = new EventWaitHandle(false, EventResetMode.AutoReset, runEventName);
             runExit = new EventWaitHandle(false, EventResetMode.AutoReset, runExitName);
@@ -112,10 +122,6 @@ namespace GNet.Profiler.MacroSystem
 
             runExit.Close();
             runThread = null;
-        }
-
-        void Run_CheckCancelation()
-        {
         }
 
         void Run()
@@ -335,7 +341,7 @@ namespace GNet.Profiler.MacroSystem
 
         public void Release()
         {
-            releasing = true;
+            //releasing = true;
 
             InputWrapper[] release;
             for (int i = releaseList.Count - 1; i >= 0; i--)

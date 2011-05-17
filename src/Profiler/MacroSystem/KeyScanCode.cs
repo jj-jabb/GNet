@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
+using GNet.IO;
 using GNet.PInvoke;
 
 namespace GNet.Profiler.MacroSystem
@@ -12,6 +13,8 @@ namespace GNet.Profiler.MacroSystem
     [XmlInclude(typeof(KeyScanCodeTap))]
     public abstract class KeyScanCode : StepActionInput
     {
+        ScanCode scanCode;
+
         public KeyScanCode() { }
 
         public KeyScanCode(ScanCode scanCode)
@@ -19,8 +22,9 @@ namespace GNet.Profiler.MacroSystem
             ScanCode = scanCode;
         }
 
-        public ScanCode ScanCode { get; set; }
+        public ScanCode ScanCode { get { return scanCode; } set { scanCode = value; SetInputs(scanCode); } }
 
+        protected abstract void SetInputs(ScanCode scanCode);
         protected abstract string KeyType { get; }
 
         public override string ToString()
@@ -34,6 +38,11 @@ namespace GNet.Profiler.MacroSystem
         public KeyScanCodeDown() { }
         public KeyScanCodeDown(ScanCode scanCode) : base(scanCode) { }
 
+        protected override void SetInputs(ScanCode scanCode)
+        {
+            Inputs = new InputWrapper[] { InputSimulator.KeyWrapper(scanCode) };
+        }
+
         protected override string KeyType { get { return "Down"; } }
     }
 
@@ -42,6 +51,11 @@ namespace GNet.Profiler.MacroSystem
         public KeyScanCodeUp() { }
         public KeyScanCodeUp(ScanCode scanCode) : base(scanCode) { }
 
+        protected override void SetInputs(ScanCode scanCode)
+        {
+            Inputs = new InputWrapper[] { InputSimulator.KeyWrapper(scanCode, true) };
+        }
+
         protected override string KeyType { get { return "Up"; } }
     }
 
@@ -49,6 +63,11 @@ namespace GNet.Profiler.MacroSystem
     {
         public KeyScanCodeTap() { }
         public KeyScanCodeTap(ScanCode scanCode) : base(scanCode) { }
+
+        protected override void SetInputs(ScanCode scanCode)
+        {
+            Inputs = new InputWrapper[] { InputSimulator.KeyWrapper(scanCode), InputSimulator.KeyWrapper(scanCode, true) };
+        }
 
         protected override string KeyType { get { return "Tap"; } }
     }

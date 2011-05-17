@@ -87,6 +87,7 @@ function blah<T>(T t) {
                     Name = "TestMacro",
                     Steps = new List<Step>
                     {
+                        new KeyScanCodeDown(PInvoke.ScanCode.lshift),
                         new KeyCharTap('a'),
                         new Delay(400),
                         new KeyCharTap('b'),

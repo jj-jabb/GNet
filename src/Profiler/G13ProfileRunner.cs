@@ -131,7 +131,7 @@ namespace GNet.Profiler
 
             threadDelegate = new ThreadStart(RunThread);
 
-            macroRunner = new MacroRunner();
+            macroRunner = new MacroRunner(profile);
 
             lcd.Notified += new NotificationEventHandler(Connection_Notified);
 
