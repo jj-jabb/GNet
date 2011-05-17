@@ -218,7 +218,10 @@ namespace GNet.Profiler
             Macro macro;
 
             if (keyMacros.TryGetValue(key, out macro))
+            {
+                macro.Canceled = false;
                 macroRunner.Enqueue(macro);
+            }
             else
                 AddKeyEvent(key, true);
         }
@@ -227,8 +230,9 @@ namespace GNet.Profiler
         {
             Macro macro;
 
-            if (keyMacros.TryGetValue(key, out macro) && macro.EndOnKeyup)
-                macroRunner.Enqueue(new CancelMacro(macro));
+            if (keyMacros.TryGetValue(key, out macro))// && macro.EndOnKeyup)
+                macro.Canceled = true;
+                //macroRunner.Enqueue(new CancelMacro(macro));
             else
                 AddKeyEvent(key, false);
         }

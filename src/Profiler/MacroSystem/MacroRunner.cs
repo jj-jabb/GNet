@@ -114,6 +114,10 @@ namespace GNet.Profiler.MacroSystem
             runThread = null;
         }
 
+        void Run_CheckCancelation()
+        {
+        }
+
         void Run()
         {
             Step step;
@@ -124,8 +128,9 @@ namespace GNet.Profiler.MacroSystem
             long elapsedMs;
             InputWrapper[] release;
             int releaseIndex;
-            Macro macro;
-            CancelMacro cancel;
+            //Macro macro;
+            Macro nextMacro;
+            //CancelMacro cancel;
             int loopCount;
             int currentLoop;
 
@@ -135,6 +140,7 @@ namespace GNet.Profiler.MacroSystem
             {
                 if (currentMacro == null)
                 {
+                    // pop the parent macro off the stack, or get the next macro from the queue
                     if (macroStack.Count > 0)
                         currentMacro = macroStack.Pop();
                     else if (macroQueue.Count > 0)
@@ -147,45 +153,48 @@ namespace GNet.Profiler.MacroSystem
                         currentMacro.Reset();
                     }
                 }
-                else
-                {
-                    if (macroQueue.Count > 0)
-                    {
-                        lock (macroQueue)
-                        {
-                            macro = macroQueue.Peek().Value;
-                        }
 
-                        cancel = macro as CancelMacro;
-                        if (cancel != null)
-                        {
-                            if (cancel.Macro == currentMacroTop)
-                            {
-                                timer.Stop();
-                                Release();
+                #region old cancel code
+                //if (currentMacro != null)
+                //{
+                //    if (macroQueue.Count > 0)
+                //    {
+                //        lock (macroQueue)
+                //        {
+                //            macro = macroQueue.Peek().Value;
+                //        }
 
-                                currentMacro = currentMacroTop = null;
+                //        cancel = macro as CancelMacro;
+                //        if (cancel != null)
+                //        {
+                //            if (cancel.Macro == currentMacroTop)
+                //            {
+                //                timer.Stop();
+                //                Release();
 
-                                lock (macroQueue)
-                                {
-                                    macroQueue.Dequeue();
-                                }
-                            }
-                        }
-                        else if (macro.IsInterrupting && macro.Priority >= currentMacro.Priority)
-                        {
-                            timer.Stop();
-                            Release();
+                //                currentMacro = currentMacroTop = null;
 
-                            lock (macroQueue)
-                            {
-                                currentMacro = currentMacroTop = macroQueue.Dequeue().Value;
-                            }
+                //                lock (macroQueue)
+                //                {
+                //                    macroQueue.Dequeue();
+                //                }
+                //            }
+                //        }
+                //        else if (macro.IsCanceling && macro.Priority >= currentMacro.Priority)
+                //        {
+                //            timer.Stop();
+                //            Release();
 
-                            currentMacro.Reset();
-                        }
-                    }
-                }
+                //            lock (macroQueue)
+                //            {
+                //                currentMacro = currentMacroTop = macroQueue.Dequeue().Value;
+                //            }
+
+                //            currentMacro.Reset();
+                //        }
+                //    }
+                //}
+                #endregion
 
                 if (currentMacro == null)
                 {
@@ -193,6 +202,53 @@ namespace GNet.Profiler.MacroSystem
                 }
                 else
                 {
+                    #region Check for cancelation
+
+                    if (currentMacroTop != null)
+                    {
+                        // check if the current top-level macro should be canceled
+                        if (currentMacroTop.Canceled)
+                        {
+                            macroStack.Clear();
+                            currentMacro = currentMacroTop = null;
+                            Release();
+
+                            // start the loop over to get the next macro off the queue (if any)
+                            continue;
+                        }
+                        // check if a child macro should be canceled
+                        // note that if the current macro is the top macro, that case has
+                        // already been handeld
+                        else if (currentMacro.Canceled)
+                        {
+                            currentMacro = null;
+
+                            // start the loop over to get the parent macro off the stack
+                            continue;
+                        }
+
+                        // check to see if the next macro in the queue should cancel the current one
+                        lock (macroQueue)
+                        {
+                            if (macroQueue.Count > 0)
+                                nextMacro = macroQueue.PeekValue();
+                            else
+                                nextMacro = null;
+                        }
+
+                        if (ShouldCancelCurrent(nextMacro))
+                        {
+                            macroStack.Clear();
+                            currentMacro = currentMacroTop = null;
+                            Release();
+
+                            // start the loop over to get the next macro off the queue (if any)
+                            continue;
+                        }
+                    }
+
+                    #endregion
+
                     step = currentMacro.CurrentStep;
                     currentMacro.IncStep();
 
@@ -293,26 +349,64 @@ namespace GNet.Profiler.MacroSystem
             releaseLookup.Clear();
         }
 
+        bool ShouldCancelCurrent(Macro cancelingMacro)
+        {
+            //var a = currentMacro != null;
+            //var b = cancelingMacro != null;
+
+            //System.Diagnostics.Debug.Write(" a: " + a ?? "null");
+            //System.Diagnostics.Debug.Write(" b: " + b ?? "null");
+
+            //if (a && b)
+            //{
+            //    var c = cancelingMacro.IsCanceling != CancelingType.None;
+            //    var d = cancelingMacro.CancelLevel >= currentMacro.CancelLevel;
+            //    var e = currentMacro.IsCancelable;
+            //    var f = cancelingMacro.IsCanceling == CancelingType.Forced;
+            //    System.Diagnostics.Debug.Write(" c: " + c);
+            //    System.Diagnostics.Debug.Write(" d: " + d);
+            //    System.Diagnostics.Debug.Write(" e: " + e);
+            //    System.Diagnostics.Debug.Write(" f: " + f);
+            //}
+
+            //System.Diagnostics.Debug.WriteLine("");
+
+            return
+                currentMacro != null &&
+                cancelingMacro != null &&
+                cancelingMacro.IsCanceling != CancelingType.None &&
+                cancelingMacro.CancelLevel >= currentMacro.CancelLevel &&
+                (
+                    currentMacro.IsCancelable ||
+                    cancelingMacro.IsCanceling == CancelingType.Forced
+                );
+        }
+
         public void Enqueue(Macro macro)
         {
             lock (macroQueue)
             {
-                var cancel = macro as CancelMacro;
-                if (cancel != null)
-                {
-                    if (cancel.Macro == currentMacroTop)
-                    {
-                        timer.Stop();
-                        macroQueue.Enqueue(macro.Priority, macro);
-                    }
-                }
-                else
-                {
-                    macroQueue.Enqueue(macro.Priority, macro);
+                //var cancel = macro as CancelMacro;
+                //if (cancel != null)
+                //{
+                //    if (cancel.Macro == currentMacroTop)
+                //    {
+                //        timer.Stop();
+                //        macroQueue.Enqueue(macro.Priority, macro);
+                //    }
+                //}
+                //else
+                //{
+                //    macroQueue.Enqueue(macro.Priority, macro);
 
-                    if (currentMacro != null && macro.IsInterrupting && macro.Priority >= currentMacro.Priority)
-                        timer.Stop();
-                }
+                //    if (currentMacro != null && macro.IsCanceling && macro.Priority >= currentMacro.Priority)
+                //        timer.Stop();
+                //}
+
+                macroQueue.Enqueue(macro.Priority, macro);
+
+                if (macroQueue.PeekValue() == macro && ShouldCancelCurrent(macro))
+                    timer.Stop();
             }
 
             if(!timer.Enabled)

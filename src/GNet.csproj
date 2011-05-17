@@ -100,6 +100,7 @@
     <Compile Include="Profiler\JoystickDirection.cs" />
     <Compile Include="Profiler\InputAssignment.cs" />
     <Compile Include="Profiler\MacroSystem\CallFunction.cs" />
+    <Compile Include="Profiler\MacroSystem\CancelingType.cs" />
     <Compile Include="Profiler\MacroSystem\CancelMacro.cs" />
     <Compile Include="Profiler\MacroSystem\Delay.cs" />
     <Compile Include="Profiler\MacroSystem\KeyChar.cs" />

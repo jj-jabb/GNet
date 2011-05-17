@@ -101,7 +101,7 @@ function blah<T>(T t) {
                 new Macro
                 {
                     Name = "TestMacro2",
-                    IsInterrupting = true,
+                    IsCanceling = CancelingType.Forced,
                     Steps = new List<Step>
                     {
                         new KeyCharTap('1'),
