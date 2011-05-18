@@ -13,9 +13,10 @@ namespace GNet.Profiler.MacroSystem
             Milliseconds = milliseconds;
         }
 
-        public override StepActionType Type { get { return StepActionType.Delay; } }
+        public override StepType Type { get { return StepType.Delay; } }
 
         public double Milliseconds { get; set;}
+        public double? RandomRange { get; set; }
 
         public override string ToString()
         {

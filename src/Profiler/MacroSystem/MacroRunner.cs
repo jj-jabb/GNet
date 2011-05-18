@@ -78,7 +78,19 @@ namespace GNet.Profiler.MacroSystem
 
         public void ResetProfile(Profile profile)
         {
-            macroLookup = profile.Macros.ToDictionary(x => x.Name);
+            //macroLookup = profile.Macros.ToDictionary(x => x.Name);
+            foreach (var macro in profile.Macros)
+                AddMacro(macro, null);
+        }
+
+        void AddMacro(Macro macro, string path)
+        {
+            string name = path == null ? macro.Name : path + "." + macro.Name;
+            macroLookup.Add(name, macro);
+
+            foreach (var step in macro.Steps)
+                if (step.Type == StepType.Macro)
+                    AddMacro(step as Macro, name);
         }
 
         public void Start()
@@ -135,10 +147,12 @@ namespace GNet.Profiler.MacroSystem
             InputWrapper[] release;
             int releaseIndex;
             //Macro macro;
-            Macro nextMacro;
+            Macro tempMacro;
             //CancelMacro cancel;
             int loopCount;
             int currentLoop;
+            Random rand = new Random();
+            Enabler enablerStep;
 
             var threadRunExit = new EventWaitHandle(false, EventResetMode.AutoReset, runExitName);
 
@@ -237,12 +251,12 @@ namespace GNet.Profiler.MacroSystem
                         lock (macroQueue)
                         {
                             if (macroQueue.Count > 0)
-                                nextMacro = macroQueue.PeekValue();
+                                tempMacro = macroQueue.PeekValue();
                             else
-                                nextMacro = null;
+                                tempMacro = null;
                         }
 
-                        if (ShouldCancelCurrent(nextMacro))
+                        if (ShouldCancelCurrent(tempMacro))
                         {
                             macroStack.Clear();
                             currentMacro = currentMacroTop = null;
@@ -291,25 +305,38 @@ namespace GNet.Profiler.MacroSystem
 
                             switch (step.Type)
                             {
-                                case StepActionType.Delay:
+                                case StepType.Delay:
                                     delay = step as Delay;
-                                    timer.Interval = delay.Milliseconds;
+                                    
+                                    if (delay.RandomRange != null)
+                                    {
+                                        timer.Interval =
+                                            delay.Milliseconds +
+                                            (rand.NextDouble() - .5d) * delay.RandomRange.Value;
+                                    }
+                                    else
+                                        timer.Interval = delay.Milliseconds;
+
                                     timer.Start();
                                     runEvent.WaitOne();
                                     break;
 
-                                case StepActionType.Macro:
+                                case StepType.Release:
+                                    Release();
+                                    break;
+
+                                case StepType.Macro:
                                     macroStack.Push(currentMacro);
                                     currentMacro = step as Macro;
                                     currentMacro.Reset();
                                     break;
 
-                                case StepActionType.Action:
+                                case StepType.Action:
                                     action = step as StepActionInput;
                                     action.Run();
                                     break;
 
-                                case StepActionType.ActionInput:
+                                case StepType.ActionInput:
                                     actionInput = step as StepActionInput;
                                     release = actionInput.Release;
                                     actionInput.Run();
@@ -328,6 +355,18 @@ namespace GNet.Profiler.MacroSystem
                                             if (releaseLookup.TryGetValue(input, out releaseIndex))
                                                 releaseList[releaseIndex] = null;
                                     }
+                                    break;
+
+                                case StepType.Enable:
+                                    enablerStep = step as Enable;
+                                    if (macroLookup.TryGetValue(enablerStep.Path, out tempMacro))
+                                        tempMacro.IsEnabled = true;
+                                    break;
+
+                                case StepType.Disable:
+                                    enablerStep = step as Disable;
+                                    if (macroLookup.TryGetValue(enablerStep.Path, out tempMacro))
+                                        tempMacro.IsEnabled = false;
                                     break;
                             }
                         }

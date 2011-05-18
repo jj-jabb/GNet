@@ -22,6 +22,9 @@ namespace GNet.UI
 
         public MainForm()
         {
+            string path = "/Test/SubTest/Sub/";
+            var list = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
             InitializeComponent();
 
             //Macro macro = new Macro(

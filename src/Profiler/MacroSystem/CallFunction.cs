@@ -6,9 +6,9 @@ namespace GNet.Profiler.MacroSystem
 {
     public class CallFunction : Step
     {
-        public override StepActionType Type
+        public override StepType Type
         {
-            get { return StepActionType.CallFunction; }
+            get { return StepType.CallFunction; }
         }
     }
 }

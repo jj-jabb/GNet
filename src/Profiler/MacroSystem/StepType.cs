@@ -4,13 +4,16 @@ using System.Text;
 
 namespace GNet.Profiler.MacroSystem
 {
-    public enum StepActionType
+    public enum StepType
     {
         Action,
         ActionInput,
         Delay,
         CallFunction,
         WaitFunction,
+        Release,
+        Enable,
+        Disable,
         Macro
     }
 }

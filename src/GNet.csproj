@@ -103,6 +103,7 @@
     <Compile Include="Profiler\MacroSystem\CancelingType.cs" />
     <Compile Include="Profiler\MacroSystem\CancelMacro.cs" />
     <Compile Include="Profiler\MacroSystem\Delay.cs" />
+    <Compile Include="Profiler\MacroSystem\Enabler.cs" />
     <Compile Include="Profiler\MacroSystem\KeyChar.cs" />
     <Compile Include="Profiler\MacroSystem\KeyScanCode.cs" />
     <Compile Include="Profiler\MacroSystem\Macro.cs" />
@@ -111,10 +112,11 @@
     <Compile Include="Profiler\MacroSystem\MouseMove.cs" />
     <Compile Include="Profiler\MacroSystem\MousePosition.cs" />
     <Compile Include="Profiler\MacroSystem\MouseWheel.cs" />
+    <Compile Include="Profiler\MacroSystem\Release.cs" />
     <Compile Include="Profiler\MacroSystem\Step.cs" />
     <Compile Include="Profiler\MacroSystem\StepAction.cs" />
     <Compile Include="Profiler\MacroSystem\StepActionInput.cs" />
-    <Compile Include="Profiler\MacroSystem\StepActionType.cs" />
+    <Compile Include="Profiler\MacroSystem\StepType.cs" />
     <Compile Include="Profiler\MacroSystem\WaitFunction.cs" />
     <Compile Include="Profiler\MacroSystem\WriteText.cs" />
     <Compile Include="Profiler\MacroSystem_ORIG\Delay.cs" />

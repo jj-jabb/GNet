@@ -11,7 +11,7 @@ namespace GNet.Profiler.MacroSystem
     [XmlInclude(typeof(MousePosition))]
     public abstract class StepAction : Step
     {
-        public override StepActionType Type { get { return StepActionType.Action; } }
+        public override StepType Type { get { return StepType.Action; } }
         public abstract void Run();
     }
 }

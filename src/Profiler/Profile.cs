@@ -10,6 +10,8 @@ namespace GNet.Profiler
 {
     public class Profile
     {
+        // TODO:
+        // implement AutoRelease
         [XmlIgnore]
         public string Description { get; set; }
         [XmlIgnore]

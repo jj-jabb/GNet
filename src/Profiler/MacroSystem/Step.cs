@@ -21,7 +21,7 @@ namespace GNet.Profiler.MacroSystem
         [XmlIgnore]
         public long Timestamp { get; set; }
 
-        public abstract StepActionType Type { get; }
+        public abstract StepType Type { get; }
 
         public bool ShouldSerializeIsEnabled() { return !IsEnabled; }
         public bool ShouldSerializeCooldown() { return Cooldown > 0; }

@@ -6,9 +6,9 @@ namespace GNet.Profiler.MacroSystem
 {
     public class WaitFunction : Step
     {
-        public override StepActionType Type
+        public override StepType Type
         {
-            get { return StepActionType.WaitFunction; }
+            get { return StepType.WaitFunction; }
         }
     }
 }

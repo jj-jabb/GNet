@@ -16,6 +16,15 @@ namespace GNet.Profiler.MacroSystem
 
         public Macro() { }
 
+        // TODO:
+        //  RepeatBehavior
+        //      None
+        //      WhilePressed
+        //      Toggle
+        //  KeyUpBehavior
+        //      Terminate
+        //      Complete
+
         public string Name { get; set; }
         public bool Release { get { return release; } set { release = value; } }
         public bool EndOnKeyup { get { return endOnKeyup; } set { endOnKeyup = value; } }
@@ -34,7 +43,7 @@ namespace GNet.Profiler.MacroSystem
         public bool ShouldSerializeCancelLevel() { return CancelLevel != 0; }
         public bool ShouldSerializeLoopCount() { return LoopCount != 0; }
 
-        public override StepActionType Type { get { return StepActionType.Macro; } }
+        public override StepType Type { get { return StepType.Macro; } }
 
         public int Count { get { return steps.Count; } }
         public Step this[int index] { get { return steps[index]; } }

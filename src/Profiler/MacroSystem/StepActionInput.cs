@@ -20,7 +20,7 @@ namespace GNet.Profiler.MacroSystem
         InputWrapper[] inputs;
         InputWrapper[] release;
 
-        public override StepActionType Type { get { return StepActionType.ActionInput; } }
+        public override StepType Type { get { return StepType.ActionInput; } }
 
         public InputWrapper[] Inputs
         {
